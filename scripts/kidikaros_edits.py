@@ -59,13 +59,20 @@ def main():
     for name, v in hb.items():
         if name not in hk:
             raise SystemExit(f"{name} missing from {REPO}")
-        a, b = bf16(rb, v), to_bf16_bits(as_f32(rk, hk[name]))
+        # compare in the base tensor's own dtype: the worker casts an edit to that dtype when it builds the checkpoint
+        k = as_f32(rk, hk[name])
+        if v["dtype"] == "BF16":
+            a, b = bf16(rb, v), to_bf16_bits(k)
+            evaluated = (b.astype(np.uint32) << 16).view(np.float32)
+        else:
+            a, b = as_f32(rb, v), k
+            evaluated = k
         if a.shape != b.shape:
             raise SystemExit(f"{name}: shape {a.shape} vs {b.shape}")
         n = int((a != b).sum())
-        if n:  # save the bf16-rounded values, exactly what the evaluated checkpoint will hold
-            np.save(os.path.join(tmp, name + ".npy"), (b.astype(np.uint32) << 16).view(np.float32))
-            changed.append({"tensor": name, "entries_changed": n, "source_dtype": hk[name]["dtype"]})
+        if n:  # save exactly the values the evaluated checkpoint will hold
+            np.save(os.path.join(tmp, name + ".npy"), evaluated)
+            changed.append({"tensor": name, "entries_changed": n, "base_dtype": v["dtype"], "source_dtype": hk[name]["dtype"]})
     if not changed:
         raise SystemExit("no tensor differs from the base: refusing to write an empty edit folder")
     os.replace(tmp, OUT)  # only a complete folder appears under the final name
