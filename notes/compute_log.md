@@ -5,3 +5,4 @@
 
 | 2026-11-06 | pw7y4j6wub1w1r | RTX 5090 secure ($1.19/h) | Opus seed 1 target passes, created 21:38 | | |
 | 2026-11-06 | iz4y3dff9ug5d8 | RTX 5090 secure ($1.19/h) | Opus seed 2 target passes, created 21:38 | | |
+| 2026-11-07 | yyxolba73b3qsr | RTX 6000 Ada secure ($0.99/h) | DeepSeek-flash seed 1 target passes, created 02:56 | | |
