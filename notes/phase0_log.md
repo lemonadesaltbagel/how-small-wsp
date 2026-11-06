@@ -54,4 +54,5 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 |---|---|---|---|---|---|
 | base | 9.0 ± 1.3 % | 10.6 ± 1.4 % | 7.9 % | 91.2 % (mean 30,393 tok) | 107 min |
 | p50c | 50.4 ± 2.2 % | 51.8 ± 2.2 % | 48.1 % | 30.4 % (mean 21,506 tok) | 68 min |
+| p10c | 14.2 ± 1.6 % | 13.6 ± 1.5 % | 12.3 % | 86.4 % (mean 29,828 tok) | 103 min |
 - Throughput: 15.2M generated tokens in 107 min ≈ 2.4k tok/s on the 5070 Ti → one full 512-answer pass of the unedited model ≈ 1.8 h here.
