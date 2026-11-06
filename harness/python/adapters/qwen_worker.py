@@ -189,8 +189,9 @@ def paired(a, b):
 
 
 def generate(args, req, ckpt_edit):
-    if req.get("activations"):
-        raise Bad("activations in generation passes are not available in this environment yet; read hidden states with a teacher_forced pass")
+    acts = req.get("activations")
+    if acts:
+        acts = check_activations(acts)
     which = req.get("model", "edited")
     if which not in ("original", "edited", "both"):
         raise Bad('"model" must be "original", "edited" or "both"')
@@ -233,10 +234,98 @@ def generate(args, req, ckpt_edit):
             for r in recs:
                 f.write(json.dumps(r) + "\n")
         results[name] = recs
+    acts_info = None
+    if acts:
+        acts_info = {}
+        for name in names:
+            sub = os.path.join(args.out, "gen_acts", name) if len(names) > 1 else os.path.join(args.out, "gen_acts")
+            acts_info[name] = generation_activations(models[name], items, results[name], acts, sub)
     summary = {"ok": True, "type": "generate", "model": which, **({"summary": summarise(results[names[0]])} if len(names) == 1 else
                {"original": summarise(results["original"]), "edited": summarise(results["edited"]), "paired": paired(results["original"], results["edited"])})}
     summary["files"] = sorted(f for f in os.listdir(args.out) if not f.startswith("."))
+    if acts_info is not None:
+        summary["activations"] = acts_info if len(names) > 1 else acts_info[names[0]]
     return summary
+
+
+# ------------------------------------------------------------------ activations of generated answers
+ACT_ANSWER_TOKENS = 8192
+
+
+def check_activations(a):
+    if not isinstance(a, dict):
+        raise Bad('"activations" must be {"layers": [0..24], "mlp": true or false}')
+    layers = a.get("layers")
+    if not isinstance(layers, list) or not layers or not all(isinstance(l, int) and 0 <= l <= 24 for l in layers):
+        raise Bad('"activations": "layers" must be a non-empty list of layer indices 0..24')
+    if len(set(layers)) != len(layers):
+        raise Bad('"activations": repeated layer index')
+    return {"layers": layers, "mlp": bool(a.get("mlp", False))}
+
+
+def generation_activations(ckpt, items, recs, acts, out):
+    """For every generated answer: the residual stream at the requested layers (0 = embeddings, l = after layer l) at the
+    last prompt token and averaged over the answer's first 8,192 tokens; with "mlp", the down_proj inputs of the MLPs
+    of those layers that have one (layers[l] for l < 24), the same two ways. One teacher-forced pass per answer over
+    prompt + answer (the answer re-tokenized from its text). Writes float16 .npy files and index.json under `out`."""
+    import numpy as np
+    import torch
+    from transformers import AutoModelForCausalLM, AutoTokenizer
+
+    tok = AutoTokenizer.from_pretrained(ckpt)
+    dev = "cuda" if torch.cuda.is_available() else "cpu"
+    model = AutoModelForCausalLM.from_pretrained(ckpt, dtype=torch.bfloat16).to(dev).eval()
+    layers = acts["layers"]
+    n_layers = len(model.model.layers)
+    mlp_layers = [l for l in layers if l < n_layers] if acts["mlp"] else []
+    H, I, N = model.config.hidden_size, model.config.intermediate_size, len(recs)
+    hp = np.zeros((N, len(layers), H), np.float16)
+    ha = np.zeros((N, len(layers), H), np.float16)
+    mp = np.zeros((N, len(mlp_layers), I), np.float16)
+    ma = np.zeros((N, len(mlp_layers), I), np.float16)
+    captured = {}
+    hooks = []
+    for l in mlp_layers:
+        def pre(mod, inp, l=l):
+            captured[l] = inp[0][0]
+        hooks.append(model.model.layers[l].mlp.down_proj.register_forward_pre_hook(pre))
+    answer_lens = []
+    with torch.no_grad():
+        for i, (it, r) in enumerate(zip(items, recs)):
+            prompt = tok.apply_chat_template([{"role": "user", "content": it["user"]}], tokenize=False, add_generation_prompt=True,
+                                             enable_thinking=True)
+            p_ids = tok(prompt, add_special_tokens=False)["input_ids"]
+            a_ids = tok(r["text"], add_special_tokens=False)["input_ids"][:ACT_ANSWER_TOKENS]
+            P, A = len(p_ids), len(a_ids)
+            answer_lens.append(A)
+            out_ = model(torch.tensor([p_ids + a_ids], device=dev), output_hidden_states=True)
+            for j, l in enumerate(layers):
+                h = out_.hidden_states[l][0]
+                hp[i, j] = h[P - 1].float().cpu().numpy()
+                if A:
+                    ha[i, j] = h[P:P + A].float().mean(0).cpu().numpy()
+            for j, l in enumerate(mlp_layers):
+                m = captured[l]
+                mp[i, j] = m[P - 1].float().cpu().numpy()
+                if A:
+                    ma[i, j] = m[P:P + A].float().mean(0).cpu().numpy()
+    for h in hooks:
+        h.remove()
+    del model
+    if dev == "cuda":
+        torch.cuda.empty_cache()
+    os.makedirs(out, exist_ok=True)
+    files = {"hidden_last_prompt": hp, "hidden_mean_answer": ha}
+    if mlp_layers:
+        files.update({"mlp_last_prompt": mp, "mlp_mean_answer": ma})
+    for k, v in files.items():
+        np.save(os.path.join(out, k + ".npy"), v)
+    index = {"layers": layers, "mlp_layers": mlp_layers, "answer_tokens_averaged": answer_lens, "max_answer_tokens": ACT_ANSWER_TOKENS,
+             "files": {k + ".npy": list(v.shape) for k, v in files.items()},
+             "rows": [{"row": i, "key": r["key"], "sample": r["sample"], "correct": r["correct"], "failure": r["failure"],
+                       "finish": r["finish"], "tokens": r["tokens"]} for i, r in enumerate(recs)]}
+    json.dump(index, open(os.path.join(out, "index.json"), "w"), indent=1)
+    return {"files": index["files"], "layers": layers, "mlp_layers": mlp_layers}
 
 
 # ------------------------------------------------------------------ teacher-forced reads

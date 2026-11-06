@@ -135,6 +135,13 @@ def forward():
             src = os.path.join(out, f)
             if work and os.path.exists(src):
                 shutil.copyfile(src, os.path.join(work, f"gen_{k}" + f[3:]))
+        acts = os.path.join(out, "gen_acts")
+        if work and os.path.isdir(acts):  # the published place: /work/gen_<k>_acts/ (one folder per model with "both")
+            dst = os.path.join(work, f"gen_{k}_acts")
+            shutil.copytree(acts, dst, dirs_exist_ok=True)
+            res.setdefault("activations", {})
+            if isinstance(res["activations"], dict):
+                res["activations"]["dir"] = f"/work/gen_{k}_acts/"
     return res
 
 
