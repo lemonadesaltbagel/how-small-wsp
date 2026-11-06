@@ -2,13 +2,15 @@
 # Event stream for a Monitor: episode milestones (every 5 passes, new edits, errors, end) and conformance results.
 #   progress_monitor.sh <episode log>... (logs/opus_s1.log ...)      (bash 3.2 compatible: no associative arrays)
 cd "$(dirname "$0")/.."
-st=$(mktemp -d)
+st=logs/.monitor_state   # persistent: a re-armed monitor resumes where the last one stopped
+mkdir -p "$st"
 field() { echo "$1" | sed -n "s/.*$2 \([0-9]*\)[\/ ].*/\1/p"; }
 for f in "$@"; do
-  k=$(basename "$f" .log); L=$(tail -n 1 "$f" 2>/dev/null)
-  wc -l < "$f" | tr -d ' ' > "$st/$k.n"; field "$L" forward > "$st/$k.p"; field "$L" edits > "$st/$k.e"
+  k=$(basename "$f" .log)
+  [ -f "$st/$k.n" ] || { echo 0 > "$st/$k.n"; echo 0 > "$st/$k.p"; echo 0 > "$st/$k.e"; }
 done
-b=$(grep -c config logs/conformance.log 2>/dev/null || echo 0)
+[ -f "$st/conformance.n" ] || echo 0 > "$st/conformance.n"
+b=$(cat "$st/conformance.n")
 while true; do
   for f in "$@"; do
     k=$(basename "$f" .log); n=$(cat "$st/$k.n"); c=$(wc -l < "$f" | tr -d ' ')
@@ -25,7 +27,7 @@ while true; do
   cb=$(grep -c config logs/conformance.log 2>/dev/null || echo 0)
   if [ "$cb" -gt "$b" ]; then
     grep config logs/conformance.log | tail -n +$(( b + 1 )) | cut -c1-300
-    echo "conformance elapsed_min=$(( ($(date +%s) - $(cat logs/conformance.start)) / 60 ))"; b=$cb
+    echo "conformance elapsed_min=$(( ($(date +%s) - $(cat logs/conformance.start)) / 60 ))"; b=$cb; echo "$b" > "$st/conformance.n"
   fi
   sleep 60
 done
