@@ -40,3 +40,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 ### Scripted-solver floor (KidIkaros/wsp-reproduction)
 - Their "independent diagnosis" edit is not fully LLM-free information-wise: it uses the paper's layers (15, 19), 64 neurons per layer and strength 6 (recovered from the released p50c edit) and only re-derives the loop direction (mean MLP-output difference looping vs finished transcripts; cos 0.35/0.45 with Astra's). Evaluated by them only on 18 problems.
 - Plan: score their released checkpoint `KidIkaros/qwen3.5-0.8b-loop-fix` on MATH-500 with our scorer (one eval). Report as "scripted floor, given the paper's localisation".
+- Target-pass throughput, smoke pass 1 (RTX PRO 6000, target worker at 25 % GPU memory beside the idle 27B editor): 255 generations, mean 27,891 tokens, 82.7 % cut at 32,768 → ~7.1M tokens in ~27 min ≈ 4.4k tok/s. A full 512-answer pass would take ~55 min at this share (authors: "up to about half an hour").
