@@ -45,7 +45,7 @@ def ssh_base(c):
 
 def rsync(c, src, dst):
     e = f"ssh -i {shlex.quote(c['key'])} -p {c['port']} -o StrictHostKeyChecking=accept-new -o BatchMode=yes"
-    subprocess.run(["rsync", "-a", "--partial", "-e", e, src, dst], check=True, capture_output=True, text=True)
+    subprocess.run(["rsync", "-az", "--partial", "-e", e, src, dst], check=True, capture_output=True, text=True)
 
 
 def edited_names(run_dir):
