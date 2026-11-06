@@ -36,3 +36,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 
 ### Open-weight backend smoke test
 - Qwen3.5-27B (bf16) served by vLLM 0.33 on an RTX PRO 6000 (96 GB) pod, `--reasoning-parser qwen3`, max_model_len 196,608, 70 % GPU memory (KV cache 210k tokens); the target worker shares the GPU at 25 %. Reasoning comes back separately from the answer, so code inside the thinking is never parsed as a tool call.
+
+### Scripted-solver floor (KidIkaros/wsp-reproduction)
+- Their "independent diagnosis" edit is not fully LLM-free information-wise: it uses the paper's layers (15, 19), 64 neurons per layer and strength 6 (recovered from the released p50c edit) and only re-derives the loop direction (mean MLP-output difference looping vs finished transcripts; cos 0.35/0.45 with Astra's). Evaluated by them only on 18 problems.
+- Plan: score their released checkpoint `KidIkaros/qwen3.5-0.8b-loop-fix` on MATH-500 with our scorer (one eval). Report as "scripted floor, given the paper's localisation".
