@@ -59,3 +59,6 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 
 **Conformance passes: all four published configs reproduce within noise** (each within ~1.3 SE of the published 4-sample mean). Total 383 min on the 5070 Ti.
 - Throughput: 15.2M generated tokens in 107 min ≈ 2.4k tok/s on the 5070 Ti → one full 512-answer pass of the unedited model ≈ 1.8 h here.
+
+### DeepSeek-flash seed 1 (started 2026-11-07 03:01; target passes on an RTX 6000 Ada pod, $0.99/h — no 5090/4090/PRO 6000/L40S/A100 in secure stock)
+- Pilot cost, first 9 turns: ¥0.09 (balance 65.20 → 65.11; ¥0.01 granularity) for 17k uncached input + 74k cached input + 16k output tokens. Rough rates consistent with this (not published on the docs pages we could read): miss ≈ ¥2/M, hit ≈ ¥0.2/M, output ≈ ¥3/M → a p50c-sized episode (6.5M uncached, 80M cached, 2.9M output) ≈ ¥38 ≈ $5. Re-measure at ~50 turns.
