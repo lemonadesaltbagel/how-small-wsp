@@ -30,6 +30,8 @@ const MAX_REFUSAL_STREAK: u32 = 3;
 const MAX_BACKOFF_S: f64 = 1800.0;
 /// Characters of /work/notes.md shown in a handoff.
 const MAX_NOTES_CHARS: usize = 20_000;
+/// empty replies in a row before the run ends
+const MAX_EMPTY_STREAK: u32 = 3;
 const MAX_SUBMISSION_BYTES: u64 = 2_000_000;
 
 #[derive(Clone, Debug, Default, PartialEq, Serialize, Deserialize)]
@@ -69,6 +71,9 @@ pub struct State {
     /// tool blocks sent back for a missing explanation, and blocks run without one after the streak limit
     pub rationale_rejects: u32,
     pub rationale_missing_run: u32,
+    /// empty replies in a row (an empty reply is not a final answer)
+    pub empty_streak: u32,
+    pub empty_replies: u32,
 }
 
 /// Machine-level settings (not part of a task).
@@ -607,6 +612,23 @@ impl Run {
     }
 
     fn act(&mut self, text: &str) -> Result<()> {
+        if text.trim().is_empty() {
+            // e.g. an open model that emitted its end-of-turn token early: not a final answer
+            self.state.empty_replies += 1;
+            self.state.empty_streak += 1;
+            if self.state.empty_streak > MAX_EMPTY_STREAK {
+                return self.finalize("", "the editor sent empty replies");
+            }
+            self.state.protocol_errors += 1;
+            self.state.next_message = format!(
+                "Your last reply was empty (no text and no tool block), so nothing was run and nothing was counted. \
+                 Continue with your next step. (If you were typing the chat template's special tokens, build those strings \
+                 in Python from the predefined constants instead.)\n{}",
+                self.budget_line()
+            );
+            return Ok(());
+        }
+        self.state.empty_streak = 0;
         let action = parse(text, &self.spec.enabled_tools());
         if let Action::Tool { tag, .. } = &action {
             if let Some(m) = self.rationale_refusal(&tag.clone(), text)? {
@@ -2023,5 +2045,23 @@ out_dir = "attn/r{k}"
         assert_eq!(r.state.rationale_missing_run, 1);
         assert_eq!(r.state.passes_used.values().sum::<u32>(), 2);
         assert_eq!(Run::explanation_words("Two words.\n```python\nx = 1 and more words\n```\nthree more words"), 5);
+    }
+
+    #[test]
+    fn an_empty_reply_is_a_protocol_error_not_a_final_answer() {
+        let d = tempfile::tempdir().unwrap();
+        let spec = task(d.path(), "");
+        let ed = script(&["", "   \n", "Final: done."]);
+        let mut r = Run::create(spec, &d.path().join("run"), ed, env()).unwrap();
+        r.run_to_end().unwrap();
+        assert_eq!(r.state.empty_replies, 2);
+        assert_eq!(r.state.end_reason.as_deref(), Some("final answer"));
+        assert!(turn_prompt(&r, 2).contains("Your last reply was empty"), "{}", turn_prompt(&r, 2));
+        let d2 = tempfile::tempdir().unwrap();
+        let spec2 = task(d2.path(), "");
+        let mut r2 = Run::create(spec2, &d2.path().join("run"), script(&["", "", "", "", "x"]), env()).unwrap();
+        r2.run_to_end().unwrap();
+        assert_eq!(r2.state.end_reason.as_deref(), Some("the editor sent empty replies"));
+        assert_eq!(r2.state.turn, 4);
     }
 }

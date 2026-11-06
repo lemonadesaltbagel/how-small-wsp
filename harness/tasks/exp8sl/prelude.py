@@ -44,6 +44,10 @@ def drop_edit(name, reason=""):
 tok = Tokenizer.from_file("/model/tokenizer.json")
 
 
+# --- scale-ladder addition: the evaluation prompt's wrapper (editors never need to type the template's special tokens) ---
+EVAL_PREFIX = "<|im_start|>user\n"
+EVAL_SUFFIX = "\nPlease reason step by step, and put your final answer within \\boxed{}.<|im_end|>\n<|im_start|>assistant\n<think>\n"
+
 # --- scale-ladder addition: every save_edit needs a reason (kept in the ledger with the edit) ---
 _save_edit_v3 = save_edit
 MIN_REASON_WORDS = 8

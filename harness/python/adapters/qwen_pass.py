@@ -112,6 +112,35 @@ def run_worker(args_list, stage, out_dir, worker=WORKER):
     return json.loads(lines[-1])
 
 
+TEXTS_FILE_MAX_BYTES = 64_000_000
+
+
+def read_texts_file(guest_path):
+    """(texts, error) for a "texts_file" request: a JSON list of strings at a path under /work (the agent's view),
+    read from the run's work folder. Symlinks and paths outside /work are refused."""
+    work = os.environ.get("OPENWISH_WORK")
+    if not work or not isinstance(guest_path, str):
+        return None, '"texts_file" must be a path under /work'
+    rel = os.path.normpath(guest_path)
+    if not rel.startswith("/work/"):
+        return None, '"texts_file" must be a path under /work'
+    host = os.path.join(work, rel[len("/work/"):])
+    real_work = os.path.realpath(work)
+    if os.path.islink(host) or not os.path.realpath(host).startswith(real_work + os.sep):
+        return None, '"texts_file" must be a regular file under /work (no symlinks)'
+    if not os.path.isfile(host):
+        return None, f"no file {guest_path}"
+    if os.path.getsize(host) > TEXTS_FILE_MAX_BYTES:
+        return None, f"{guest_path} is larger than {TEXTS_FILE_MAX_BYTES:,} bytes"
+    try:
+        texts = json.load(open(host, encoding="utf-8"))
+    except (ValueError, UnicodeDecodeError) as e:
+        return None, f"{guest_path} is not valid JSON ({e})"
+    if not isinstance(texts, list) or not all(isinstance(t, str) for t in texts):
+        return None, f"{guest_path} must hold a JSON list of strings"
+    return texts, None
+
+
 def forward():
     req_path = os.environ["OPENWISH_REQ"]
     try:
@@ -123,6 +152,16 @@ def forward():
         return {"ok": False, "error": 'the request needs "type": "generate" or "teacher_forced"'}
     out = os.environ["OPENWISH_OUT"]
     with tempfile.TemporaryDirectory() as tmp:
+        if kind == "teacher_forced" and "texts_file" in req:
+            # texts written from Python to a JSON file under /work (texts with the template's special tokens)
+            texts, err = read_texts_file(req.pop("texts_file"))
+            if err:
+                return {"ok": False, "error": err}
+            if "texts" in req or "chats" in req:
+                return {"ok": False, "error": 'give one of "texts", "texts_file" or "chats"'}
+            req["texts"] = texts
+            req_path = os.path.join(tmp, "req.json")
+            json.dump(req, open(req_path, "w"))
         stage = {"edits": os.path.join(tmp, "edits"), "req": req_path}
         stage["tag"] = stage_edits(os.environ["OPENWISH_NET"], edited_names(os.environ["OPENWISH_RUN_DIR"]), stage["edits"])
         args = [kind, "--model", "{model}", "--edits", "{edits}", "--req", "{req}", "--out", "{out}", "--practice", "{practice}"]
@@ -152,6 +191,7 @@ def evaluate(a):
     results = {}
     with tempfile.TemporaryDirectory() as tmp:
         stage = {"edits": os.path.join(tmp, "edits")}
+        os.makedirs(stage["edits"], exist_ok=True)  # an empty folder for an unedited run (the remote rsync needs one)
         stage["tag"] = stage_edits(net, names, stage["edits"]) if names else "base"
         for s in a.sets.split(","):
             out = os.path.join(run or tmp, "eval", f"qwen_{s}")
