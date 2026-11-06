@@ -13,11 +13,11 @@ pg=$(ps -o pgid= -p $$ | tr -d ' ')
     if [ "$a" -lt "$MIN_MB" ]; then echo "$(date +%H:%M:%S) WATCHDOG: MemAvailable ${a} MB < ${MIN_MB}; killing local queue (pgid $pg)" >> "$log"; kill -TERM -"$pg"; exit; fi
   done ) &
 step() { echo "$(date +%H:%M:%S) == $*" >> "$log"; }
-step "GSM8K, unedited base (published: 13.8 %, 2 samples)"
-python3 scripts/exp8_conformance.py base --set gsm8k >> "$log" 2>&1
+# each step runs only if the previous one succeeded (an empty edit folder would silently evaluate the base model)
 step "KidIkaros scripted-solver checkpoint -> edit folder"
-[ -d assets/exp8/published/kidikaros ] || assets/venvs/sandbox/bin/python -I ../scripts/kidikaros_edits.py >> "$log" 2>&1
+rm -rf assets/exp8/published/kidikaros assets/exp8/published/kidikaros.partial
+assets/venvs/sandbox/bin/python -I ../scripts/kidikaros_edits.py >> "$log" 2>&1 || { step "conversion failed; stopping"; exit 1; }
 step "MATH-500, KidIkaros scripted floor"
-python3 scripts/exp8_conformance.py kidikaros >> "$log" 2>&1
+python3 scripts/exp8_conformance.py kidikaros >> "$log" 2>&1 || { step "evaluation failed"; exit 1; }
 step "done"
 kill %1 2>/dev/null
