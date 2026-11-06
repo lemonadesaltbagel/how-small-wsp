@@ -20,7 +20,7 @@ guest = "/practice"
 [python]
 runs = 300
 timeout_s = 900
-mem_gb = 20
+mem_gb = 11
 max_out = 10000
 prelude = "prelude.py"
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run ON a pod: prepare the exp8 target-model worker files under /root/openwish (the layout qwen_pass.py's remote
 # mode expects: model/, practice/, eval/, qwen_worker.py) by downloading everything on the pod (home upload is slow).
-# Needs /root/vllm-env (vLLM). Prints sha256 of the text checkpoint and eval sets; compare with WSL before use:
+# Installs /root/vllm-env (vLLM) if missing. Prints sha256 of the text checkpoint and eval sets; compare with WSL before use:
 #   68194c7beef8da37beaddb33b02a3b076f0930d81b55808be59998ba10cfc9fb  model.safetensors
 #   35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132  math500.jsonl
 set -euo pipefail
@@ -9,6 +9,11 @@ R=/root/openwish
 REV=2fc06364715b967f1860aea9cf38778875588b17
 export PATH=/root/.local/bin:/root/vllm-env/bin:$PATH
 mkdir -p $R/model $R/practice $R/eval $R/src
+if [ ! -x /root/vllm-env/bin/vllm ]; then
+  command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null
+  uv venv -q -p 3.12 /root/vllm-env && VIRTUAL_ENV=/root/vllm-env uv pip install -q vllm
+fi
+command -v rsync >/dev/null || { apt-get update -qq >/dev/null; apt-get install -y -qq rsync >/dev/null; }
 VIRTUAL_ENV=/root/vllm-env uv pip install -q transformers safetensors math-verify huggingface_hub numpy
 [ -d $R/src/lm_understand-logs ] || git clone -q --depth 1 https://github.com/RikiyaT/lm_understand-logs.git $R/src/lm_understand-logs
 L=$R/src/lm_understand-logs/exp8_math
