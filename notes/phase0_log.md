@@ -89,3 +89,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - Gaps between passes: median 3.0 / 2.5 min, longest 17 min, none over 30 min (34 / 32 gaps). → Creating pods on demand (≥ 8–10 min setup + scarce secure stock) or stop/start (≥ 3–5 min boot + engine start) would add more waiting than the gaps they save. Not feasible.
 - Copy-back of large teacher-forced outputs runs at ~3 MB/s (home link): a 2 GB output took ~11 min. Useful (non-padding) fraction 45–94 %; rsync -z enabled (small gain, no risk).
 - Real savings left: (1) run one of the two parallel episodes on the free local 5070 Ti (≈2× slower passes; only when memory headroom ≥ 4 GB holds); (2) two episodes sharing one pod GPU (combined demand ~150 % of a GPU → each episode ~1.5× slower, pod cost per episode about halved); (3) the disk fix already removed ~1 h of failed passes per pod.
+
+### Opus seed 2 breakthrough (2026-11-07 ~10:00, turn 279, pass ~26/50)
+- Paired practice pass (n=256): 12.9 % → 42.2 % (+29.3 ± 3.2), cut 88 % → 51 % (earlier best +8.2).
+- Its "V2": E1 = W − 3·u uᵀ W on the 9 output writers of layers 8–14 (u = repetition direction at the layer-15 input) plus projecting out a "doubt" direction (layer-19 input, "Wait"-line starts minus others). Being tested on top ("T1"): project out a line-level "restate rather than explore" direction from writers in layers 11–18. Dense rank-1 projections over 19 tensors → **~7 % of all weights changed** (vs s1's 0.42 %, Astra p50c's 0.016 %). Closest in style to Astra's p10c.
+- So far three different mechanisms for the same loop pathology: Astra p50c (MLP columns, L15/L19), Opus s1 (attention output gates of copy heads, L15/19/23), Opus s2 (dense direction projections, L8–18).
