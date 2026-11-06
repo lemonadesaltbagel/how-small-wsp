@@ -33,6 +33,12 @@ while true; do
     if [ "$v" != "$old" ]; then echo "$r: infrastructure failures $old -> $v ($(grep -E "GPU worker failed|Engine core|not responding|No space left|Connection (refused|reset)|timed out" "$tj" | tail -n 1 | cut -c1-160))"; fi
     echo "$v" > "$st/$r.infra"
   done
+  # the local GPU queue (scripts/local_queue.sh)
+  if [ -f logs/local_queue.log ]; then
+    qn=$(wc -l < logs/local_queue.log | tr -d ' '); qo=$(cat "$st/localq.n" 2>/dev/null || echo "$qn")
+    [ "$qn" -gt "$qo" ] && tail -n +$(( qo + 1 )) logs/local_queue.log | grep -E "==|WATCHDOG|\"config\"|Traceback|Error|fraction_changed" | sed 's/^/localq: /' | cut -c1-300
+    echo "$qn" > "$st/localq.n"
+  fi
   cb=$(grep -c config logs/conformance.log 2>/dev/null || echo 0)
   if [ "$cb" -gt "$b" ]; then
     grep config logs/conformance.log | tail -n +$(( b + 1 )) | cut -c1-300
