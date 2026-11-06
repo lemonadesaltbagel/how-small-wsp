@@ -30,7 +30,7 @@ fi
 echo "logs at $(git -C assets/lm_understand-logs rev-parse HEAD)"
 
 step "Qwen3.5-0.8B @ $QWEN_REV"
-if [ ! -f assets/exp8/qwen35-hf/config.json ]; then
+if [ ! -f assets/exp8/qwen35-hf/model.safetensors-00001-of-00001.safetensors ]; then
   assets/venvs/sandbox/bin/hf download Qwen/Qwen3.5-0.8B --revision "$QWEN_REV" --local-dir assets/exp8/qwen35-hf
 fi
 ls -la assets/exp8/qwen35-hf
