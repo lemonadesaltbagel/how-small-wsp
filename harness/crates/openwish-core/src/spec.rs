@@ -37,6 +37,9 @@ pub struct TaskSpec {
     pub finish: FinishSpec,
     #[serde(default)]
     pub handoff: HandoffSpec,
+    /// an explanation required with every tool call (off by default)
+    #[serde(default)]
+    pub rationale: RationaleSpec,
     pub score: Option<CommandSpec>,
     /// backend defaults for this task (overridable on the command line)
     #[serde(default)]
@@ -147,6 +150,39 @@ pub struct FinishSpec {
     pub max_nudges: u32,
     /// Optional format-only validation before accepting a final reply.
     pub validation: Option<ValidationSpec>,
+    /// Per-episode editor caps (0 = no cap). When a cap is reached the run ends and the current edit is submitted.
+    /// Output tokens include reasoning; total tokens are input + cached input + output.
+    #[serde(default)]
+    pub max_editor_output_tokens: u64,
+    #[serde(default)]
+    pub max_editor_total_tokens: u64,
+    /// Only enforced when the backend reports cost.
+    #[serde(default)]
+    pub max_editor_cost_usd: f64,
+}
+
+/// An explanation rule: a reply with a tool block must explain the step in plain English outside the block.
+/// A block without enough explanation is sent back unrun and uncharged, at most `max_rejects_in_row` times in a row
+/// (then it runs, and the missing explanation is logged).
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct RationaleSpec {
+    /// words of text outside the tool block the reply needs (0 = rule off)
+    #[serde(default)]
+    pub min_words: usize,
+    /// the tools the rule applies to (empty = every tool)
+    #[serde(default)]
+    pub tools: Vec<String>,
+    #[serde(default = "d_rejects")]
+    pub max_rejects_in_row: u32,
+}
+fn d_rejects() -> u32 {
+    2
+}
+impl Default for RationaleSpec {
+    fn default() -> Self {
+        RationaleSpec { min_words: 0, tools: vec![], max_rejects_in_row: d_rejects() }
+    }
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -174,6 +210,9 @@ impl Default for FinishSpec {
             max_turns: d_turns(),
             max_nudges: d_nudges(),
             validation: None,
+            max_editor_output_tokens: 0,
+            max_editor_total_tokens: 0,
+            max_editor_cost_usd: 0.0,
         }
     }
 }

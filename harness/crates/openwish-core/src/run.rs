@@ -64,6 +64,11 @@ pub struct State {
     pub tool_free_turns: u32,
     /// tool calls a pre_tool hook blocked (not charged)
     pub hook_blocks: u32,
+    /// tool blocks sent back in a row for a missing explanation ([rationale])
+    pub rationale_streak: u32,
+    /// tool blocks sent back for a missing explanation, and blocks run without one after the streak limit
+    pub rationale_rejects: u32,
+    pub rationale_missing_run: u32,
 }
 
 /// Machine-level settings (not part of a task).
@@ -336,6 +341,11 @@ impl Run {
             self.finalize("", "turn limit reached")?;
             return Ok(Step::Done);
         }
+        if let Some(why) = self.editor_cap_reached() {
+            self.finalize("", &why)?;
+            self.save_state()?;
+            return Ok(Step::Done);
+        }
         self.take_turn()
     }
 
@@ -533,8 +543,78 @@ impl Run {
         }
     }
 
+    /// The per-episode editor cap that is reached, if any ([finish] max_editor_*).
+    fn editor_cap_reached(&self) -> Option<String> {
+        let f = &self.spec.finish;
+        let u = &self.state.usage_total;
+        if f.max_editor_output_tokens > 0 && u.output >= f.max_editor_output_tokens {
+            return Some(format!("editor output-token cap reached ({} >= {})", u.output, f.max_editor_output_tokens));
+        }
+        let total = u.context_tokens();
+        if f.max_editor_total_tokens > 0 && total >= f.max_editor_total_tokens {
+            return Some(format!("editor total-token cap reached ({total} >= {})", f.max_editor_total_tokens));
+        }
+        if f.max_editor_cost_usd > 0.0 && self.state.cost_usd >= f.max_editor_cost_usd {
+            return Some(format!("editor cost cap reached (${:.2} >= ${:.2})", self.state.cost_usd, f.max_editor_cost_usd));
+        }
+        None
+    }
+
+    /// Words of a reply outside its fenced blocks (the plain-English explanation of a tool call).
+    fn explanation_words(text: &str) -> usize {
+        let mut words = 0;
+        let mut fence: Option<usize> = None;
+        for line in text.lines() {
+            let t = line.trim_start();
+            let ticks = t.chars().take_while(|c| *c == '`').count();
+            match fence {
+                None if ticks >= 3 => fence = Some(ticks),
+                None => words += t.split_whitespace().filter(|w| w.chars().any(|c| c.is_alphabetic())).count(),
+                Some(n) if ticks >= n && t[ticks..].trim().is_empty() => fence = None,
+                Some(_) => {}
+            }
+        }
+        words
+    }
+
+    /// The [rationale] rule: Some(message) when the tool call must be sent back unrun.
+    fn rationale_refusal(&mut self, tag: &str, text: &str) -> Result<Option<String>> {
+        let r = self.spec.rationale.clone();
+        if r.min_words == 0 || !(r.tools.is_empty() || r.tools.iter().any(|t| t == tag)) {
+            return Ok(None);
+        }
+        let words = Self::explanation_words(text);
+        if words >= r.min_words {
+            self.state.rationale_streak = 0;
+            return Ok(None);
+        }
+        if self.state.rationale_streak >= r.max_rejects_in_row {
+            self.state.rationale_streak = 0;
+            self.state.rationale_missing_run += 1;
+            self.tool_log(json!({"kind": "rationale-missing", "turn": self.state.turn, "tool": tag, "words": words, "run_anyway": true}))?;
+            return Ok(None);
+        }
+        self.state.rationale_streak += 1;
+        self.state.rationale_rejects += 1;
+        self.tool_log(json!({"kind": "rationale-missing", "turn": self.state.turn, "tool": tag, "words": words, "run_anyway": false}))?;
+        Ok(Some(format!(
+            "EXPLAIN EVERY STEP: before the ```{tag} block, explain in plain English what this step does and why \
+             (at least {} words outside the block; yours had {words}). Your block was not run and nothing was charged. \
+             Send the same step again with its explanation.\n{}",
+            r.min_words,
+            self.budget_line()
+        )))
+    }
+
     fn act(&mut self, text: &str) -> Result<()> {
-        match parse(text, &self.spec.enabled_tools()) {
+        let action = parse(text, &self.spec.enabled_tools());
+        if let Action::Tool { tag, .. } = &action {
+            if let Some(m) = self.rationale_refusal(&tag.clone(), text)? {
+                self.state.next_message = m;
+                return Ok(());
+            }
+        }
+        match action {
             Action::Error(m) => {
                 self.state.protocol_errors += 1;
                 self.state.next_message = format!("{m}\n{}", self.budget_line());
@@ -1891,5 +1971,57 @@ out_dir = "attn/r{k}"
         let mut r = Run::resume(&d.path().join("run"), script(&lines), e).unwrap();
         r.run_to_end().unwrap();
         assert_eq!(read(r.dir.join("s.txt")).lines().count(), 3);
+    }
+
+    /// An editor that reports a fixed usage per reply (for the per-episode caps).
+    struct Costly {
+        inner: Scripted,
+        output: u64,
+    }
+    impl Editor for Costly {
+        fn name(&self) -> String {
+            "costly".into()
+        }
+        fn send(&mut self, m: &str, n: bool) -> std::result::Result<Reply, BackendError> {
+            let mut r = self.inner.send(m, n)?;
+            r.usage.output = self.output;
+            r.usage.input = 10;
+            Ok(r)
+        }
+        fn session(&self) -> Option<String> {
+            None
+        }
+        fn set_session(&mut self, _: Option<String>) {}
+    }
+
+    #[test]
+    fn editor_output_cap_ends_the_run_and_submits() {
+        let d = tempfile::tempdir().unwrap();
+        let spec = task(d.path(), &format!("{FWD}[finish]\nmax_editor_output_tokens = 250\n"));
+        let step = "Probe.\n```games\n{\"n\": 1}\n```";
+        let ed = Box::new(Costly { inner: Scripted::new(vec![step.into(); 10]), output: 100 });
+        let mut r = Run::create(spec, &d.path().join("run"), ed, env()).unwrap();
+        r.run_to_end().unwrap();
+        assert!(r.state.done);
+        assert_eq!(r.state.turn, 3, "the cap is checked before each turn");
+        assert!(r.state.end_reason.as_deref().unwrap().contains("output-token cap"), "{:?}", r.state.end_reason);
+        assert!(r.dir.join("final/net").exists());
+    }
+
+    #[test]
+    fn rationale_rule_sends_unexplained_blocks_back_then_runs_after_the_streak() {
+        let d = tempfile::tempdir().unwrap();
+        let spec = task(d.path(), &format!("{FWD}[rationale]\nmin_words = 5\nmax_rejects_in_row = 2\n"));
+        let bare = "```games\n{\"n\": 1}\n```";
+        let explained = "I probe the games now to check the effect of my edit.\n```games\n{\"n\": 1}\n```";
+        let ed = script(&[bare, explained, bare, bare, bare, "done"]);
+        let mut r = Run::create(spec, &d.path().join("run"), ed, env()).unwrap();
+        r.run_to_end().unwrap();
+        assert!(turn_prompt(&r, 2).contains("EXPLAIN EVERY STEP"), "{}", turn_prompt(&r, 2));
+        // turn 1 refused, 2 ran, 3 and 4 refused, 5 ran anyway (streak limit)
+        assert_eq!(r.state.rationale_rejects, 3);
+        assert_eq!(r.state.rationale_missing_run, 1);
+        assert_eq!(r.state.passes_used.values().sum::<u32>(), 2);
+        assert_eq!(Run::explanation_words("Two words.\n```python\nx = 1 and more words\n```\nthree more words"), 5);
     }
 }
