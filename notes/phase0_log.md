@@ -62,3 +62,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 
 ### DeepSeek-flash seed 1 (started 2026-11-07 03:01; target passes on an RTX 6000 Ada pod, $0.99/h — no 5090/4090/PRO 6000/L40S/A100 in secure stock)
 - Pilot cost, first 9 turns: ¥0.09 (balance 65.20 → 65.11; ¥0.01 granularity) for 17k uncached input + 74k cached input + 16k output tokens. Rough rates consistent with this (not published on the docs pages we could read): miss ≈ ¥2/M, hit ≈ ¥0.2/M, output ≈ ¥3/M → a p50c-sized episode (6.5M uncached, 80M cached, 2.9M output) ≈ ¥38 ≈ $5. Re-measure at ~50 turns.
+
+### Incident: Opus target pods out of disk (found by the user, 2026-11-07 ~03:40)
+- Both 60 GB pods reached 94 % / 98 %: synced pass outputs never deleted on the pod (~10–11 GB of teacher-forced arrays), one 1.6 GB edited checkpoint per distinct edit (4–6 kept), uv cache (~19 GB with vLLM wheels). vLLM then failed to start ("Engine core initialization failed"): 6 uncharged failed passes across the two seeds (s1 turns 112–116, s2 turns 109–113) plus one SSH timeout; the editors lost those turns but no budget.
+- Fixed: verified every pass folder was already on WSL (s1 10, s2 14), cleaned the pods (→ 43 % / 40 %); `qwen_pass.py` now deletes the remote pass folder after syncing it back; `qwen_worker.py` keeps only the 2 newest edited checkpoints; the progress monitor alerts on any increase of `failed_requests` (failed passes are uncharged, so they never appear in the status line). New pods: use ≥100 GB disk.
