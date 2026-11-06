@@ -358,6 +358,15 @@ def teacher_forced(args, req, ckpt):
     topk = int(ret.get("topk", 0) or 0)
     if topk > 50:
         raise Bad("topk is at most 50")
+    # the prompt's limit: at most 6 GB of output per pass (right-padded arrays; checked before anything is allocated)
+    T0, n0 = max(len(x) for x in ids), len(ids)
+    cfg = json.load(open(os.path.join(ckpt, "config.json")))
+    cfg = cfg.get("text_config", cfg)
+    per_tok = 2 * (cfg["hidden_size"] * len(hs_layers) + cfg["intermediate_size"] * len(mlp_layers)) + 12 * topk + 8 + 4
+    est = n0 * T0 * per_tok
+    if est > 6e9:
+        raise Bad(f"this request would return about {est / 1e9:.1f} GB (arrays are right-padded to the longest text); "
+                  "at most 6 GB per pass: request fewer layers, fewer or shorter texts")
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     model = AutoModelForCausalLM.from_pretrained(ckpt, dtype=torch.bfloat16, attn_implementation="eager" if attn else None).to(dev).eval()
     layers = model.model.layers
