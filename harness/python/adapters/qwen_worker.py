@@ -420,7 +420,9 @@ def teacher_forced(args, req, ckpt):
                 outs[f"mlp_act_{l}"][i, :L] = captured[l]
             if attn:
                 for l in attn:
-                    a = r.attentions[l]
+                    # transformers records attention only in the full-attention layers (Qwen3_5Attention): the tuple has
+                    # one entry per FULL_ATTENTION layer, in order, not one per layer (the authors fixed this mid-run, notice 002)
+                    a = r.attentions[FULL_ATTENTION.index(l)] if len(r.attentions) == len(FULL_ATTENTION) else r.attentions[l]
                     if a is None:
                         raise Bad(f"layer {l} returned no attention probabilities")
                     attn_out.setdefault(l, []).append(a[0].float().cpu().numpy().astype(np.float16))
