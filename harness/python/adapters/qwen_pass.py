@@ -7,6 +7,9 @@ Run `qwen_pass.py --setup-remote` once to copy the model, practice and evaluatio
 
 forward pass (harness):  OPENWISH_REQ, OPENWISH_NET, OPENWISH_OUT, OPENWISH_RUN_DIR, OPENWISH_WORK, OPENWISH_PASS
 scorer:                  qwen_pass.py --evaluate --sets math500 --limit 500 [--samples 1]   (OPENWISH_RUN, OPENWISH_FINAL_NET)
+hold-out scorer:         qwen_pass.py --evaluate --sets mmlupro1k,gpqa,ifeval [--limit N] [--samples K]
+                         (python/adapters/holdout_eval.py; defaults: all items, the authors' 1 / 4 / 2 samples;
+                         data from `holdout_eval.py prepare` in assets/exp8/holdout; docs/holdout.md)
 Prints one JSON line."""
 import argparse
 import hashlib
@@ -22,6 +25,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 A = os.path.join(ROOT, "assets", "exp8")
 WORKER = os.path.join(ROOT, "python", "adapters", "qwen_worker.py")
 LOCAL_PY = os.path.join(ROOT, "assets", "venvs", "qwen", "bin", "python")
+HOLDOUT = os.path.join(ROOT, "python", "adapters", "holdout_eval.py")
+HOLDOUT_SETS = ("mmlupro1k", "gpqa", "ifeval")
 
 
 def remote_cfg():
@@ -65,26 +70,31 @@ def stage_edits(net_dir, names, dst):
     return h.hexdigest()[:16]
 
 
-def run_worker(args_list, stage, out_dir):
-    """Run the worker with `args_list` (paths as placeholders {model} {edits} {out} {practice} {data} {req}); returns its JSON."""
+def run_worker(args_list, stage, out_dir, worker=WORKER):
+    """Run the worker with `args_list` (paths as placeholders {model} {edits} {out} {practice} {data} {holdout} {req});
+    returns its JSON. `worker` is qwen_worker.py or holdout_eval.py (which runs qwen_worker.py's `_one` beside it)."""
     c = remote_cfg()
     if c is None:
         local = {"model": os.path.join(A, "qwen35-text"), "practice": os.path.join(A, "practice"), "data": os.path.join(A, "eval"),
-                 "edits": stage["edits"], "out": out_dir, "req": stage.get("req", "")}
-        cmd = [LOCAL_PY, WORKER] + [a.format(**local) for a in args_list] + ["--work", os.path.join(A, "work")]
+                 "holdout": os.path.join(A, "holdout"), "edits": stage["edits"], "out": out_dir, "req": stage.get("req", "")}
+        cmd = [LOCAL_PY, worker] + [a.format(**local) for a in args_list] + ["--work", os.path.join(A, "work")]
         p = subprocess.run(cmd, capture_output=True, text=True)
         tail = p.stderr[-3000:]
     else:
         r = c["root"]
         tag = os.path.basename(out_dir.rstrip("/")) + "_" + stage["tag"]
-        rem = {"model": f"{r}/model", "practice": f"{r}/practice", "data": f"{r}/eval", "edits": f"{r}/edits/{stage['tag']}",
-               "out": f"{r}/out/{tag}", "req": f"{r}/req/{tag}.json"}
+        rem = {"model": f"{r}/model", "practice": f"{r}/practice", "data": f"{r}/eval", "holdout": f"{r}/holdout",
+               "edits": f"{r}/edits/{stage['tag']}", "out": f"{r}/out/{tag}", "req": f"{r}/req/{tag}.json"}
         subprocess.run(ssh_base(c) + [f"mkdir -p {r}/edits/{stage['tag']} {r}/req {r}/out && rm -rf {r}/out/{tag}"], check=True, capture_output=True)
         rsync(c, stage["edits"] + "/", f"{c['host']}:{rem['edits']}/")
         if stage.get("req"):
             rsync(c, stage["req"], f"{c['host']}:{rem['req']}")
         rsync(c, WORKER, f"{c['host']}:{r}/qwen_worker.py")
-        argv = [c["python"], f"{r}/qwen_worker.py"] + [a.format(**rem) for a in args_list] + ["--work", f"{r}/work"]
+        if worker != WORKER:      # the hold-out scorer, its item ids and the vendored IFEval checkers, beside qwen_worker.py
+            for f in (worker, os.path.join(os.path.dirname(worker), "holdout_ids.json")):
+                rsync(c, f, f"{c['host']}:{r}/{os.path.basename(f)}")
+            rsync(c, os.path.join(os.path.dirname(worker), "instruction_following_eval") + "/", f"{c['host']}:{r}/instruction_following_eval/")
+        argv = [c["python"], f"{r}/{os.path.basename(worker)}"] + [a.format(**rem) for a in args_list] + ["--work", f"{r}/work"]
         # the remote venv's bin must be on PATH: vLLM's kernel builds call tools installed there (ninja)
         env = f"export PATH={shlex.quote(os.path.dirname(c['python']))}:$PATH VLLM_USE_FLASHINFER_SAMPLER=0; "
         p = subprocess.run(ssh_base(c) + [env + " ".join(shlex.quote(x) for x in argv)], capture_output=True, text=True)
@@ -136,8 +146,13 @@ def evaluate(a):
         stage["tag"] = stage_edits(net, names, stage["edits"]) if names else "base"
         for s in a.sets.split(","):
             out = os.path.join(run or tmp, "eval", f"qwen_{s}")
-            args = ["evaluate", "--model", "{model}", "--edits", "{edits}", "--set", s, "--data", "{data}", "--limit", str(a.limit),
-                    "--samples", str(a.samples), "--out", "{out}"]
+            if s in HOLDOUT_SETS:
+                args = ["evaluate", "--model", "{model}", "--edits", "{edits}", "--set", s, "--data", "{holdout}", "--out", "{out}"]
+                args += (["--limit", str(a.limit)] if a.limit is not None else []) + (["--samples", str(a.samples)] if a.samples else [])
+                results[s] = run_worker(args, stage, out, worker=HOLDOUT)
+                continue
+            args = ["evaluate", "--model", "{model}", "--edits", "{edits}", "--set", s, "--data", "{data}",
+                    "--limit", str(500 if a.limit is None else a.limit), "--samples", str(a.samples or 1), "--out", "{out}"]
             results[s] = run_worker(args, stage, out)
     ok = all(r.get("ok") for r in results.values())
     first = next(iter(results.values()))
@@ -153,6 +168,11 @@ def setup_remote():
     for src, dst in ((os.path.join(A, "qwen35-text") + "/", f"{r}/model/"), (os.path.join(A, "practice") + "/", f"{r}/practice/"),
                      (os.path.join(A, "eval") + "/", f"{r}/eval/"), (WORKER, f"{r}/qwen_worker.py")):
         rsync(c, src, f"{c['host']}:{dst}")
+    hd = os.path.join(A, "holdout")
+    if os.path.exists(os.path.join(hd, "manifest.json")):      # the prepared hold-out sets and NLTK data (not raw/)
+        subprocess.run(ssh_base(c) + [f"mkdir -p {r}/holdout && chmod 755 {r}/holdout"], check=True)
+        for f in ("manifest.json", "mmlupro1k.jsonl", "gpqa.jsonl", "ifeval.jsonl", "nltk_data"):
+            rsync(c, os.path.join(hd, f) + ("/" if f == "nltk_data" else ""), f"{c['host']}:{r}/holdout/{f}" + ("/" if f == "nltk_data" else ""))
     return {"ok": True, "remote": c["host"], "root": r}
 
 
@@ -161,8 +181,8 @@ if __name__ == "__main__":
     ap.add_argument("--evaluate", action="store_true")
     ap.add_argument("--setup-remote", action="store_true")
     ap.add_argument("--sets", default="math500")
-    ap.add_argument("--limit", type=int, default=500)
-    ap.add_argument("--samples", type=int, default=1)
+    ap.add_argument("--limit", type=int, default=None, help="default: 500 for math500 / gsm8k, all items for the hold-out sets")
+    ap.add_argument("--samples", type=int, default=None, help="default: 1 for math500 / gsm8k, the authors' counts for the hold-out sets")
     a = ap.parse_args()
     try:
         res = setup_remote() if a.setup_remote else evaluate(a) if a.evaluate else forward()
