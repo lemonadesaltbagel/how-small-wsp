@@ -97,6 +97,8 @@ def run_worker(args_list, stage, out_dir, worker=WORKER):
         argv = [c["python"], f"{r}/{os.path.basename(worker)}"] + [a.format(**rem) for a in args_list] + ["--work", f"{r}/work"]
         # the remote venv's bin must be on PATH: vLLM's kernel builds call tools installed there (ninja)
         env = f"export PATH={shlex.quote(os.path.dirname(c['python']))}:$PATH VLLM_USE_FLASHINFER_SAMPLER=0; "
+        if c.get("gpu_util"):  # a GPU shared with another server (e.g. the editor on the same pod)
+            env += f"export QWEN_GPU_UTIL={float(c['gpu_util'])}; "
         p = subprocess.run(ssh_base(c) + [env + " ".join(shlex.quote(x) for x in argv)], capture_output=True, text=True)
         tail = p.stderr[-3000:]
         os.makedirs(out_dir, exist_ok=True)
