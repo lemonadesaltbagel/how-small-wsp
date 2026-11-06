@@ -68,6 +68,10 @@ struct RunArgs {
     /// do not score the run when it ends
     #[arg(long)]
     no_score: bool,
+    /// start a fresh conversation (handoff) when the editor's context reaches this many tokens; overrides the task's
+    /// [handoff] max_conversation_tokens for a new run (set it below the editor model's context window)
+    #[arg(long)]
+    max_conversation_tokens: Option<u64>,
 }
 
 #[derive(Subcommand)]
@@ -370,7 +374,10 @@ fn run_task(a: RunArgs, pc: &ProjectConfig, threads: usize) -> Result<()> {
         Run::resume(&dir, ed, env(pc, threads)?)?
     } else {
         let task = a.task.context("give a task file, or --resume <run dir>")?;
-        let spec = TaskSpec::load(&task)?;
+        let mut spec = TaskSpec::load(&task)?;
+        if let Some(n) = a.max_conversation_tokens {
+            spec.handoff.max_conversation_tokens = n;
+        }
         let stamp = chrono::Local::now().format("%Y%m%d-%H%M%S");
         let dir = a
             .out
