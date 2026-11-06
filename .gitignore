@@ -1,0 +1,9 @@
+external/
+harness/target/
+harness/assets/
+harness/runs/
+logs/
+.env
+__pycache__/
+*.pyc
+.DS_Store
