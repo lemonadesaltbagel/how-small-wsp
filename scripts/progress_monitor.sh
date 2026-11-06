@@ -24,6 +24,14 @@ while true; do
       echo "$c" > "$st/$k.n"
     fi
   done
+  # failed forward passes / kernel restarts in any phase-0 run (they are uncharged, so the logs never show them)
+  for sj in harness/runs/phase0/*/state.json; do
+    r=$(basename "$(dirname "$sj")")
+    v=$(python3 -I -c 'import json,sys; d=json.load(open(sys.argv[1])); print(d.get("failed_requests",0), d.get("kernel_restarts",0), d.get("empty_replies",0))' "$sj" 2>/dev/null) || continue
+    old=$(cat "$st/$r.fail" 2>/dev/null || echo "$v")
+    if [ "$v" != "$old" ]; then echo "$r: failed_requests/kernel_restarts/empty_replies $old -> $v"; fi
+    echo "$v" > "$st/$r.fail"
+  done
   cb=$(grep -c config logs/conformance.log 2>/dev/null || echo 0)
   if [ "$cb" -gt "$b" ]; then
     grep config logs/conformance.log | tail -n +$(( b + 1 )) | cut -c1-300

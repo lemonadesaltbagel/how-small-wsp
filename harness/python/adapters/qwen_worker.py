@@ -85,6 +85,7 @@ def checkpoint(model_dir, edits, work):
         h.update(open(os.path.join(edits, f), "rb").read())
     tag = h.hexdigest()[:16]
     out = os.path.join(work, "ckpt_" + tag)
+    prune_checkpoints(work, keep=out)
     if os.path.exists(os.path.join(out, "model.safetensors")):
         return out, tag
     import numpy as np
@@ -106,6 +107,17 @@ def checkpoint(model_dir, edits, work):
         if f != "model.safetensors":
             shutil.copyfile(os.path.join(model_dir, f), os.path.join(out, f))
     return out, tag
+
+
+def prune_checkpoints(work, keep, n_keep=2):
+    """Edited checkpoints are 1.6 GB each and rebuilt on demand: keep only the most recent few (and `keep`)."""
+    try:
+        ck = sorted((os.path.join(work, d) for d in os.listdir(work) if d.startswith("ckpt_")), key=os.path.getmtime, reverse=True)
+    except OSError:
+        return
+    for d in ck[n_keep:]:
+        if os.path.abspath(d) != os.path.abspath(keep):
+            shutil.rmtree(d, ignore_errors=True)
 
 
 # ------------------------------------------------------------------ generation

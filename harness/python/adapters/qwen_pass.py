@@ -104,7 +104,9 @@ def run_worker(args_list, stage, out_dir, worker=WORKER):
         os.makedirs(out_dir, exist_ok=True)
         try:
             rsync(c, f"{c['host']}:{rem['out']}/", out_dir + "/")
-        except subprocess.CalledProcessError:
+            # the results now live on this machine: free the pod's disk (teacher-forced outputs reach GBs)
+            subprocess.run(ssh_base(c) + [f"rm -rf {rem['out']} {rem['req']}"], capture_output=True, timeout=120)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
             pass
     lines = [l for l in p.stdout.splitlines() if l.strip().startswith("{")]
     if not lines:
