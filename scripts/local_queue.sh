@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Run ON WSL: a queue of local GPU evaluations, in its own session, with a memory watchdog.
-#   setsid bash scripts/local_queue.sh <logfile>      (start it inside tmux)
+#   tmux new -d -s localq "bash scripts/local_queue.sh <logfile>"   (a tmux pane is its own session and process group)
 # The watchdog kills this queue's whole process group (never an episode) if MemAvailable drops below MIN_MB.
 set -uo pipefail
 cd "$(dirname "$0")/../harness"
