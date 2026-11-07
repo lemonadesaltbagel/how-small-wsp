@@ -26,7 +26,7 @@ while true; do
   done
   # infrastructure failures in any phase-0 run (GPU worker / pod / engine errors are uncharged, so the status line
   # never shows them); the editor's own malformed requests are not counted
-  for tj in harness/runs/phase0/*/tool_calls.jsonl; do
+  for tj in harness/runs/phase0/*/tool_calls.jsonl harness/runs_laptop/phase0/*/tool_calls.jsonl; do
     r=$(basename "$(dirname "$tj")")
     v=$(grep -c -E "GPU worker failed|Engine core|not responding|No space left|Connection (refused|reset)|timed out" "$tj" 2>/dev/null)
     old=$(cat "$st/$r.infra" 2>/dev/null || echo "$v")
