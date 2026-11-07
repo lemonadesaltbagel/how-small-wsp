@@ -365,6 +365,10 @@ def read_texts_file(guest_path):
     return texts, None
 
 
+REQUEST_KEYS = {"generate": {"type", "model", "problems", "prompts", "n", "max_tokens", "activations"},
+                "teacher_forced": {"type", "model", "texts", "texts_file", "chats", "return", "enable_thinking"}}
+
+
 def forward():
     req_path = os.environ["OPENWISH_REQ"]
     try:
@@ -376,6 +380,12 @@ def forward():
         return {"ok": False, "error": "request keys starting with \"_\" are reserved"}
     if kind not in ("generate", "teacher_forced"):
         return {"ok": False, "error": 'the request needs "type": "generate" or "teacher_forced"'}
+    # unknown keys used to be ignored silently (e.g. "problems_file": a pass then ran on whatever "problems" held)
+    known = REQUEST_KEYS[kind]
+    unknown = sorted(set(req) - known)
+    if unknown:
+        return {"ok": False, "error": f"unknown request key(s) {unknown} for a {kind} pass; allowed: {sorted(known)}"
+                + ('. List practice ids in "problems" (there is no "problems_file")' if "problems_file" in unknown else "")}
     out = os.environ["OPENWISH_OUT"]
     with tempfile.TemporaryDirectory() as tmp:
         if kind == "teacher_forced" and "texts_file" in req:
