@@ -232,6 +232,8 @@ def generate(args, req, ckpt_edit):
     names = ["original", "edited"] if which == "both" else [which]
     os.makedirs(args.out, exist_ok=True)
     json.dump(items, open(os.path.join(args.out, "items.json"), "w"))
+    if req.get("_parts") is not None:   # one host's share of a pass split across GPUs (set by qwen_pass.py only)
+        return generate_parts(args, req["_parts"], items, names, models, max_tokens, acts)
     results = {}
     for name in names:
         out = os.path.join(args.out, f".raw_{name}.json")
@@ -274,6 +276,38 @@ def check_activations(a):
     if len(set(layers)) != len(layers):
         raise Bad('"activations": repeated layer index')
     return {"layers": layers, "mlp": bool(a.get("mlp", False))}
+
+
+def generate_parts(args, parts, items, names, models, max_tokens, acts):
+    """Run only `parts` ([{"model", "start", "end"}], item ranges of the full request, which was validated above) and
+    write, per part, the graded records to parts/<model>_<start>.jsonl and its activations to parts/acts_<model>_<start>/.
+    qwen_pass.py merges the parts of all hosts in item order."""
+    pdir = os.path.join(args.out, "parts")
+    os.makedirs(pdir, exist_ok=True)
+    done = []
+    for part in parts:
+        name, a, b = part["model"], int(part["start"]), int(part["end"])
+        if name not in names or not 0 <= a < b <= len(items):
+            raise Bad(f"bad part {part}")
+        sub = items[a:b]
+        tmp_items = os.path.join(args.out, f".items_{name}_{a}.json")
+        json.dump(sub, open(tmp_items, "w"))
+        raw = os.path.join(args.out, f".raw_{name}_{a}.json")
+        cmd = [sys.executable, os.path.abspath(__file__), "_one", "--model", models[name], "--items", tmp_items,
+               "--out", raw, "--max-tokens", str(max_tokens)]
+        p = subprocess.run(cmd, capture_output=True, text=True)
+        if p.returncode != 0:
+            raise RuntimeError(f"generation failed for the {name} model (items {a}-{b}): {p.stderr[-3000:]}")
+        recs = grade(sub, json.load(open(raw)))
+        os.remove(raw)
+        os.remove(tmp_items)
+        with open(os.path.join(pdir, f"{name}_{a}.jsonl"), "w") as f:
+            for r in recs:
+                f.write(json.dumps(r) + "\n")
+        if acts:
+            generation_activations(models[name], sub, recs, acts, os.path.join(pdir, f"acts_{name}_{a}"))
+        done.append({"model": name, "start": a, "end": b})
+    return {"ok": True, "type": "generate_parts", "parts": done}
 
 
 def generation_activations(ckpt, items, recs, acts, out):

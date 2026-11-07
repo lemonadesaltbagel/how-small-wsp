@@ -23,19 +23,40 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 A = os.path.join(ROOT, "assets", "exp8")
-WORKER = os.path.join(ROOT, "python", "adapters", "qwen_worker.py")
+WORKER = os.path.join(os.path.dirname(os.path.abspath(__file__)), "qwen_worker.py")
 LOCAL_PY = os.path.join(ROOT, "assets", "venvs", "qwen", "bin", "python")
-HOLDOUT = os.path.join(ROOT, "python", "adapters", "holdout_eval.py")
+HOLDOUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "holdout_eval.py")
 HOLDOUT_SETS = ("mmlupro1k", "gpqa", "ifeval")
 
 
-def remote_cfg():
+def hosts_cfg():
+    """The GPU hosts of remote.json: one host object, or {"hosts": [host, ...]} to split generation passes across
+    several GPUs. A host is {"host", "port", "key", "root", "python", "gpu_util"?, "weight"?} or {"local": true,
+    "weight"?} (this machine's GPU, used only when its memory allows). "weight" = the host's share (use its memory
+    bandwidth in TB/s; generation is bandwidth bound). None: no remote.json, everything runs locally."""
     p = os.environ.get("OPENWISH_QWEN_REMOTE") or os.path.join(A, "remote.json")
-    if os.path.exists(p):
-        c = json.load(open(p))
-        c["key"] = os.path.expanduser(c.get("key", "~/.ssh/id_rsa"))
-        return c
-    return None
+    if not os.path.exists(p):
+        return None
+    c = json.load(open(p))
+    hosts = c["hosts"] if isinstance(c, dict) and "hosts" in c else [c]
+    seen = set()
+    for h in hosts:
+        if not h.get("local"):
+            h["key"] = os.path.expanduser(h.get("key", "~/.ssh/id_rsa"))
+            k = (h["host"], int(h["port"]))
+            if k in seen:   # each pod runs one worker at a time (the orphan cleanup below ends any other)
+                raise ValueError(f"host {k} listed twice in {p}")
+            seen.add(k)
+    return hosts
+
+
+def remote_cfg():
+    """The host for everything that is not split: the first remote host (None = local)."""
+    hosts = hosts_cfg()
+    if hosts is None:
+        return None
+    remote = [h for h in hosts if not h.get("local")]
+    return remote[0] if remote else None
 
 
 def ssh_base(c):
@@ -70,15 +91,17 @@ def stage_edits(net_dir, names, dst):
     return h.hexdigest()[:16]
 
 
-def run_worker(args_list, stage, out_dir, worker=WORKER):
+def run_worker(args_list, stage, out_dir, worker=WORKER, host="default", guard=False):
     """Run the worker with `args_list` (paths as placeholders {model} {edits} {out} {practice} {data} {holdout} {req});
-    returns its JSON. `worker` is qwen_worker.py or holdout_eval.py (which runs qwen_worker.py's `_one` beside it)."""
-    c = remote_cfg()
+    returns its JSON. `worker` is qwen_worker.py or holdout_eval.py (which runs qwen_worker.py's `_one` beside it).
+    `host`: a host of hosts_cfg() ({"local": true} = this machine), default the first remote host.
+    `guard`: for a local run, stop it when this machine runs short of memory (see local_memory_ok)."""
+    c = remote_cfg() if host == "default" else (None if host.get("local") else host)
     if c is None:
         local = {"model": os.path.join(A, "qwen35-text"), "practice": os.path.join(A, "practice"), "data": os.path.join(A, "eval"),
                  "holdout": os.path.join(A, "holdout"), "edits": stage["edits"], "out": out_dir, "req": stage.get("req", "")}
         cmd = [LOCAL_PY, worker] + [a.format(**local) for a in args_list] + ["--work", os.path.join(A, "work")]
-        p = subprocess.run(cmd, capture_output=True, text=True)
+        p = run_guarded(cmd) if guard else subprocess.run(cmd, capture_output=True, text=True)
         tail = p.stderr[-3000:]
     else:
         r = c["root"]
@@ -119,6 +142,200 @@ def run_worker(args_list, stage, out_dir, worker=WORKER):
     return json.loads(lines[-1])
 
 
+# ------------------------------------------------------------------ generation split across several GPUs
+POWERSHELL = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe"
+LOCAL_LOCK = os.path.join(A, "local_gpu.lock")
+# Measured on the desktop (2026-11-08): a local vLLM generation costs ~13-15 GB of Windows commit for the GPU memory
+# alone, and WSL's page cache grows by the model; with too little left Windows pages hard (and runs out of commit,
+# which crashes the machine). Start a local share only with this much free; stop it below the guard values.
+LOCAL_START = {"wsl_avail_mb": 6000, "commit_free_gb": 24}
+LOCAL_GUARD = {"wsl_avail_mb": 2500, "commit_free_gb": 6}
+
+
+def wsl_avail_mb():
+    for line in open("/proc/meminfo"):
+        if line.startswith("MemAvailable:"):
+            return int(line.split()[1]) // 1024
+    return 0
+
+
+def win_commit_free_gb():
+    """Windows commit headroom seen from WSL (None when not on WSL or unreadable)."""
+    if not os.path.exists(POWERSHELL):
+        return None
+    q = "$c=(Get-Counter '\\Memory\\Committed Bytes','\\Memory\\Commit Limit').CounterSamples; [math]::Round(($c[1].CookedValue-$c[0].CookedValue)/1GB,1)"
+    try:
+        p = subprocess.run([POWERSHELL, "-NoProfile", "-Command", q], capture_output=True, text=True, timeout=60)
+        return float(p.stdout.strip().replace(",", "."))
+    except (subprocess.SubprocessError, ValueError, OSError):
+        return None
+
+
+def local_memory_ok(limits):
+    if wsl_avail_mb() < limits["wsl_avail_mb"]:
+        return False
+    c = win_commit_free_gb()
+    return c is None or c >= limits["commit_free_gb"]
+
+
+def run_guarded(cmd):
+    """subprocess.run for a local worker, killed (whole process group) when memory falls below LOCAL_GUARD."""
+    import signal
+    import threading
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, start_new_session=True)
+    stop = threading.Event()
+    killed = []
+
+    def watch():
+        while not stop.wait(20):
+            if not local_memory_ok(LOCAL_GUARD):
+                killed.append(True)
+                try:
+                    os.killpg(proc.pid, signal.SIGTERM)
+                except ProcessLookupError:
+                    pass
+                return
+    t = threading.Thread(target=watch, daemon=True)
+    t.start()
+    out, err = proc.communicate()
+    stop.set()
+    if killed:
+        err += "\nstopped by the local memory guard"
+    return subprocess.CompletedProcess(cmd, proc.returncode, out, err)
+
+
+def plan_split(n_items, names, weights):
+    """Contiguous item ranges proportional to `weights`; each host runs every model of the pass on its range, so the
+    original and edited answers to a problem in a "both" pass come from the same GPU (a clean pairing).
+    Returns one list of parts [{"model", "start", "end"}] per host (empty when a host gets nothing)."""
+    wsum = float(sum(weights))
+    bounds, acc = [0], 0.0
+    for w in weights:
+        acc += w
+        bounds.append(round(acc / wsum * n_items))
+    return [[{"model": name, "start": a, "end": b} for name in names] if a < b else []
+            for a, b in zip(bounds[:-1], bounds[1:])]
+
+
+def merge_parts(host_outs, names, n_items, out):
+    """Join the parts of all hosts into what one unsplit generate pass writes to `out`; returns the summary."""
+    import numpy as np
+    sys.path.insert(0, os.path.dirname(WORKER))
+    from qwen_worker import paired, summarise
+    os.makedirs(out, exist_ok=True)
+    shutil.copyfile(os.path.join(host_outs[0], "items.json"), os.path.join(out, "items.json"))
+    results, acts_info = {}, {}
+    for name in names:
+        found = []
+        for ho in host_outs:
+            pdir = os.path.join(ho, "parts")
+            for f in os.listdir(pdir) if os.path.isdir(pdir) else []:
+                if f.startswith(name + "_") and f.endswith(".jsonl"):
+                    found.append((int(f[len(name) + 1:-6]), pdir, f))
+        found.sort()
+        recs, nxt, adirs = [], 0, []
+        for start, pdir, f in found:
+            if start != nxt:
+                raise RuntimeError(f"split pass: items of the {name} model not contiguous at {start} (expected {nxt})")
+            rows = [json.loads(l) for l in open(os.path.join(pdir, f))]
+            recs += rows
+            nxt = start + len(rows)
+            ad = os.path.join(pdir, f"acts_{name}_{start}")
+            if os.path.isdir(ad):
+                adirs.append(ad)
+        if nxt != n_items:
+            raise RuntimeError(f"split pass: {nxt} of {n_items} generations of the {name} model came back")
+        results[name] = recs
+        fname = "gen.jsonl" if len(names) == 1 else f"gen_{name}.jsonl"
+        with open(os.path.join(out, fname), "w") as fh:
+            for r in recs:
+                fh.write(json.dumps(r) + "\n")
+        if adirs:
+            dst = os.path.join(out, "gen_acts") if len(names) == 1 else os.path.join(out, "gen_acts", name)
+            os.makedirs(dst, exist_ok=True)
+            idx = [json.load(open(os.path.join(d, "index.json"))) for d in adirs]
+            files = {}
+            for k in idx[0]["files"]:
+                arr = np.concatenate([np.load(os.path.join(d, k)) for d in adirs], axis=0)
+                np.save(os.path.join(dst, k), arr)
+                files[k] = list(arr.shape)
+            rows = [dict(r, row=i) for i, r in enumerate(r for ix in idx for r in ix["rows"])]
+            index = dict(idx[0], files=files, rows=rows,
+                         answer_tokens_averaged=[t for ix in idx for t in ix["answer_tokens_averaged"]])
+            json.dump(index, open(os.path.join(dst, "index.json"), "w"), indent=1)
+            acts_info[name] = {"files": files, "layers": index["layers"], "mlp_layers": index["mlp_layers"]}
+    which = "both" if len(names) > 1 else names[0]
+    summary = {"ok": True, "type": "generate", "model": which,
+               **({"summary": summarise(results[names[0]])} if len(names) == 1 else
+                  {"original": summarise(results["original"]), "edited": summarise(results["edited"]),
+                   "paired": paired(results["original"], results["edited"])})}
+    summary["files"] = sorted(f for f in os.listdir(out) if not f.startswith("."))
+    if acts_info:
+        summary["activations"] = acts_info if len(names) > 1 else acts_info[names[0]]
+    return summary
+
+
+def split_generate(req, hosts, stage, out, tmp):
+    """A generation pass spread over `hosts`. Failed shares are run again on a host that succeeded."""
+    import fcntl
+    import threading
+    which = req.get("model", "edited")
+    names = ["original", "edited"] if which == "both" else [which]
+    n_items = (len(req.get("problems") or []) + len(req.get("prompts") or [])) * int(req.get("n", 1))
+    lock = None
+    use = []
+    for h in hosts:
+        if h.get("local"):
+            fh = open(LOCAL_LOCK, "w")
+            try:
+                fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)   # one local share at a time (episodes on this machine)
+            except OSError:
+                fh.close()
+                continue
+            if not local_memory_ok(LOCAL_START):
+                fh.close()
+                continue
+            lock = fh
+        use.append(h)
+    if not use:
+        return {"ok": False, "error": "no GPU host available"}
+    plans = plan_split(n_items, names, [float(h.get("weight", 1.0)) for h in use])
+    args = ["generate", "--model", "{model}", "--edits", "{edits}", "--req", "{req}", "--out", "{out}", "--practice", "{practice}"]
+    res, outs = {}, {}
+
+    def go(i, parts, host):
+        rp = os.path.join(tmp, f"req_host{i}.json")
+        json.dump(dict(req, _parts=parts), open(rp, "w"))
+        outs[i] = os.path.join(tmp, f"host{i}")
+        res[i] = run_worker(args, dict(stage, req=rp), outs[i], host=host, guard=bool(host.get("local")))
+
+    threads = [threading.Thread(target=go, args=(i, parts, use[i])) for i, parts in enumerate(plans) if parts]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+    if lock:
+        lock.close()
+    failed = [i for i in res if not res[i].get("ok")]
+    if any(r.get("ok") is False and "error" in r and "generation failed" not in r["error"] and "GPU worker failed" not in r["error"]
+           for r in res.values()):
+        return next(r for r in res.values() if not r.get("ok"))   # the request itself is wrong: same error everywhere
+    good = [i for i in res if res[i].get("ok") and not use[i].get("local")]
+    for k, i in enumerate(failed):
+        if not good:
+            return {"ok": False, "error": f"split pass: every host failed; first error: {res[i].get('error', '')[:2000]}"}
+        j = good[0]
+        rp = os.path.join(tmp, f"req_retry{k}.json")
+        json.dump(dict(req, _parts=plans[i]), open(rp, "w"))
+        outs[i] = os.path.join(tmp, f"retry{k}")
+        r = run_worker(args, dict(stage, req=rp), outs[i], host=use[j])
+        if not r.get("ok"):
+            return r
+    summary = merge_parts([outs[i] for i in sorted(outs)], names, n_items, out)
+    summary["gpu_hosts"] = len(threads)
+    return summary
+
+
 TEXTS_FILE_MAX_BYTES = 64_000_000
 
 
@@ -155,6 +372,8 @@ def forward():
     except json.JSONDecodeError as e:
         return {"ok": False, "error": f"the ```forward block must hold JSON ({e})"}
     kind = req.get("type")
+    if isinstance(req, dict) and any(str(k).startswith("_") for k in req):
+        return {"ok": False, "error": "request keys starting with \"_\" are reserved"}
     if kind not in ("generate", "teacher_forced"):
         return {"ok": False, "error": 'the request needs "type": "generate" or "teacher_forced"'}
     out = os.environ["OPENWISH_OUT"]
@@ -172,7 +391,11 @@ def forward():
         stage = {"edits": os.path.join(tmp, "edits"), "req": req_path}
         stage["tag"] = stage_edits(os.environ["OPENWISH_NET"], edited_names(os.environ["OPENWISH_RUN_DIR"]), stage["edits"])
         args = [kind, "--model", "{model}", "--edits", "{edits}", "--req", "{req}", "--out", "{out}", "--practice", "{practice}"]
-        res = run_worker(args, stage, out)
+        hosts = hosts_cfg()
+        if kind == "generate" and hosts and len(hosts) > 1:
+            res = split_generate(req, hosts, stage, out, tmp)
+        else:
+            res = run_worker(args, stage, out)
     if res.get("ok") and kind == "generate":
         # also where the published prompt says they are: /work/gen_<k>.jsonl (gen_<k>_original/_edited with "both")
         k = os.environ.get("OPENWISH_PASS", "0")
