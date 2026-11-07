@@ -345,7 +345,9 @@ def generation_activations(ckpt, items, recs, acts, out):
             a_ids = tok(r["text"], add_special_tokens=False)["input_ids"][:ACT_ANSWER_TOKENS]
             P, A = len(p_ids), len(a_ids)
             answer_lens.append(A)
-            out_ = model(torch.tensor([p_ids + a_ids], device=dev), output_hidden_states=True)
+            # the backbone only: model(...) would also build logits over the 248k vocabulary for every position
+            # (~4 GB at 8.5k tokens), which ran a 24 GB GPU out of memory after a full generation (11-08)
+            out_ = model.model(input_ids=torch.tensor([p_ids + a_ids], device=dev), output_hidden_states=True)
             for j, l in enumerate(layers):
                 h = out_.hidden_states[l][0]
                 hp[i, j] = h[P - 1].float().cpu().numpy()
