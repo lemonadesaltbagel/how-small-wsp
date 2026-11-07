@@ -9,7 +9,16 @@
 | 2026-11-07 | nqiujjt6drtt60 | RTX PRO 6000 secure ($2.49/h) | Opus seed 3 target passes (laptop harness), 22:17–23:02 (deleted: user balance low) | 45 | 1.87 |
 
 **Total to 2026-11-07 23:02: ≈ $67.0** (0.09 + 2.49 + 2.13 + 30.23 + 30.23 + 1.87). No pods running.
-| 2026-11-07 | mer4scszz551q4 | RTX 5090 secure ($1.19/h) | Opus s1 resume target passes, created 23:27 | | |
-| 2026-11-07 | cnybjl990pd7ri | RTX PRO 6000 secure ($2.49/h) | Opus s2 resume target passes, created 23:27 | | |
-| 2026-11-07 | 05se8n39mympkg | RTX 5090 secure ($1.19/h) | Opus s3 resume (laptop) target passes, created 23:27 | | |
-| 2026-11-08 | odwbx9trcyaxn1 | GPU secure ($2.49/h) | DeepSeek s1 resume target passes (mac node), created 00:41 | | |
+| 2026-11-07 | mer4scszz551q4 | RTX 5090 secure ($1.19/h) | Opus s1 resume target passes + score, 23:27 – 11-08 01:51 | 144 | 2.86 |
+| 2026-11-07 | cnybjl990pd7ri | RTX PRO 6000 secure ($2.49/h) | Opus s2 resume target passes + score, 23:27 – 11-08 ~01:45 (holdout stopped: run invalid) | ~138 | ~5.73 |
+| 2026-11-07 | 05se8n39mympkg | RTX 5090 secure ($1.19/h) | Opus s3 resume (laptop), 23:27 – 11-08 ~01:45 (stopped: pre-strict rules) | ~138 | ~2.74 |
+| 2026-11-08 | odwbx9trcyaxn1 | GPU secure ($2.49/h) | DeepSeek s1 resume (mac node), 00:41 – ~01:45 (stopped: pre-strict rules) | ~64 | ~2.66 |
+
+**Total to 2026-11-08 01:51: ≈ $81.0** (67.0 + 2.86 + 5.73 + 2.74 + 2.66). No pods running.
+
+Strict-rule reruns (task hinted-p50-strict; 5090s were out of stock):
+| 2026-11-08 | vx1mfk4ufa7137 | RTX 4090 secure ($0.89/h) | Opus strict s1 target passes (desktop harness), created 02:24 | | |
+| 2026-11-08 | r2nlncawb0yqzf | RTX PRO 6000 secure ($2.49/h) | Opus strict s2 target passes (desktop harness), created 02:24 | | |
+| 2026-11-08 | hdqf0i76ys7swk | L40S secure ($1.09/h) | Opus strict s3 target passes (laptop harness), created 02:24 | | |
+Rule reviewer (deepseek-flash, pre_tool hook): ~1k tokens per Python block, negligible.
+

@@ -1,14 +1,20 @@
 #!/usr/bin/env bash
 # Mac-side pipeline after an episode: wait for its MATH-500 score, run the hold-out benchmarks of the final edit on the
 # same target pod, then delete the pod. Replaces teardown_watch.sh for runs that need hold-out scores.
-#   post_episode.sh <tmux session> <run dir rel. to harness/> <pod id> <remote.json rel. to repo>
+#   [NODE=<node>] post_episode.sh <tmux session> <run dir rel. to harness/> <pod id> <remote.json rel. to repo>
+# NODE: the node that runs the episode (default: rx's default node).
 # One line per state change on stdout (for a Monitor). If the session ends without a score: ALERT, pod kept.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 sess=$1; run=$2; pod=$3; remote=$4
 KEY=~/.runpod/ssh/runpodctl-ssh-key
+rx() { if [ -n "${NODE:-}" ]; then command rx -n "$NODE" "$@"; else command rx "$@"; fi; }
 say() { echo "$(date +%H:%M) $sess $*"; }
-alive() { rx "tmux has-session -t $sess 2>/dev/null && echo yes || echo no" 2>/dev/null | tail -n 1; }
+alive() {  # yes | no; an unreachable node is retried (a failed rx must not look like a finished episode)
+  for _ in 1 2 3 4 5 6; do
+    a=$(rx "tmux has-session -t $sess 2>/dev/null && echo yes || echo no" 2>/dev/null | tail -n 1)
+    case "$a" in yes|no) echo "$a"; return;; esac; sleep 60
+  done; echo yes; }
 scored() { [ -f "harness/$run/eval/score.json" ] && echo yes || echo no; }
 podssh() { read -r ip port < <(runpodctl pod get "$pod" 2>/dev/null | jq -r '"\(.ssh.ip) \(.ssh.port)"'); ssh -o ConnectTimeout=20 -p "$port" -i "$KEY" "root@$ip" "$@" < /dev/null; }
 
