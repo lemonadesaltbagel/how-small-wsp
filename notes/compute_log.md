@@ -22,3 +22,4 @@ Strict-rule reruns (task hinted-p50-strict; 5090s were out of stock):
 | 2026-11-08 | hdqf0i76ys7swk | L40S secure ($1.09/h) | Opus strict s3 target passes (laptop harness), created 02:24 | | |
 Rule reviewer (deepseek-flash, pre_tool hook): ~1k tokens per Python block, negligible.
 
+| 2026-11-08 | ynmzn2c2jjwwbp | RTX PRO 6000 secure ($2.49/h) | STRAY: created 02:26 by the GPU-fallback loop for strict s3 (create returned output the loop did not parse as an id, so it tried the next GPU); never used. Deletion pending user approval (the agent's delete was blocked by the permission classifier) | | |
