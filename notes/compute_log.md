@@ -12,3 +12,4 @@
 | 2026-11-07 | mer4scszz551q4 | RTX 5090 secure ($1.19/h) | Opus s1 resume target passes, created 23:27 | | |
 | 2026-11-07 | cnybjl990pd7ri | RTX PRO 6000 secure ($2.49/h) | Opus s2 resume target passes, created 23:27 | | |
 | 2026-11-07 | 05se8n39mympkg | RTX 5090 secure ($1.19/h) | Opus s3 resume (laptop) target passes, created 23:27 | | |
+| 2026-11-08 | odwbx9trcyaxn1 | GPU secure ($2.49/h) | DeepSeek s1 resume target passes (mac node), created 00:41 | | |
