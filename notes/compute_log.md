@@ -41,3 +41,6 @@ GPU pools (11-08 ~04:33; passes split across hosts, see notes/target_gpu_cost.md
 Pools: s1 = 4090 + 2×A5000 + desktop 5070 Ti when free; s2 = 2×3090 + A5000 + desktop 5070 Ti (PRO 6000 retired once idle);
 s3 = 3090 + 2×A5000; DeepSeek = 4090 + 2×A5000. Spend ~$5.4/h as before, ~2.2× the bandwidth.
 
+| 2026-11-08 | jrji6yisbhzqlr | RTX A5000 ($0.27/h) | test of the split-activation fix, then Opus strict s2 pool (4th host), created 05:40 | | |
+| 2026-11-08 | r2nlncawb0yqzf | RTX PRO 6000 ($2.49/h) | Opus strict s2 single target, 02:24 – 04:38 (retired: pool) | ~134 | ~5.56 |
+| 2026-11-08 | vbdv6tys477nvr | RTX A5000 ($0.27/h) | A5000 benchmark, 03:09 – 05:35 | ~146 | ~0.66 |
