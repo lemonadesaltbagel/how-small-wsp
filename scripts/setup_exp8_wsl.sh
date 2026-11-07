@@ -17,11 +17,13 @@ fi
 assets/venvs/sandbox/bin/python -c "import torch, numpy, tokenizers; print('sandbox ok', torch.__version__, numpy.__version__)"
 
 step "qwen venv (vLLM on the GPU)"
-if [ ! -x assets/venvs/qwen/bin/python ]; then
+if [ -n "${NO_GPU:-}" ]; then
+  echo "NO_GPU set: skipping the vLLM venv (this node runs the harness only; forward passes go to a remote GPU)"
+elif [ ! -x assets/venvs/qwen/bin/python ]; then
   uv venv -q -p 3.12 assets/venvs/qwen
   VIRTUAL_ENV=assets/venvs/qwen uv pip install -q vllm transformers safetensors math-verify
 fi
-assets/venvs/qwen/bin/python -c "import vllm, transformers, torch; print('qwen ok vllm', vllm.__version__, 'transformers', transformers.__version__, 'torch', torch.__version__, 'cuda', torch.cuda.is_available())"
+[ -n "${NO_GPU:-}" ] || assets/venvs/qwen/bin/python -c "import vllm, transformers, torch; print('qwen ok vllm', vllm.__version__, 'transformers', transformers.__version__, 'torch', torch.__version__, 'cuda', torch.cuda.is_available())"
 
 step "authors' logs (full clone, all blobs)"
 if [ ! -d assets/lm_understand-logs/.git ]; then

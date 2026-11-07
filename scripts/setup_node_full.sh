@@ -26,11 +26,12 @@ step "exp8 venvs, Qwen3.5-0.8B (pinned, hash-checked), prepared assets, publishe
 bash scripts/setup_exp8_wsl.sh
 
 step "FlashInfer kernels for vLLM (no nvcc)"
-(export PATH="$PWD/harness/assets/venvs/qwen/bin:$PATH"; vllm download-kernels >/dev/null 2>&1 || true)
+[ -n "${NO_GPU:-}" ] || (export PATH="$PWD/harness/assets/venvs/qwen/bin:$PATH"; vllm download-kernels >/dev/null 2>&1 || true)
 
 step "hold-out benchmark data"
-(cd harness && VIRTUAL_ENV=assets/venvs/qwen uv pip install -q langdetect nltk immutabledict absl-py pyarrow \
-  && assets/venvs/qwen/bin/python -I python/adapters/holdout_eval.py prepare | tail -n 2)
+HV=qwen; [ -n "${NO_GPU:-}" ] && HV=sandbox   # the prepare step needs no GPU
+(cd harness && VIRTUAL_ENV=assets/venvs/$HV uv pip install -q langdetect nltk immutabledict absl-py pyarrow huggingface_hub \
+  && assets/venvs/$HV/bin/python -I python/adapters/holdout_eval.py prepare | tail -n 2)
 
 step "build the harness"
 (cd harness && nice -n 10 cargo build --release -j 8 2>&1 | tail -n 1)
