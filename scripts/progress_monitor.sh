@@ -33,6 +33,13 @@ while true; do
     if [ "$v" != "$old" ]; then echo "$r: infrastructure failures $old -> $v ($(grep -E "GPU worker failed|Engine core|not responding|No space left|Connection (refused|reset)|timed out" "$tj" | tail -n 1 | cut -c1-160))"; fi
     echo "$v" > "$st/$r.infra"
   done
+  # post-episode pipelines (scripts/post_episode.sh): every new line is an event
+  for pl in logs/post_*.log; do
+    [ -f "$pl" ] || continue
+    k=$(basename "$pl" .log); pn=$(wc -l < "$pl" | tr -d ' '); po=$(cat "$st/$k.n" 2>/dev/null || echo 0)
+    [ "$pn" -gt "$po" ] && tail -n +$(( po + 1 )) "$pl" | sed "s/^/$k: /" | cut -c1-300
+    echo "$pn" > "$st/$k.n"
+  done
   # the local GPU queue (scripts/local_queue.sh)
   if [ -f logs/local_queue.log ]; then
     qn=$(wc -l < logs/local_queue.log | tr -d ' '); qo=$(cat "$st/localq.n" 2>/dev/null || echo "$qn")
