@@ -40,7 +40,7 @@ def remote_cfg():
 
 def ssh_base(c):
     return ["ssh", "-i", c["key"], "-p", str(c["port"]), "-o", "StrictHostKeyChecking=accept-new", "-o", "BatchMode=yes",
-            "-o", "ConnectTimeout=20", "-o", "ServerAliveInterval=30", c["host"]]
+            "-o", "ConnectTimeout=20", "-o", "ServerAliveInterval=30", "-o", "ServerAliveCountMax=20", c["host"]]
 
 
 def rsync(c, src, dst):
@@ -97,6 +97,11 @@ def run_worker(args_list, stage, out_dir, worker=WORKER):
         argv = [c["python"], f"{r}/{os.path.basename(worker)}"] + [a.format(**rem) for a in args_list] + ["--work", f"{r}/work"]
         # the remote venv's bin must be on PATH: vLLM's kernel builds call tools installed there (ninja)
         env = f"export PATH={shlex.quote(os.path.dirname(c['python']))}:$PATH VLLM_USE_FLASHINFER_SAMPLER=0; "
+        # a worker orphaned by a dropped SSH connection keeps the GPU (no pty, so no SIGHUP): end it first. One run per
+        # pod. The anchored patterns match the worker processes, never this shell's own command line.
+        # vLLM engine processes left behind get parent 1; an editor server's engine (same pod) keeps its parent.
+        env += (f"pkill -f '^{c['python']} {r}/qwen_worker.py' ; pkill -f '^{c['python']} {r}/holdout_eval.py' ; sleep 3 ; "
+                "for p in $(pgrep -f '^VLLM::EngineCore'); do [ \"$(ps -o ppid= -p $p | tr -d ' ')\" = 1 ] && kill $p ; done ; sleep 2 ; ")
         if c.get("gpu_util"):  # a GPU shared with another server (e.g. the editor on the same pod)
             env += f"export QWEN_GPU_UTIL={float(c['gpu_util'])}; "
         p = subprocess.run(ssh_base(c) + [env + " ".join(shlex.quote(x) for x in argv)], capture_output=True, text=True)
