@@ -20,6 +20,7 @@ import sys
 
 INSTRUCTION = "Please reason step by step, and put your final answer within \\boxed{}."
 SAMPLING = dict(temperature=0.6, top_p=0.95, top_k=20, presence_penalty=1.5)
+TF_LOGIT_BLOCK = 2048  # positions per output-layer block in teacher-forced passes
 LIMITS = dict(gen_max=512, tf_max_texts=1024, tf_max_tokens=32768, tf_total_tokens=524288, attn_max_texts=2, attn_max_tokens=2048)
 FULL_ATTENTION = (3, 7, 11, 15, 19, 23)
 
@@ -404,16 +405,25 @@ def teacher_forced(args, req, ckpt):
     with torch.no_grad():
         for i, x in enumerate(ids):
             t = torch.tensor([x], device=dev)
-            r = model(t, output_hidden_states=bool(hs_layers), output_attentions=bool(attn))
-            lp = torch.log_softmax(r.logits[0].float(), -1)
+            # the backbone, then the output layer in blocks of positions: full-vocabulary logits for a 32,768-token
+            # text are 16 GB in bf16 (32 GB as float), more than the GPU holds next to the model
+            r = model.model(t, output_hidden_states=bool(hs_layers), output_attentions=bool(attn))
             L = len(x)
             outs["input_ids"][i, :L] = x
-            if "token_logprobs" in outs and L > 1:
-                outs["token_logprobs"][i, :L - 1] = lp[:-1].gather(1, t[0, 1:, None])[:, 0].cpu().numpy()
-            if topk:
-                v, k = lp.topk(topk, -1)
-                outs["topk_logprobs"][i, :L] = v.cpu().numpy()
-                outs["topk_ids"][i, :L] = k.cpu().numpy()
+            if "token_logprobs" in outs or topk:
+                hlast = r.last_hidden_state[0]
+                for a in range(0, L, TF_LOGIT_BLOCK):
+                    b = min(a + TF_LOGIT_BLOCK, L)
+                    lp = torch.log_softmax(model.lm_head(hlast[a:b]).float(), -1)
+                    if "token_logprobs" in outs:
+                        nb = min(b, L - 1)          # position j predicts token j + 1
+                        if nb > a:
+                            outs["token_logprobs"][i, a:nb] = lp[: nb - a].gather(1, t[0, a + 1:nb + 1, None])[:, 0].cpu().numpy()
+                    if topk:
+                        v, k = lp.topk(topk, -1)
+                        outs["topk_logprobs"][i, a:b] = v.cpu().numpy()
+                        outs["topk_ids"][i, a:b] = k.cpu().numpy()
+                    del lp
             for l in hs_layers:
                 outs[f"hidden_{l}"][i, :L] = r.hidden_states[l][0].float().cpu().numpy()
             for l in mlp_layers:
