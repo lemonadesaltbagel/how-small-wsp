@@ -73,11 +73,29 @@ def mc_extract_official(text):
     m = re.search(r"answer is \(?([A-J])\)?", text)
     if m:
         return m.group(1)
-    m = re.search(r".*[aA]nswer:\s*([A-J])", text)
-    if m:
-        return m.group(1)
-    m = re.search(r"\b[A-J]\b(?!.*\b[A-J]\b)", text, re.DOTALL)
-    return m.group(0) if m else None
+    # The two official fallbacks are quadratic in the text length (a 32k-token looping answer took minutes each).
+    # Same results in linear time:
+    # (1) re.search(r".*[aA]nswer:\s*([A-J])", text): the earliest line holding a match, and its last match there
+    #     (".*" stops at newlines, "\s*" may cross them).
+    first_line, last = None, None
+    for m in _ANSWER_COLON.finditer(text):
+        line = text.rfind("\n", 0, m.start())
+        if first_line is None:
+            first_line = line
+        elif line != first_line:
+            break
+        last = m
+    if last is not None:
+        return last.group(1)
+    # (2) re.search(r"\b[A-J]\b(?!.*\b[A-J]\b)", text, re.DOTALL): the last standalone letter.
+    last = None
+    for last in _LETTER.finditer(text):
+        pass
+    return last.group(0) if last else None
+
+
+_ANSWER_COLON = re.compile(r"(?=[aA]nswer:\s*([A-J]))")  # lookahead: overlapping candidates, as the greedy ".*" sees them
+_LETTER = re.compile(r"\b[A-J]\b")
 
 
 def mc_extract(text):
@@ -298,10 +316,12 @@ def evaluate(a):
     ip = os.path.join(a.out, "items.json")
     json.dump(items, open(ip, "w"))
     raw = os.path.join(a.out, ".raw.json")
-    p = subprocess.run([sys.executable, os.path.join(HERE, "qwen_worker.py"), "_one", "--model", ckpt, "--items", ip,
-                        "--out", raw, "--max-tokens", str(a.max_tokens)], capture_output=True, text=True)
-    if p.returncode != 0:
-        raise RuntimeError(p.stderr[-3000:])
+    reuse = getattr(a, "reuse_raw", False) and os.path.exists(raw) and len(json.load(open(raw))) == len(items)
+    if not reuse:  # --reuse-raw: grade generations already saved for exactly these items (e.g. after a grader fix)
+        p = subprocess.run([sys.executable, os.path.join(HERE, "qwen_worker.py"), "_one", "--model", ckpt, "--items", ip,
+                            "--out", raw, "--max-tokens", str(a.max_tokens)], capture_output=True, text=True)
+        if p.returncode != 0:
+            raise RuntimeError(p.stderr[-3000:])
     gens = json.load(open(raw))
     bad = sum(g["finish"] not in ("stop", "length") for g in gens)
     if bad:      # the authors' guard: an engine stopped from outside returns partial answers
@@ -382,6 +402,7 @@ def main():
     ap.add_argument("--limit", type=int, default=None, help="first N problems only (a smoke run)")
     ap.add_argument("--samples", type=int, default=None, help="samples per problem (default: the authors' 1 / 4 / 2)")
     ap.add_argument("--max-tokens", type=int, default=32768)
+    ap.add_argument("--reuse-raw", action="store_true", help="grade the saved .raw.json instead of generating again")
     ap.add_argument("--work", default=os.environ.get("QWEN_WORK", "/tmp/qwen_work"))
     ap.add_argument("--authors", help="regrade: the authors' eval directory (unedited/, p10c/, ...)")
     a = ap.parse_args()
