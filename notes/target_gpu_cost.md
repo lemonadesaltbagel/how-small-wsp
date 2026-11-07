@@ -60,4 +60,29 @@ RunPod billing (`runpodctl billing pods --bucket-size hour --start-time … --en
   target model's measured behaviour.
 
 ## 4. Benchmarks
-(filled in from `logs/bench_*.txt` and the strict runs' first passes)
+The same workload everywhere: the first pass of an Opus episode, 512 base-model answers (~15.5M generated tokens,
+~91 % cut at 32,768) plus activations at all layers. Time includes vLLM start and the activation pass.
+
+| GPU (secure) | source | minutes | ktok/s | ktok/s per TB/s | $ per pass | vs 5090 |
+|---|---|---|---|---|---|---|
+| RTX A5000 | bench (`logs/bench_a5000.txt`) | 142.7 | 1.81 | 2.36 | 0.64 | 0.50× |
+| RTX 5090 | Opus s1 (11-06) | 64.3 | 4.07 | 2.27 | 1.28 | 1 |
+| RTX 4090 | Opus strict s1 | 101.1 | 2.53 | 2.50 | 1.50 | 1.17× |
+| L40S | Opus strict s3 | 116.1 | 2.20 | 2.56 | 2.11 | 1.65× |
+| RTX PRO 6000 | Opus strict s2 | 54.7 | 4.81 | 2.69 | 2.27 | 1.77× |
+| RTX PRO 6000 | Opus s3 (11-07) | 55.6 | 4.64 | 2.59 | 2.31 | 1.80× |
+| RTX 6000 Ada | DeepSeek s1, no activations, 512 | 98.1 | 2.63 | 2.74 | 1.62 | — |
+| RTX 5070 Ti (local) | MATH-500 base eval (11-06), 500 answers | 107 | ~2.3 | ~2.6 | free | — |
+
+The A5000 (Ampere) is exactly as efficient per TB/s as the newer cards, so the bandwidth model holds on all seven
+types. The pools of 11-08 (A5000/3090 with a 4090 where one was already running) give each episode 2.5–2.7 TB/s:
+about 1.45× a 5090's speed at about 0.55× its price per pass.
+
+## 5. Rules of thumb for this project
+- Choose target GPUs by $ per TB/s (table in §2), not by memory: 24 GB is plenty for one 0.8B model.
+- One episode = one pool of 2–3 cheap cards (A5000 first, then 3090); put the fastest card first (teacher-forced
+  passes and the final MATH-500 score run on the first remote host only).
+- Secure stock of any one type is small: take a mix, weight hosts by bandwidth.
+- Never run a local vLLM job on the desktop beside two episodes without the memory guard.
+- When pods change mid-episode, swap `remote.json` atomically and delete old pods only after no pass uses them
+  (`scripts/swap_pool.sh`); do not edit a bash script while a copy of it is running (bash reads scripts as it goes).
