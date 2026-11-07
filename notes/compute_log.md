@@ -23,3 +23,6 @@ Strict-rule reruns (task hinted-p50-strict; 5090s were out of stock):
 Rule reviewer (deepseek-flash, pre_tool hook): ~1k tokens per Python block, negligible.
 
 | 2026-11-08 | ynmzn2c2jjwwbp | RTX PRO 6000 secure ($2.49/h) | STRAY: created 02:26 by the GPU-fallback loop for strict s3 (create returned output the loop did not parse as an id, so it tried the next GPU); never used. Deleted by the user before 03:00 (the agent's delete was blocked by the permission classifier) | ~32 | ~1.33 |
+
+**Reconciled with RunPod billing (2026-11-08 ~03:40, `runpodctl billing pods --bucket-size hour --start-time … --end-time …`):** RunPod bills each pod separately (GPU + container disk, from creation to deletion). The 10 deleted pods of this project were billed **$82.63** (GPU $82.0 + disk $0.59) against the estimates above of $81.03 (−2 %; the resumed pods bill their setup minutes and disk). The pods of 11-08 (4 running + the stray) are not billed yet (lag ~1 h). Pods on the account from 11-05 ($55.19) belong to another project. Balance at 03:40: $130.14; spend rate $5.42/h.
+
