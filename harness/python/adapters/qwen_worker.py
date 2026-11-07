@@ -304,10 +304,13 @@ def generate_parts(args, parts, items, names, models, max_tokens, acts):
         with open(os.path.join(pdir, f"{name}_{a}.jsonl"), "w") as f:
             for r in recs:
                 f.write(json.dumps(r) + "\n")
-        if acts:
-            generation_activations(models[name], sub, recs, acts, os.path.join(pdir, f"acts_{name}_{a}"))
-        done.append({"model": name, "start": a, "end": b})
-    return {"ok": True, "type": "generate_parts", "parts": done}
+        done.append({"model": name, "start": a, "end": b, "items": sub, "recs": recs})
+    # activations only after every generation, as in generate(): the activation step loads the model in this process,
+    # and the memory torch keeps would leave the next vLLM engine too little (11-08: "Free memory ... less than desired")
+    if acts:
+        for d in done:
+            generation_activations(models[d["model"]], d["items"], d["recs"], acts, os.path.join(pdir, f"acts_{d['model']}_{d['start']}"))
+    return {"ok": True, "type": "generate_parts", "parts": [{k: d[k] for k in ("model", "start", "end")} for d in done]}
 
 
 def generation_activations(ckpt, items, recs, acts, out):
