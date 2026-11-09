@@ -22,7 +22,7 @@ pssh() {  # pssh <pod-id> <command>
 case "$1" in
   create)
     runpodctl pod create --name "$2" --gpu-id "$3" --cloud-type "${CLOUD:-SECURE}" --template-id "$TEMPLATE" \
-      --container-disk-in-gb "${4:-150}" --ports "22/tcp" | jq -r '.id' ;;
+      --container-disk-in-gb "${4:-150}" --ports "22/tcp" --min-cuda-version "${MIN_CUDA:-13.0}" | jq -r '.id' ;;
   wait)
     for _ in $(seq 1 90); do
       read -r ip port < <(addr "$2")

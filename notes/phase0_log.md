@@ -392,3 +392,12 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   reviewer works in the episode (~7 s per block). Post pipeline, auto-resume (env "DS" = resume through the
   launcher) and the low-balance stop attached. Both hinted 9B seeds recovered from the tunnel drop on their last
   retries (s1 turn 190, s2 turn 151).
+- 03:25: deepseek-flash s1's community 3090 (1univ9fx8esl0x) had a driver with CUDA 12.9, too old for the worker's
+  torch: vLLM passes failed (uncharged). Pod deleted; `editor_pod.sh create` now passes `--min-cuda-version 13.0`
+  (MIN_CUDA), and acquire's setup checks `torch.zeros(1).cuda()` before a pod counts as ready. The DS episode is
+  **paused** (Ctrl-C between turns, turn 13, 1/50 passes; a pending request re-runs on resume) until it has working
+  pods, so that it does not spend turns on failing passes.
+- Prior-art scan (11-10): no published open-weight editor scale curve. Closest: Hu et al., arXiv 2611.09382 (11-06):
+  one editor (GPT-6 Astra), target scale 0.8B / 9B, MATH-500 8.35 → 37.80 %, no audit. Simon Willison ran experiment 1
+  with a local Qwen3.8-27B editor (3 of 4 games; secondary sources only so far). Qwen3.8 exists only at ≥ 27B, which
+  is why the ladder uses Qwen3.5 (0.8B / 9B / 27B, one family). Outline related work updated.

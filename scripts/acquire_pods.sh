@@ -25,6 +25,9 @@ setup() {  # setup <id> <gpu> <weight>
     && scp -q -o StrictHostKeyChecking=accept-new -P "$port" -i "$KEY" scripts/pod_target_setup.sh "root@$ip:/root/" || { say "pod $id: ssh setup failed; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   sha=$(ssh -p "$port" -i "$KEY" "root@$ip" 'bash /root/pod_target_setup.sh 2>&1 | grep model.safetensors | cut -c1-64; export PATH=/root/.local/bin:$PATH; VIRTUAL_ENV=/root/vllm-env uv pip install -q langdetect nltk immutabledict absl-py pyarrow >/dev/null 2>&1' < /dev/null)
   [ "$sha" = "$MODEL_SHA" ] || { say "pod $id: model hash mismatch ($sha); deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
+  # torch must see the GPU (a community host's driver can be too old for the worker's CUDA build)
+  ssh -o ConnectTimeout=30 -p "$port" -i "$KEY" "root@$ip" '/root/vllm-env/bin/python -c "import torch; torch.zeros(1).cuda(); print(1)"' < /dev/null 2>/dev/null | grep -qx 1 \
+    || { say "pod $id: torch cannot use the GPU (driver?); deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   printf '{"pod": "%s", "gpu": "%s", "host": "root@%s", "port": %s, "key": "~/.ssh/id_ed25519_pods", "root": "/root/openwish", "python": "/root/vllm-env/bin/python", "gpu_util": 0.85, "weight": %s, "price": %s}\n' \
     "$id" "$gpu" "$ip" "$port" "$w" "$(runpodctl pod get "$id" | jq -r .costPerHr)" >> logs/pool_hosts.jsonl
   say "ready $id $gpu $ip:$port"
