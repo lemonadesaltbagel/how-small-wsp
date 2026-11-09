@@ -259,3 +259,10 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   first host only). Hold-out started 14:23 on the 3090. The nltk ownership loop had stopped at its 12-hour limit (~10:00),
   before this hold-out copied its data, and the folder was uid 1000 again; chowned by hand at 15:12, before IFEval.
   So Opus strict: 44.8 / 55.4 / 40.6 %, all three ≥ 30 %: the Opus part of the Phase 0 gate passes.
+- **s3 hold-out** (17:23): MMLU-Pro-1k 44.7 %, GPQA 30.1 %, IFEval 60.8 % (graded on the pod after the chown). Last pod
+  deleted 17:24; no project pods left. `low_balance_stop.sh` did not exit on an empty pod list (it took "no pods" for a
+  failed query); stopped by hand, fixed. RunPod total for Phase 0 so far $212.58 (compute_log).
+- Opus strict, final: MATH-500 44.8 / 55.4 / 40.6 %; hold-out MMLU-Pro 40.4 / 44.8 / 44.7, GPQA 27.8 / 30.8 / 30.1,
+  IFEval 57.7 / 60.4 / 60.8 (base 9.0; 39.7 / 24.4 / 20.1). All three valid after adjudication.
+- Tracker proposal `tracker_proposals/2026-11-09_phase0_opus_done.md` (results, adjudications, costs, budget
+  re-estimate) waits for the user's review; open-source editor episodes wait for the budget decision.

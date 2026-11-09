@@ -33,9 +33,9 @@ GPU pools (11-08 ~04:33; passes split across hosts, see notes/target_gpu_cost.md
 | 2026-11-08 | blkvi438r5edfl | RTX 3090 ($0.50/h) | Opus strict s2 pool (first host: scoring, hold-out), 04:21 – 23:09 | ~1128 | 9.32 (billed) |
 | 2026-11-08 | fjjukomg74e7x8 | RTX 3090 ($0.50/h) | Opus strict s2 pool, 04:21 – 23:09 | ~1128 | 9.32 (billed) |
 | 2026-11-08 | 3kyhmqepm4a3jl | RTX A5000 ($0.27/h) | Opus strict s2 pool, 04:12 – 23:09 | ~1137 | 5.19 (billed) |
-| 2026-11-08 | l4uv2c1qm9l4hp | RTX 3090 ($0.50/h) | Opus strict s3 pool, created 04:21 | | |
-| 2026-11-08 | 6ohqgldauh3p00 | RTX A5000 ($0.27/h) | Opus strict s3 pool, created 04:24 | | |
-| 2026-11-08 | 9o7nukwndavaro | RTX A5000 ($0.27/h) | Opus strict s3 pool, created 04:24 | | |
+| 2026-11-08 | l4uv2c1qm9l4hp | RTX 3090 ($0.50/h) | Opus strict s3 pool (first host: scoring, hold-out), 04:21 – 11-09 17:24 | ~2223 | 18.52 (billed) |
+| 2026-11-08 | 6ohqgldauh3p00 | RTX A5000 ($0.27/h) | Opus strict s3 pool, 04:24 – 11-09 13:01 (deleted once the episode ended) | ~1957 | 9.26 (billed) |
+| 2026-11-08 | 9o7nukwndavaro | RTX A5000 ($0.27/h) | Opus strict s3 pool, 04:24 – 11-09 13:01 (same) | ~1957 | 9.26 (billed) |
 | 2026-11-08 | ge3fudq3awgh7y | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:30, deleted 21:57 (idle once the episode ended; scoring uses the first host) | 1047 | ~4.7 |
 | 2026-11-08 | 21q9v3a40iumt4 | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:33, deleted 21:57 (same) | 1044 | ~4.7 |
 | 2026-11-08 | jafz0mqatxadgl | RTX 4090 secure ($0.89/h) | DeepSeek strict s1 target passes, then first host of its pool; ~02:35 – 23:29 (hold-out skipped: the submission is the unedited model) | ~1254 | 17.97 (billed, last hour may lag) |
@@ -45,3 +45,8 @@ s3 = 3090 + 2×A5000; DeepSeek = 4090 + 2×A5000. Spend ~$5.4/h as before, ~2.2�
 | 2026-11-08 | jrji6yisbhzqlr | RTX A5000 ($0.27/h) | test of the split-activation fix, then Opus strict s2 pool (4th host), 05:40 – 23:09 | ~1049 | 4.77 (billed) |
 | 2026-11-08 | r2nlncawb0yqzf | RTX PRO 6000 ($2.49/h) | Opus strict s2 single target, 02:24 – 04:38 (retired: pool) | ~134 | ~5.56 |
 | 2026-11-08 | vbdv6tys477nvr | RTX A5000 ($0.27/h) | A5000 benchmark, 03:09 – 05:35 | ~146 | ~0.66 |
+
+**Total at 2026-11-09 17:24, all pods deleted: $212.58 billed** (`runpodctl billing pods --pod-id <id> --bucket-size day`,
+summed over the 27 pods above; ~349 card-hours = GPU amount ÷ hourly price). Strict episodes, target side incl. scoring,
+hold-out and idle time: s1 $24.57, s2 $35.19, s3 $39.42 (2 usage-limit stops, network outage), DeepSeek s1 $28.76;
+first round, tests and the stray pod $84.62. DeepSeek API: ¥65.2 → ¥35.9 (¥29.3 ≈ $4, strict s1 + rule reviewer).

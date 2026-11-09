@@ -16,13 +16,14 @@ RUNS=(
 )
 say() { echo "$(date '+%m-%d %H:%M') $*"; }
 all_pods() { for r in "${RUNS[@]}"; do set -- $r; echo "${4//,/ }"; done; }
-listed() { runpodctl pod list 2>/dev/null | jq -r '.[].id'; }
+listed() { runpodctl pod list 2>/dev/null | jq -er '.[].id // empty' || true; }
+listed_ok() { runpodctl pod list 2>/dev/null | jq -e 'type == "array"' >/dev/null; }  # an empty list is a valid answer
 
 say "watching balance, threshold \$$TH"
 while true; do
   live=$(listed)
   ours=""; for p in $(all_pods); do grep -qx "$p" <<< "$live" && ours="$ours $p"; done
-  if [ -n "$live" ] && [ -z "$ours" ]; then say "none of the listed pods is left; exiting"; exit 0; fi
+  if [ -z "$ours" ] && listed_ok; then say "none of the listed pods is left; exiting"; exit 0; fi
   bal=$(runpodctl me 2>/dev/null | jq -r '.clientBalance // empty')
   if [ -n "$bal" ] && awk -v b="$bal" -v t="$TH" 'BEGIN{exit !(b < t)}'; then break; fi
   sleep 300
