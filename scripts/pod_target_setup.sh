@@ -11,7 +11,7 @@ export PATH=/root/.local/bin:/root/vllm-env/bin:$PATH
 mkdir -p $R/model $R/practice $R/eval $R/src
 if [ ! -x /root/vllm-env/bin/vllm ]; then
   command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null
-  uv venv -q -p 3.12 /root/vllm-env && VIRTUAL_ENV=/root/vllm-env uv pip install -q vllm
+  uv venv -q -p 3.12 /root/vllm-env && VIRTUAL_ENV=/root/vllm-env uv pip install -q vllm==0.33.0
 fi
 command -v rsync >/dev/null || { apt-get update -qq >/dev/null; apt-get install -y -qq rsync >/dev/null; }
 VIRTUAL_ENV=/root/vllm-env uv pip install -q transformers safetensors math-verify huggingface_hub numpy
@@ -47,4 +47,5 @@ cp -r $L/practice/. $R/practice/
 [ -f $R/eval/math500.jsonl ] || curl -sfL -o $R/eval/math500.jsonl https://huggingface.co/datasets/HuggingFaceH4/MATH-500/resolve/main/test.jsonl
 [ -f $R/eval/gsm8k_test.jsonl ] || curl -sfL -o $R/eval/gsm8k_test.jsonl https://raw.githubusercontent.com/openai/grade-school-math/master/grade_school_math/data/test.jsonl
 vllm download-kernels >/dev/null 2>&1 || true
+rm -rf /root/.cache/uv  # ~19 GB of download cache; the installed venv does not need it (40 GB disks filled up)
 sha256sum $R/model/model.safetensors $R/eval/*.jsonl

@@ -491,3 +491,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 09:51: 5090 sb6a → pool of 27B hinted s1. New acquisition loop for 3 pods (0.8B re-score, 0.8B hinted s2,
   27B unhinted s1).
 - Spend: ours $5.7/h (A100 editor $1.79), all projects $9.4/h, balance $107 at 09:52.
+- 09:58: 27B hinted s1's passes at turns 32–34 failed (uncharged): "No space left on device" on the 40 GB 5090 sb6a.
+  19 GB of it was uv's download cache. Cleared on every pool pod (now 33–37 GB free on the 60 GB disks);
+  `pod_target_setup.sh` now deletes the cache after installing and pins vllm==0.33.0 (every target pod runs 0.33.0).
+- A third pod on the bad host 99.69.17.69, ilppyd3ecb6qjj (9B hinted s1's pool), also fails torch's CUDA check:
+  removed from that pool at 10:00 (swap_pool deletes it once idle); its passes so far succeeded on the other hosts.
