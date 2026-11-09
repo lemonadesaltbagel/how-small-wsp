@@ -440,3 +440,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   through `rx` (login shell). Run class written after the audit.
 - Its 5090 (8qekaexohjxc0r) kept (post pipeline stopped by hand) and now serves the **Qwen3.5-0.8B editor**
   (vLLM, max_model_len 196,608, max-num-seqs 4); 0.8B hinted s1 goes on the Mac when a target pod arrives.
+- 9B unhinted s2 audit (rerun): 17/0/0, valid → counts (run_class.json written).
+- 07:33: deepseek-flash s1's 3090 (6thmelf5g8764g) lost its GPU mid-pass (turn 59, after 60 min: "Device string must not
+  be empty"; on the pod `nvidia-smi`: "Failed to initialize NVML: Unknown Error"). Uncharged. Pod deleted; DS paused
+  again (turn 60, 5/50 passes, 1 reviewer block); the next pod goes to it, before 0.8B.

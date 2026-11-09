@@ -134,6 +134,30 @@
   "editor_cost_usd": 36.62018880000002
  },
  {
+  "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s2",
+  "arm": "main: Qwen3.5-9B, unhinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.078,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 17,
+   "allowed": 17,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 17,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 35,
+  "editor_cost_usd": 0.0
+ },
+ {
   "run": "runs_laptop/phase0/opus55-hinted-p50-s3",
   "arm": "aborted",
   "access": "simulation allowed",
