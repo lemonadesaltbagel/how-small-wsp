@@ -426,3 +426,17 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   1,319 × 2 samples. 27B (A100 80GB editor, bf16) waits for node slots: the 9B hinted seeds free the desktop and
   laptop in ~1 day (passes 6–11/50 at 05:30). deepseek-flash s2 and unhinted seeds go on the laptop (Claude reviewer)
   as its slots free.
+
+## Qwen3.5-9B unhinted seed 2 finished early (2026-11-10 06:02)
+- Ended at turn 35 with a final answer after 3/50 passes and 17 Python runs: the editor declared that its tools "don't
+  exist" ("The simulation environment you've described does not match my actual operational capabilities") and kept
+  replying without tool blocks through 4 nudges ("you have 47 forward passes left"), so the harness ended the run as
+  designed (`max_nudges`; same rule for every editor). No edit: **MATH-500 7.8 %** (base 9.0 %), hold-out skipped.
+- Failure label **not localised** (proposed by `scripts/label_failure.py` with Claude Code Sonnet 5.5 on the desktop,
+  reviewed and accepted by me): it never read a generation for loops; calls 2–7 file-path errors; 14–18 hidden-state
+  norms and NaN attention entropy; 19 a paired pass with no edit (0 rescues, 0 losses); 21 generic hypotheses.
+  `logs/label_q9bu_s2.json`.
+- First audit attempt failed (codex not on PATH in a non-login shell, all 17 calls "no readable verdict"); rerun
+  through `rx` (login shell). Run class written after the audit.
+- Its 5090 (8qekaexohjxc0r) kept (post pipeline stopped by hand) and now serves the **Qwen3.5-0.8B editor**
+  (vLLM, max_model_len 196,608, max-num-seqs 4); 0.8B hinted s1 goes on the Mac when a target pod arrives.
