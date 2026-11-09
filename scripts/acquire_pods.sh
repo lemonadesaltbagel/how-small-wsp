@@ -11,6 +11,8 @@ cd "$(dirname "$0")/.."
 want=$1; minutes=${2:-120}
 KEY=~/.runpod/ssh/runpodctl-ssh-key
 GPUS=("NVIDIA RTX A5000:0.77" "NVIDIA GeForce RTX 3090:0.94")
+# GPU_LIST="id:TB/s;id:TB/s" overrides the list (e.g. add community 4090s when A5000/3090 stock is low)
+[ -n "${GPU_LIST:-}" ] && IFS=';' read -ra GPUS <<< "$GPU_LIST"
 MODEL_SHA=68194c7beef8da37beaddb33b02a3b076f0930d81b55808be59998ba10cfc9fb
 keys="$(cat scripts/wsl_pod_key.pub)
 $(ssh cn-laptop 'cat ~/.ssh/id_ed25519_pods.pub' < /dev/null)
@@ -32,14 +34,15 @@ while [ "$got" -lt "$want" ] && [ "$(date +%s)" -lt "$end" ]; do
   for g in "${GPUS[@]}"; do
     gpu=${g%%:*}; w=${g##*:}
     while [ "$got" -lt "$want" ]; do
-      n=$((n + 1)); out=$(scripts/editor_pod.sh create "wsl-ladder-pool-$n" "$gpu" 100 2>&1)
+      n=$((n + 1)); name="wsl-ladder-pool-$n-$$"  # unique per process: two loops once claimed the same pod by name
+      out=$(scripts/editor_pod.sh create "$name" "$gpu" "${DISK_GB:-100}" 2>&1)
       id=$(echo "$out" | grep -E '^[a-z0-9]{10,}$')
       if [ -z "$id" ]; then
         # a create can succeed without printing a bare id (11-08 stray pod): look it up by name before moving on
-        id=$(runpodctl pod list | jq -r --arg n "wsl-ladder-pool-$n" '.[] | select(.name == $n) | .id' | head -n 1)
+        id=$(runpodctl pod list | jq -r --arg n "$name" '.[] | select(.name == $n) | .id' | head -n 1)
         [ -z "$id" ] && break
       fi
-      echo "$(date +%Y-%m-%dT%H:%M) wsl-ladder-pool-$n $id $gpu" >> logs/pods_strict.txt
+      echo "$(date +%Y-%m-%dT%H:%M) $name $id $gpu ${CLOUD:-SECURE}" >> logs/pods_strict.txt
       got=$((got + 1)); say "created $id $gpu ($got/$want)"
       setup "$id" "$gpu" "$w" &
     done

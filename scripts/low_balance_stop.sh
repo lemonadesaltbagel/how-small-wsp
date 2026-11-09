@@ -9,10 +9,8 @@ cd "$(dirname "$0")/.."
 TH=${1:-5}
 # node session run-dir(relative to harness/) pods episode-log
 RUNS=(
-  "wsl opusx1 runs/phase0/opus55-hinted-p50-strict-s1 vx1mfk4ufa7137,ym70xf2dazbop1,522txdq1n7oz6j opus_strict_s1"
-  "wsl opusx2 runs/phase0/opus55-hinted-p50-strict-s2 blkvi438r5edfl,fjjukomg74e7x8,3kyhmqepm4a3jl,jrji6yisbhzqlr opus_strict_s2"
-  "laptop opusx3 runs_laptop/phase0/opus55-hinted-p50-strict-s3 l4uv2c1qm9l4hp,6ohqgldauh3p00,9o7nukwndavaro opus_strict_s3"
-  "mac dsx1 runs/phase0/deepseekflash-hinted-p50-strict-s1 jafz0mqatxadgl,ge3fudq3awgh7y,21q9v3a40iumt4 ds_strict_s1"
+  "wsl q9bx1 runs/phase0/qwen9b-hinted-p50-strict2-s1 ilppyd3ecb6qjj,jvoma6feywsyqm q9b_strict2_s1"
+  "laptop q9bx2 runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 2pc75n05yrqfyi,mutruiktz8i5e1,5plj5dix1grckr q9b_strict2_s2"
 )
 say() { echo "$(date '+%m-%d %H:%M') $*"; }
 all_pods() { for r in "${RUNS[@]}"; do set -- $r; echo "${4//,/ }"; done; }

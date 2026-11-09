@@ -301,3 +301,18 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
      full-size passes. The authors' own p50c run used ~7 h of forward time; the 1–2 h estimate ignored this.
   3. Work outside the plan: the invalid first round (62 card-h, $80, 38 % of the spend), the hold-out evaluations
      (~2–3 h per seed on one card), idle time from the network outage and the usage-limit stops (~$12), tests.
+
+## Qwen3.5-9B strict2 seeds 1–2 started (2026-11-09 21:12)
+- User decisions: rules version **strict2** for the open-source editors (appendix notes (5)–(6), rule_gate --v2);
+  target pools on community cloud where stock allows (a), local GPUs when memory allows (b).
+- Editor: Qwen/Qwen3.5-9B @ c2022362 (bf16; no FP8 release exists; the 27B will also run in bf16, so precision is
+  the same on every rung of the size ladder), vLLM 0.33, `--reasoning-parser qwen3`, max_model_len 196,608,
+  max-num-seqs 4, on one secure A40 48 GB ($0.59/h, pod 5plj5dix1grckr) that serves **both seeds**; SSH tunnels to
+  localhost:18001 on the desktop and the laptop. Harness flags as in the 27B smoke test: `--backend openai --model
+  editor --max-tokens 32000 --timeout 3600 --max-conversation-tokens 150000` (handoff below the context window).
+- Target pools: community stock of A5000/3090/4090 was empty (create → "no instances available", also with 60 GB disk),
+  so the pools started partly on secure A5000s: s1 (desktop) = community 3090 + secure A5000; s2 (laptop) = 2 secure
+  A5000. A community loop keeps trying; community pods replace the secure ones between passes as they appear.
+  Local GPUs: not now (other projects' jobs; Windows commit would fall below 15 GB with a local worker).
+- Bug found and fixed in acquire_pods.sh: two acquisition loops running at once used the same pod name, and the
+  by-name fallback made one loop claim (and set up a second time) the other's pod. Names are now unique per process.
