@@ -467,3 +467,15 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   pool is h2r5 only (hold-out, if a repair).
 - 27B hinted s1 waits for laptop memory (6.1 GB available with q9bx2 still scoring + DS; an episode needs up to
   ~8 GB): starts when q9bx2's harness exits.
+
+## Qwen3.5-0.8B hinted seed 1 ended early; Qwen3.5-27B hinted seed 1 started (2026-11-10 09:40–09:50)
+- **0.8B hinted s1** ended at turn 49 (3 min of editor time per few turns; 34 Python runs, **0 forward passes,
+  0 edits**, 5 nudges): it kept writing analyses without tool calls, and the final answer describes a
+  non-existent mechanism (a "cosh" scaling of the final norm). Ended by `max_nudges`, as for every editor. Scoring
+  of the (unedited) network runs on its 3090 (bhnj); Codex audit started on the desktop (`logs/audit_q08b_s1.log`).
+  Expected label: not localised (no forward pass, so it never saw a looping generation).
+- **27B hinted s1** started at 09:48 on the Mac node (the Mac node is a 14 GB Linux VM; 12 GB available, the
+  finished 0.8B episode's scoring holds almost no memory), tunnel 18003 on the Mac, pool = 3090 ij5r, same flags as
+  the 9B. The laptop stays at 6 GB available (other projects' jobs), so it keeps only DS for now.
+- Queue: next target pod → 0.8B hinted s2 (Mac or laptop, whichever has ≥ 12 GB available); 27B unhinted s1 on the
+  same editor (2 concurrent episodes fit its KV cache) when a node slot frees.
