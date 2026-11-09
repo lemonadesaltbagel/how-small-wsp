@@ -508,3 +508,10 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - Plan for the freed slots: 27B unhinted s1 on wsl (when the two finished harnesses exit, ~3 GB each), pool 38xd + a
   5090; 0.8B hinted s2 on the laptop when q9bx2 exits, pool hvxt (after the re-score) + a 5090; deepseek-flash s1 gets
   a 5090 next to its single 3090 (its passes take ~60 min).
+- 10:40: the scoring of **9B hinted s1** failed too (math500.error; caught by the new post_episode check, pods kept).
+  Cause: 3090 8me34ta4jvcpd7 has a CUDA 12.9 driver ("driver too old"); it was set up before the torch check and
+  min-cuda 13.0 existed, so it never ran a pass: in this run's split passes the work went to the other hosts (all
+  counted passes completed). Deleted; eval moved to `eval_failed_olddriver/`; re-scored on A5000 38xd
+  (`logs/rescore_q9b_s1.log`, desktop).
+- New `scripts/pool_health.sh`: torch CUDA check on every live pool pod; the watcher runs it every 20 min and wakes
+  me on any BAD pod. At 10:45 all 8 live pool pods pass.
