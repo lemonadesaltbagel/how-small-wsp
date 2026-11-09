@@ -41,8 +41,9 @@ scale]. Code, trajectories, prompts and edits are public.
   families) with a single editor (GPT-6 Astra) and report 8.35 → 37.80 % on MATH-500 for the 0.8B model; they do not
   vary the editor or audit tool calls. We vary the editor and audit. Community reproductions: experiments 1–6 with
   Opus [cite EphraiemSarabamoun]; a scripted solver that re-derives the loop direction given the paper's localisation
-  (KidIkaros) [cite]; experiment 1 with a local Qwen3.8-27B editor, 3 of 4 games identified [Simon Willison, primary
-  source to find]; edited Qwen3.8-27B checkpoints [ReBatch; Teylersf], where the 27B model is the target, not the
+  (KidIkaros) [cite]; experiment 1 (which game a policy network plays) with a local Qwen3.8-27B (Q4_K_M) reading the
+  weights in its prompt, without tools or code, 3 of 4 games identified (Willison 2026,
+  simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/) — interpretation only, no editing; edited Qwen3.8-27B checkpoints [ReBatch; Teylersf], where the 27B model is the target, not the
   editor.
 - **Model editing and steering.** Locate-and-edit methods (ROME, MEMIT) and direction-based interventions
   (activation addition, directional ablation) change behaviour with small, targeted weight or activation changes;

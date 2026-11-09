@@ -455,3 +455,6 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   and 0.8B editors; `editor_pod.sh` now pins `VLLM_SPEC`), Qwen/Qwen3.5-27B bf16, max_model_len 196,608,
   max-num-seqs 4. 27B hinted s1 goes on the laptop when 9B hinted s2's slot frees.
 - RunPod balance $111 at 09:15, spend $5.9/h across all projects (ours ~$3.7/h before the A100).
+- Prior art, primary source found: Willison (2026-11-03, simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/)
+  ran only experiment 1 (which game) with Qwen3.8-27B Q4_K_M in LM Studio, weights in the prompt, no tools or code
+  execution: 3 of 4 games (Freeway wrong). No weight editing, so no overlap with our editing question. Draft §2 updated.
