@@ -401,3 +401,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   one editor (GPT-6 Astra), target scale 0.8B / 9B, MATH-500 8.35 → 37.80 %, no audit. Simon Willison ran experiment 1
   with a local Qwen3.8-27B editor (3 of 4 games; secondary sources only so far). Qwen3.8 exists only at ≥ 27B, which
   is why the ladder uses Qwen3.5 (0.8B / 9B / 27B, one family). Outline related work updated.
+- 04:42: deepseek-flash s1 resumed on the laptop with a community 3090 (6thmelf5g8764g, passed the torch GPU check); pipeline, auto-resume and low-balance updated.
