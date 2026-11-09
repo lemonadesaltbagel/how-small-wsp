@@ -3,6 +3,7 @@
 # a vLLM editor, an API outage), so its pool pods do not sit idle until someone notices. Runs on the Mac:
 #   nohup bash scripts/auto_resume_limit.sh <node> <session> <run dir under harness/> <remote.json> <pods> <log name> \
 #     <task under harness/> "<env assignments>" "<openwish flags>" > logs/auto_resume_<session>.log 2>&1 < /dev/null &
+# (env "DS" = a deepseek-flash episode: resumed through scripts/launch_ds_episode.sh, which reads the key from .env)
 # Acts only when the session is gone AND the episode log's last line is "Error: backend kept failing ..."; any other stop
 # is left for a human. A usage-limit stop waits for the reset time (+2 min), any other backend failure 5 min. Restarts
 # post_episode.sh if it exited. Exits when the episode has a score, or after 8 resumes.
@@ -41,7 +42,11 @@ while true; do
     say "backend stop ($(cut -c1-120 <<< "$last")); resuming at $(date -r "$at" '+%H:%M')"
     sleep "$wait_s"
     [ "$(alive)" = no ] || { say "session already back (resumed by hand?)"; continue; }
-    rx -n "$node" "tmux new -d -s $sess '$envs bash scripts/run_episode.sh $task $run $remote $flags 2>&1 | tee -a $log'" >/dev/null 2>&1
+    if [ "$envs" = DS ]; then  # deepseek-flash: the launcher reads the API key from .env on the node
+      rx -n "$node" "tmux new -d -s $sess 'bash scripts/launch_ds_episode.sh $task $run $remote $name'" >/dev/null 2>&1
+    else
+      rx -n "$node" "tmux new -d -s $sess '$envs bash scripts/run_episode.sh $task $run $remote $flags 2>&1 | tee -a $log'" >/dev/null 2>&1
+    fi
     sleep 30
     if [ "$(alive)" = yes ]; then n=$((n + 1)); say "resumed ($n)"; else say "ALERT resume failed"; exit 1; fi
     if ! pgrep -f "[p]ost_episode.sh $sess " >/dev/null; then

@@ -387,3 +387,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   flags; now watching q9bx1, q9bx2, q9bux1. Idle editor and pools ~50 min (~$2.4).
 - DeepSeek topped up (balance ¥134.29 at 02:08). deepseek-flash episodes (task -strict2-claudegate) go on the laptop
   as soon as target pods are available (stock still near zero).
+- 03:21: **deepseek-flash hinted strict2-claudegate seed 1** started on the laptop (`scripts/launch_ds_episode.sh`,
+  key from .env; flags as DeepSeek seed 1). Pool: one community 3090 (1univ9fx8esl0x) so far. The Claude Sonnet 5.5
+  reviewer works in the episode (~7 s per block). Post pipeline, auto-resume (env "DS" = resume through the
+  launcher) and the low-balance stop attached. Both hinted 9B seeds recovered from the tunnel drop on their last
+  retries (s1 turn 190, s2 turn 151).
