@@ -444,3 +444,14 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 07:33: deepseek-flash s1's 3090 (6thmelf5g8764g) lost its GPU mid-pass (turn 59, after 60 min: "Device string must not
   be empty"; on the pod `nvidia-smi`: "Failed to initialize NVML: Unknown Error"). Uncharged. Pod deleted; DS paused
   again (turn 60, 5/50 passes, 1 reviewer block); the next pod goes to it, before 0.8B.
+- 09:05: **Qwen3.5-9B hinted seed 2** ended with a final answer at turn 236 (15/50 passes, 102/300 Python, 2 edits,
+  5 handoffs, 54 protocol errors). Its final answer is off-task (a short Chinese chat reply about breathing
+  exercises), so the scored network is whatever edit stands at the end. Scoring in progress on its pool.
+- 09:14: found 3090 agvuzshz20d1ax idle since 03:26: created by an earlier acquisition loop that was stopped before
+  it set the pod up, and never listed in a pool (my miss, ~$1.3). Set up now (`ADOPT=`), model hash and torch check
+  pass; it is the new pool of **deepseek-flash hinted s1**, resumed at 09:16 (turn 61); post pipeline, auto-resume
+  and the low-balance guard restarted with the new pod.
+- 09:20: **27B editor** pod created: secure A100 80GB PCIe (5nx3he1hfn44dd), vLLM pinned to 0.33.0 (same as the 9B
+  and 0.8B editors; `editor_pod.sh` now pins `VLLM_SPEC`), Qwen/Qwen3.5-27B bf16, max_model_len 196,608,
+  max-num-seqs 4. 27B hinted s1 goes on the laptop when 9B hinted s2's slot frees.
+- RunPod balance $111 at 09:15, spend $5.9/h across all projects (ours ~$3.7/h before the A100).

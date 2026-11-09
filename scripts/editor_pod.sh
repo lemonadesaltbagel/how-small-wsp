@@ -34,7 +34,7 @@ case "$1" in
     pod=$2; model=$3; maxlen=${4:-262144}; shift 4 || shift $#
     extra="$*"
     pssh "$pod" "mkdir -p ~/.ssh && grep -q wsl-wsp-ladder ~/.ssh/authorized_keys 2>/dev/null || echo '$(cat "$(dirname "$0")/wsl_pod_key.pub")' >> ~/.ssh/authorized_keys"
-    pssh "$pod" "set -e; cd /root; if [ ! -x /root/vllm-env/bin/vllm ]; then command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null; export PATH=/root/.local/bin:\$PATH; uv venv -q -p 3.12 /root/vllm-env; VIRTUAL_ENV=/root/vllm-env uv pip install -q vllm; fi; /root/vllm-env/bin/python -c 'import vllm; print(\"vllm\", vllm.__version__)'
+    pssh "$pod" "set -e; cd /root; if [ ! -x /root/vllm-env/bin/vllm ]; then command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh >/dev/null; export PATH=/root/.local/bin:\$PATH; uv venv -q -p 3.12 /root/vllm-env; VIRTUAL_ENV=/root/vllm-env uv pip install -q ${VLLM_SPEC:-vllm==0.33.0}; fi; /root/vllm-env/bin/python -c 'import vllm; print(\"vllm\", vllm.__version__)'
       export PATH=/root/vllm-env/bin:\$PATH; vllm download-kernels >/dev/null 2>&1 || true
       nohup setsid env -u GH_RO_TOKEN vllm serve $model --served-model-name editor --max-model-len $maxlen --enable-prefix-caching \
         --reasoning-parser qwen3 --gpu-memory-utilization 0.92 --port 8000 $extra > /root/vllm.log 2>&1 < /dev/null &
