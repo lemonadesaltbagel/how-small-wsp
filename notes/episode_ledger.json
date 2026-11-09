@@ -5,6 +5,7 @@
   "access": "simulation allowed",
   "counts": false,
   "math500": null,
+  "scoring_error": false,
   "failure_label": null,
   "holdout": null,
   "audit": null,
@@ -19,6 +20,7 @@
   "access": "strict (rules v1)",
   "counts": false,
   "math500": 0.072,
+  "scoring_error": false,
   "failure_label": "localised, edit failed",
   "holdout": null,
   "audit": {
@@ -43,6 +45,7 @@
   "access": "simulation allowed",
   "counts": false,
   "math500": 0.508,
+  "scoring_error": false,
   "failure_label": "success",
   "holdout": null,
   "audit": {
@@ -63,6 +66,7 @@
   "access": "simulation allowed",
   "counts": false,
   "math500": 0.35,
+  "scoring_error": false,
   "failure_label": "success",
   "holdout": null,
   "audit": {
@@ -83,6 +87,7 @@
   "access": "strict (rules v1 + adjudication)",
   "counts": true,
   "math500": 0.448,
+  "scoring_error": false,
   "failure_label": "success",
   "holdout": {
    "mmlupro1k": 0.404,
@@ -111,6 +116,7 @@
   "access": "strict (rules v1 + adjudication)",
   "counts": true,
   "math500": 0.554,
+  "scoring_error": false,
   "failure_label": "success",
   "holdout": {
    "mmlupro1k": 0.448,
@@ -139,6 +145,7 @@
   "access": "strict2",
   "counts": true,
   "math500": 0.078,
+  "scoring_error": false,
   "failure_label": "not localised",
   "holdout": null,
   "audit": {
@@ -163,6 +170,7 @@
   "access": "simulation allowed",
   "counts": false,
   "math500": null,
+  "scoring_error": false,
   "failure_label": null,
   "holdout": null,
   "audit": null,
@@ -177,6 +185,7 @@
   "access": "strict (rules v1)",
   "counts": true,
   "math500": 0.406,
+  "scoring_error": false,
   "failure_label": "success",
   "holdout": {
    "mmlupro1k": 0.447,

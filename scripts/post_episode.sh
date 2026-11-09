@@ -18,7 +18,9 @@ alive() {  # yes | no; an unreachable node is retried (a failed rx must not look
     a=$(rx "tmux has-session -t $sess 2>/dev/null && echo yes || echo no" 2>/dev/null | tail -n 1)
     case "$a" in yes|no) echo "$a"; return;; esac; sleep 60
   done; echo yes; }
-scored() { [ -f "harness/$run/eval/score.json" ] && echo yes || echo no; }
+scored() {  # yes | no | failed (a score file whose MATH-500 scoring errored, e.g. a dead GPU, is not a score)
+  f="harness/$run/eval/score.json"; [ -f "$f" ] || { echo no; return; }
+  jq -e '.math500.error == null' "$f" >/dev/null 2>&1 && echo yes || echo failed; }
 podssh() { read -r ip port < <(first_host); ssh -o ConnectTimeout=20 -p "$port" -i "$KEY" "root@$ip" "$@" < /dev/null; }
 
 last=""
@@ -26,6 +28,7 @@ while true; do
   a=$(alive); s=$(scored); st="alive=$a scored=$s"
   [ "$st" != "$last" ] && say "$st" && last=$st
   [ "$a" = no ] && [ "$s" = yes ] && break
+  if [ "$s" = failed ]; then say "ALERT MATH-500 scoring failed ($(jq -r '.math500.error' "harness/$run/eval/score.json" | tail -n 1 | cut -c1-160)); pods $pods kept"; exit 1; fi
   if [ "$a" = no ] && [ "$s" = no ]; then say "ALERT ended without a score; pods $pods kept for --resume"; exit 1; fi
   sleep 300
 done

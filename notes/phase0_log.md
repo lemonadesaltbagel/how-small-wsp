@@ -479,3 +479,15 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   the 9B. The laptop stays at 6 GB available (other projects' jobs), so it keeps only DS for now.
 - Queue: next target pod → 0.8B hinted s2 (Mac or laptop, whichever has ≥ 12 GB available); 27B unhinted s1 on the
   same editor (2 concurrent episodes fit its KV cache) when a node slot frees.
+- 09:50: 27B hinted s1's first forward pass failed at startup ("CUDA unknown error"; uncharged): its 3090 ij5r had
+  lost the GPU since setup. bhnj, on the **same host** (99.69.17.69), had the same fault: the scoring of 0.8B hinted
+  s1 failed, the harness wrote score 0.0 with `math500.error`, and post_episode accepted it and deleted the pod.
+  **That 0.0 is not a result**: eval moved to `eval_failed_deadgpu/`; the run is re-scored (`openwish score`) on the
+  next pod. Both pods deleted.
+- Fixes: post_episode treats a score file with `math500.error` as failed (ALERT, pods kept); the ledger shows
+  math500 = null and `scoring_error` for such files; the watcher keeps its read offsets in a state file (restarting
+  it had skipped lines: the 09:36 "ready" of 5090 sb6ag2bbexn6z6 and the 09:41 0.0 score). All running post_episode
+  copies restarted on the new script.
+- 09:51: 5090 sb6a → pool of 27B hinted s1. New acquisition loop for 3 pods (0.8B re-score, 0.8B hinted s2,
+  27B unhinted s1).
+- Spend: ours $5.7/h (A100 editor $1.79), all projects $9.4/h, balance $107 at 09:52.

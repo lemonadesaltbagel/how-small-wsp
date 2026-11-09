@@ -42,7 +42,8 @@ def row(run):
     acc = lambda k: (ho.get(k) or {}).get("accuracy") if isinstance(ho.get(k), dict) else ho.get(k)
     return {
         "run": rel, "arm": c.get("arm"), "access": c.get("access"), "counts": c.get("counts"),
-        "math500": sc.get("score"), "failure_label": c.get("failure_label"),
+        "math500": None if (sc.get("math500") or {}).get("error") else sc.get("score"),  # errored scoring is no score
+        "scoring_error": bool((sc.get("math500") or {}).get("error")), "failure_label": c.get("failure_label"),
         "holdout": None if not ho or ho.get("skipped") else {k: acc(k) for k in ("mmlupro1k", "gpqa", "ifeval")},
         "audit": {k: au.get(k) for k in ("runs_reviewed", "allowed", "suspicious", "violations", "valid")} if au else None,
         "adjudicated_valid": adj.get("valid") if adj else None,
