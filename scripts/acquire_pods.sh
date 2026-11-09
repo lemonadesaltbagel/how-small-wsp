@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Mac side: get up to <count> cheap target GPUs (secure cloud), retrying every 3 min until <minutes> pass. Each pod is
+# Mac side: get up to <count> cheap target GPUs (secure cloud; CLOUD=COMMUNITY for community cloud, approved for target
+# pools 2026-11-09), retrying every 3 min until <minutes> pass. A pod whose setup fails is deleted. Each pod is
 # set up (pod_target_setup.sh + hold-out deps), checked against the model hash, authorized for every node's key
 # (desktop, laptop, mac: a pod can serve any of them), and appended as a host line to logs/pool_hosts.jsonl:
 #   {"pod": id, "gpu": ..., "host": "root@ip", "port": p, "key": "~/.ssh/id_ed25519_pods", "root": "/root/openwish",
@@ -17,11 +18,11 @@ $(ssh cn-mac 'cat ~/.ssh/id_ed25519_pods.pub' < /dev/null)"
 say() { echo "$(date +%H:%M) acquire $*"; }
 setup() {  # setup <id> <gpu> <weight>
   local id=$1 gpu=$2 w=$3 ip port sha
-  read -r ip port < <(scripts/editor_pod.sh wait "$id") || { say "pod $id: no ssh"; return 1; }
+  read -r ip port < <(scripts/editor_pod.sh wait "$id") || { say "pod $id: no ssh; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -p "$port" -i "$KEY" "root@$ip" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys" <<< "$keys" \
-    && scp -q -o StrictHostKeyChecking=accept-new -P "$port" -i "$KEY" scripts/pod_target_setup.sh "root@$ip:/root/" || return 1
+    && scp -q -o StrictHostKeyChecking=accept-new -P "$port" -i "$KEY" scripts/pod_target_setup.sh "root@$ip:/root/" || { say "pod $id: ssh setup failed; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   sha=$(ssh -p "$port" -i "$KEY" "root@$ip" 'bash /root/pod_target_setup.sh 2>&1 | grep model.safetensors | cut -c1-64; export PATH=/root/.local/bin:$PATH; VIRTUAL_ENV=/root/vllm-env uv pip install -q langdetect nltk immutabledict absl-py pyarrow >/dev/null 2>&1' < /dev/null)
-  [ "$sha" = "$MODEL_SHA" ] || { say "pod $id: model hash mismatch ($sha)"; return 1; }
+  [ "$sha" = "$MODEL_SHA" ] || { say "pod $id: model hash mismatch ($sha); deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   printf '{"pod": "%s", "gpu": "%s", "host": "root@%s", "port": %s, "key": "~/.ssh/id_ed25519_pods", "root": "/root/openwish", "python": "/root/vllm-env/bin/python", "gpu_util": 0.85, "weight": %s, "price": %s}\n' \
     "$id" "$gpu" "$ip" "$port" "$w" "$(runpodctl pod get "$id" | jq -r .costPerHr)" >> logs/pool_hosts.jsonl
   say "ready $id $gpu $ip:$port"

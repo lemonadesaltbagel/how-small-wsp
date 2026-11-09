@@ -3,7 +3,7 @@
 # harness machine (WSL) through an SSH tunnel. The harness itself never runs on the pod (bubblewrap cannot
 # create namespaces inside RunPod containers; tested 2026-11-06).
 #
-#   editor_pod.sh create <name> <gpu-id> [disk-gb]      create a secure-cloud pod from the pytorch-gh template
+#   editor_pod.sh create <name> <gpu-id> [disk-gb]      create a pod from the pytorch-gh template (CLOUD=SECURE|COMMUNITY, default SECURE)
 #   editor_pod.sh wait <pod-id>                         print "ip port" once SSH is up
 #   editor_pod.sh serve <pod-id> <hf-model> [max-len] [extra vllm args...]   install vLLM and start the server (background)
 #   editor_pod.sh health <pod-id>                       0 when the server answers /v1/models
@@ -21,7 +21,7 @@ pssh() {  # pssh <pod-id> <command>
 
 case "$1" in
   create)
-    runpodctl pod create --name "$2" --gpu-id "$3" --cloud-type SECURE --template-id "$TEMPLATE" \
+    runpodctl pod create --name "$2" --gpu-id "$3" --cloud-type "${CLOUD:-SECURE}" --template-id "$TEMPLATE" \
       --container-disk-in-gb "${4:-150}" --ports "22/tcp" | jq -r '.id' ;;
   wait)
     for _ in $(seq 1 90); do
