@@ -373,3 +373,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   starts with one community 3090 (hvxt8xro4itco0, found by a manual create probe and set up with the new
   `ADOPT=` mode of acquire_pods.sh); more hosts are added as the loop (A5000/3090/4090/5090 community) finds them.
   Seed 2 (Mac node) waits for pods.
+- **deepseek-flash on the size axis (user, 2026-11-10):** a horizontal interval from active to total parameters, its own
+  marker, not connected to the Qwen curve. From the Hugging Face card of DeepSeek-V4.1-Flash: 8B activated per token
+  in prefill / 16B in decode; 552B backbone + 196B Engram conditional memory (token-lookup) = 748B. Chosen ends:
+  16B (decode, where the editor's reasoning is generated) to 748B (Engram counts as stored knowledge, the user's
+  reason for the total end); footnotes give 8B and 552B. The rationale (active ~ per-step depth, total ~ knowledge)
+  is stated as the reason for the display, not as a finding. Monotonicity test on the three Qwen sizes only.
