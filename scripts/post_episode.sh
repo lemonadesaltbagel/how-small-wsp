@@ -29,7 +29,14 @@ while true; do
   if [ "$a" = no ] && [ "$s" = no ]; then say "ALERT ended without a score; pods $pods kept for --resume"; exit 1; fi
   sleep 300
 done
-say "MATH-500 score $(jq -r '.score' "harness/$run/eval/score.json")"
+sc=$(jq -r '.score' "harness/$run/eval/score.json")
+say "MATH-500 score $sc"
+# hold-out only for a successful repair (user, 2026-11-10): MATH-500 at least 20 points above the base (9.0 %)
+BASE=${BASE_MATH500:-0.090}
+if ! awk -v s="$sc" -v b="$BASE" 'BEGIN{exit !(s - b >= 0.1995)}'; then
+  say "hold-out skipped: not a repair (score $sc, base $BASE)"
+  echo '{"ok": true, "skipped": "not a repair: MATH-500 gain < 20 points"}' > "harness/$run/eval/holdout_summary.json"
+else
 
 # hold-out data and dependencies on the pod (small files; the model and worker are there already)
 podssh "export PATH=/root/.local/bin:\$PATH; VIRTUAL_ENV=/root/vllm-env uv pip install -q langdetect nltk immutabledict absl-py pyarrow && mkdir -p /root/openwish/holdout && echo deps-ok" | tail -n 1
@@ -43,6 +50,7 @@ until grep -q "HOLDOUT_EXIT=" "$log" 2>/dev/null; do sleep 300; done
 out=$(grep '^{' "$log" | tail -n 1)
 echo "$out" > "harness/$run/eval/holdout_summary.json"
 say "hold-out done ($(grep HOLDOUT_EXIT "$log")): $(echo "$out" | jq -c '{ok, mmlupro1k: .mmlupro1k.accuracy, gpqa: .gpqa.accuracy, ifeval: .ifeval.accuracy}' 2>/dev/null || echo "$out" | cut -c1-200)"
+fi
 
 left=""
 for p in ${pods//,/ }; do

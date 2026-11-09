@@ -4,8 +4,8 @@ Source: the authors' v3 prompt of run p50c (github.com/RikiyaT/lm_understand-log
 OpenWiSH's scripts/prepare_exp8.py into harness/assets/exp8/prompts/p50.txt (or read from the logs clone).
 
 Variants (prompt dimension of Q1):
-  hinted    the v3 prompt verbatim (it names repetition as an example failure, twice)
-  unhinted  the v3 prompt with the two repetition hints removed. The authors' own shortened v4 prompt was never
+  hinted    the v3 prompt verbatim (it names repetition as an example failure three times)
+  unhinted  the v3 prompt with its three repetition hints removed. The authors' own shortened unhinted prompt was never
             published, so this is our construction; every other sentence is unchanged.
 
 Both variants get the same appendix (harness notes, see APPENDIX below) and the same task settings: the original

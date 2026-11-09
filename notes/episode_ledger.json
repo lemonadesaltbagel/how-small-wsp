@@ -1,0 +1,178 @@
+[
+ {
+  "run": "runs/phase0/deepseekflash-hinted-p50-s1",
+  "arm": "aborted",
+  "access": "simulation allowed",
+  "counts": false,
+  "math500": null,
+  "failure_label": null,
+  "holdout": null,
+  "audit": null,
+  "adjudicated_valid": null,
+  "gate": null,
+  "turns": 57,
+  "editor_cost_usd": 0.0
+ },
+ {
+  "run": "runs/phase0/deepseekflash-hinted-p50-strict-s1",
+  "arm": "deepseek-flash hinted, rules v1 (not the strict2 matrix)",
+  "access": "strict (rules v1)",
+  "counts": false,
+  "math500": 0.072,
+  "failure_label": "localised, edit failed",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 304,
+   "allowed": 300,
+   "suspicious": 0,
+   "violations": 4,
+   "valid": false
+  },
+  "adjudicated_valid": false,
+  "gate": {
+   "allow": 300,
+   "block": 4,
+   "unreviewed": 0
+  },
+  "turns": 401,
+  "editor_cost_usd": 0.0
+ },
+ {
+  "run": "runs/phase0/opus55-hinted-p50-s1",
+  "arm": "reference: Opus 5.5, simulation allowed (first round)",
+  "access": "simulation allowed",
+  "counts": false,
+  "math500": 0.508,
+  "failure_label": "success",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 300,
+   "allowed": 274,
+   "suspicious": 0,
+   "violations": 26,
+   "valid": false
+  },
+  "adjudicated_valid": null,
+  "gate": null,
+  "turns": 368,
+  "editor_cost_usd": 36.68470860000004
+ },
+ {
+  "run": "runs/phase0/opus55-hinted-p50-s2",
+  "arm": "reference: Opus 5.5, simulation allowed (first round)",
+  "access": "simulation allowed",
+  "counts": false,
+  "math500": 0.35,
+  "failure_label": "success",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 289,
+   "allowed": 277,
+   "suspicious": 1,
+   "violations": 11,
+   "valid": false
+  },
+  "adjudicated_valid": null,
+  "gate": null,
+  "turns": 357,
+  "editor_cost_usd": 39.387553
+ },
+ {
+  "run": "runs/phase0/opus55-hinted-p50-strict-s1",
+  "arm": "reference: Opus 5.5, strict",
+  "access": "strict (rules v1 + adjudication)",
+  "counts": true,
+  "math500": 0.448,
+  "failure_label": "success",
+  "holdout": {
+   "mmlupro1k": 0.404,
+   "gpqa": 0.2777777777777778,
+   "ifeval": 0.5767097966728281
+  },
+  "audit": {
+   "runs_reviewed": 301,
+   "allowed": 293,
+   "suspicious": 2,
+   "violations": 6,
+   "valid": false
+  },
+  "adjudicated_valid": true,
+  "gate": {
+   "allow": 299,
+   "block": 2,
+   "unreviewed": 0
+  },
+  "turns": 356,
+  "editor_cost_usd": 40.98385660000003
+ },
+ {
+  "run": "runs/phase0/opus55-hinted-p50-strict-s2",
+  "arm": "reference: Opus 5.5, strict",
+  "access": "strict (rules v1 + adjudication)",
+  "counts": true,
+  "math500": 0.554,
+  "failure_label": "success",
+  "holdout": {
+   "mmlupro1k": 0.448,
+   "gpqa": 0.30808080808080807,
+   "ifeval": 0.6044362292051756
+  },
+  "audit": {
+   "runs_reviewed": 288,
+   "allowed": 286,
+   "suspicious": 0,
+   "violations": 2,
+   "valid": false
+  },
+  "adjudicated_valid": true,
+  "gate": {
+   "allow": 288,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 343,
+  "editor_cost_usd": 36.62018880000002
+ },
+ {
+  "run": "runs_laptop/phase0/opus55-hinted-p50-s3",
+  "arm": "aborted",
+  "access": "simulation allowed",
+  "counts": false,
+  "math500": null,
+  "failure_label": null,
+  "holdout": null,
+  "audit": null,
+  "adjudicated_valid": null,
+  "gate": null,
+  "turns": 71,
+  "editor_cost_usd": 4.708817600000001
+ },
+ {
+  "run": "runs_laptop/phase0/opus55-hinted-p50-strict-s3",
+  "arm": "reference: Opus 5.5, strict",
+  "access": "strict (rules v1)",
+  "counts": true,
+  "math500": 0.406,
+  "failure_label": "success",
+  "holdout": {
+   "mmlupro1k": 0.447,
+   "gpqa": 0.3005050505050505,
+   "ifeval": 0.6081330868761553
+  },
+  "audit": {
+   "runs_reviewed": 298,
+   "allowed": 298,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 296,
+   "block": 2,
+   "unreviewed": 0
+  },
+  "turns": 357,
+  "editor_cost_usd": 40.80152000000001
+ }
+]

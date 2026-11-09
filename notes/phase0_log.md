@@ -329,3 +329,27 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 23:28: three more community pods (A5000 $0.16, 2 × 3090 $0.22) replace the secure A5000s: s1 = 3090 + 3090 + A5000,
   s2 = 3 × 3090, all community. `swap_pool.sh` retires jvoma6feywsyqm, 2pc75n05yrqfyi, mutruiktz8i5e1 once no pass
   uses them. Target side ~$1.26/h for both episodes (was ~$1.57).
+
+## Scope change and Astra log audit (2026-11-10)
+- **Scope (user, 2026-11-10):** goal is a preprint as soon as possible, Q1 lean only (outline:
+  `预印本大纲：How Small Can a Weight-Space Programmer Be.md`; my review: `预印本大纲_校对意见.md`). Q2/Q3/Q4, the injected
+  lesion, the zero-feedback tier and the 5th size tier are paused (future work). Main matrix: editors Qwen3.5-0.8B /
+  9B / 27B and deepseek-flash × hinted + self-built unhinted prompt × 2 seeds = 16 episodes; a 3rd seed only for a
+  tier whose two seeds split (one success, one failure). Hold-out only for repairs (MATH-500 +20 points); every episode
+  gets a failure label; the first-round Opus runs are kept as the "simulation allowed" access level.
+- Done for this: `post_episode.sh` skips the hold-out unless score − 0.090 ≥ 0.20; `run_class.json` in every run dir
+  (access level, counts, failure label); `scripts/ledger.py` → `notes/episode_ledger.{md,json}`.
+- **Astra (authors' p50c) audit** — `scripts/stage_external_audit.py` stages their published run for `openwish audit`:
+  their rows (`out` → `output`), their own task prompt + our note (5) as rules (the reading the strict Opus audits
+  used), our spec.json for the auditor config (their instructions are identical). Codex medium, batch 8, same as ours.
+  **80 Python runs: 77 allowed, 0 suspicious, 3 violations** (calls 9, 61, 90; call = line in their tool_calls.jsonl).
+  My reading of the three: all are linear attributions through down_proj on recorded activations — the mean MLP
+  activation difference (repetitive − productive, recorded tokens) times the down_proj columns projected on the
+  repetition direction u (`u @ W_down`), i.e. each neuron's contribution along u; call 9 also rebuilds the MLP's
+  output difference (`W_down @ dm`) to split the residual growth into MLP and attention parts. Note (5) forbids
+  "reconstructing a layer's output … on recorded inputs" and "ranking candidate edits by such computation"; calls 61
+  and 90 rank neurons this way and pick the top 64 per layer in L15/L19, which is exactly the submitted edit
+  (130,188 changed entries in two down_proj, 64 columns each). No nonlinearity (norms, gates, attention, logit lens)
+  is simulated, unlike the first-round Opus violations (26 and 11 calls, incl. RMSNorm, sigmoid gates, output layer).
+  Under the authors' own rules ("any analysis of the weights and of forward-pass results") this was plausibly
+  allowed. The `refused/t006_1` entry in their run is an OpenAI usage-policy rejection of one turn, not a rule matter.
