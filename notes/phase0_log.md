@@ -161,3 +161,101 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - Bug in the split (my code, 04:30–05:54): a host running both models of a "both" pass with "activations" ran the activation step of the original model before starting the edited model's vLLM; the activation model's memory (kept by torch) left vLLM 16.4 of 23.6 GB → "Free memory … less than desired". Opus strict s2's turn-82 pass (256 problems) failed on every host after 42 min (uncharged). Fixed: activations after all generations, as in the unsplit path; split test passes again; notice 002 to s2. The small-request test had not exposed it (little memory reserved).
 - First full split passes: Opus strict s1 turn 58, "both" × 256 on 4090 + 2×A5000: 15.6M tokens in 43.5 min = 5.96k tok/s (predicted 6.1k from 2.55 TB/s; a lone 5090 does ~5.3k).
 - Rule gate, first block in the strict runs (Opus strict s1 turn 73): **a false positive.** The code projected RMS-scaled recorded hidden states onto `dlu` (late-loop minus pre-loop mean activation difference) and `bvec` (a covariance solve on activation statistics), both directions computed from activations, which note (5) allows. The reviewer only sees earlier *function* definitions, not earlier variable assignments, and guessed they were "weight rows". The editor moved on (no repeat; one turn, no budget). 1 false positive in 70 reviews; gate left unchanged mid-run. For later runs: also pass the assignments of the names a block uses.
+
+## Network outage, 2026-11-08 afternoon
+- The home network failed from about 13:45 to 17:30. DeepSeek strict s1 stopped at 14:32 (DeepSeek API unreachable after 9
+  retries; turn 326, 17/50 passes) and Opus strict s3 at 14:01 (laptop could not reach the Claude API; turn 270, 24/50).
+  The desktop runs s1/s2 waited and continued by themselves. The idle pools of s3 and DeepSeek cost about $2.5/h for
+  ~4 h (~$10).
+- 17:51–17:55: both resumed with `--resume` from the same run dirs and pools; post-episode pipelines restarted.
+- Balance $40.8 at 17:58 for $5.6/h. By the user's rule, `scripts/low_balance_stop.sh 5` now watches the balance: below $5
+  it stops the four episodes (resumable), deletes their 13 pool pods and writes `logs/RESUME_low_balance.md`.
+- Gate blocks so far are collected in `logs/gate_blocks_strict.log` (s1 turns 73, 186; s3 turn 182).
+
+## Opus strict s1 finished (2026-11-08 18:30)
+- 356 turns, 50/50 passes, 299/300 Python runs, editor cost $40.98. MATH-500 (scorer on the 4090 pod): **44.8 %**
+  (base 9.0 %, scripted floor 33.6 %, invalid first-round s1 50.8 %). The editor's own held-out claim: 53.5 % vs 10.8 % on
+  2,304 practice problems. Edit: 4 repurposed MLP neurons in layers 19 and 23 (~12k weights): a loop breaker whose gate
+  reads an LDA loop detector on the layer-18 residual and writes the </think> direction, plus an "answer commit" circuit.
+- Rule gate: 2 blocks (turn 73, a false positive; turn 186, a correct rule (b) block), no unreviewed calls.
+- Post-hoc Codex audit (medium): 293 allowed / 2 suspicious / **6 violations**, `valid: false`. None of them is rule (b).
+  All are rule (a) as Codex reads it: LDA detectors (calls 104, 218, 222, 313) and one ridge least-squares readout
+  (234, installed in 235) fitted on recorded activations and installed as MLP gate/up rows ("fitting network weights to
+  data"). The gate allowed them. The written rule (a) forbids "gradient descent or any other training: … no iterative
+  fitting of weights to a loss"; note (5) allows "projections onto directions computed from other activations" and
+  "building edits from such analysis". LDA and ridge are closed-form, not iterative. The first-round audits accepted
+  mean-difference directions. **Open question for the user: does a closed-form fit (LDA / ridge) installed as weights
+  count as training?** The submitted edit depends on it (the loop gate is the LDA detector of call 104).
+- **Decision (user, 2026-11-08 21:03): closed-form statistics of activations are allowed** (mean differences, LDA,
+  covariance-whitened means, constant or least-squares read-outs: functions of activation means/covariances and their
+  inverses). Rule (a) forbids iterative optimisation and any fitting that needs the network's computation. Why: the
+  flagged "ridge regression" (call 234) solves X·b = 1 for a constant read-out used as a bias (MLP layers have none);
+  it equals M⁻¹μ, the same formula as CB3's unflagged constant read-out C⁻¹μ, and an LDA direction equals least squares
+  on ±1 labels, so a line between LDA and ridge would not hold. **Opus strict s1 counts (44.8 %)**; its 6 audit
+  "violations" are overruled as this class (`audit_adjudication.json` in the run dir). Next appendix version: write
+  this boundary into note (5)/(6). The same class will be adjudicated the same way in s2/s3/DeepSeek; any other
+  violation still invalidates a run.
+
+## Opus strict s2 and DeepSeek strict s1 finished; hold-out grading fix (2026-11-08 evening)
+- **Opus strict s2**: MATH-500 **55.4 %** (20:46). Hold-out running on its first pool host. Audit pending.
+- **Opus strict s1 hold-out**: MMLU-Pro-1k 40.4 %, GPQA 27.8 % (4 samples), **IFEval 57.7 %** (instruction level 67.4 %).
+  IFEval grading had failed on the pod: nltk (new version on fresh pods) refuses a data folder writable by another
+  account, and rsync -a had kept uid 1000 as the owner of /root/openwish/holdout/nltk_data. The generations were saved,
+  so `scripts/regrade_holdout_raw.py` graded them on the desktop with holdout_eval.py's own grader (qwen venv, 5 s).
+  The original summary is kept as `eval/holdout_summary_grading_failed.json`. Fixed for the running pipelines by
+  `chown -R root:root` on the hold-out pods (s2 by hand; DeepSeek and s3 by a 2-minute loop, logs/nltk_owner_fix.log).
+  For future pods: rsync with `--chown=root:root` (or `--no-o --no-g`) in post_episode.sh, once no copy of it runs.
+- **DeepSeek strict s1**: ended 21:51 after 401 turns, 50/50 passes and 300/300 Python runs (the last 33 passes in 4 h
+  after the resume). Scoring now; its two A5000s deleted (scoring and hold-out use the first host only).
+- **Opus strict s2 audit** (Codex medium): 286 allowed / 0 suspicious / 2 violations (rule (b)), gate allowed both.
+  Call 102 evaluates the silu formula of the neuron being built on a hand-made scalar grid to set its strength (plus the
+  down column · </think> direction, a weight analysis); call 108 extrapolates per-token END log-probs measured by two
+  teacher-forced passes linearly in logit space. Neither applies network computation to recorded activations of actual
+  tokens. **Decision (user, 2026-11-08 23:22): both are false positives; s2 counts (55.4 %).**
+  `audit_adjudication.json` in the run dir. For the next appendix: say that designing an edit on hypothetical scalar
+  inputs and extrapolating measured forward-pass outputs are allowed.
+- **DeepSeek strict s1: MATH-500 7.2 %** (23:27). The editor's final edit set is **empty**: it reverted its last edit
+  before the Python budget ran out (final_answer.md: "submitted weights are the original, unedited Qwen3.5-0.8B"), so
+  the score re-measures the base (9.0 % earlier; difference ≈ 1.4 SE). Hold-out skipped (it would only repeat the
+  base hold-out baselines IFEval 20.1 / MMLU-Pro 39.7 / GPQA 24.4) and its last pod deleted at 23:29. Audit pending
+  (for the record; with no submitted edit, validity does not change the score).
+- **DeepSeek strict s1 audit** (Codex medium): 300 allowed / 0 suspicious / 4 violations, gate allowed all four. Calls
+  273 and 313 are closed-form fits (allowed by the 21:03 decision; 273 also failed). **Calls 243–244 upheld (agent's
+  reading, for user review):** they predict the designed neuron's per-token logit effect at recorded positions
+  (activation projection × readout through embedding rows and the final-norm weight) and pick the strength by the
+  predicted flip rate, which note (5) forbids. Run marked invalid; no effect on the score (empty submission).
+  Gate misses of this class (edit-effect prediction on recorded tokens) recur in s2 (102/108, false positives) and here
+  (true positive): the reviewer prompt should distinguish them in the next version.
+
+## Opus strict s3: usage-limit stop (2026-11-09)
+- 04:36: s3 stopped at turn 338 (41/50 passes, python 286/300, $37.12): the Claude account hit its 5-hour usage limit
+  (status 429, reset 05:10); 9 retries over ~1 h, then "resume later with --resume". Its post-episode pipeline exited
+  with "ended without a score" and kept the pods. 05:13: resumed (same command, same pool); pipeline restarted with
+  `NODE=laptop` (without it, `alive()` checks the default node and reports the episode as ended). Idle pool ~37 min, ~$0.7.
+- 09:25: second usage-limit stop at turn 348 (46/50 passes, python 291/300, $39.67; reset 10:10). Resumed 10:11, pipeline
+  restarted. Idle pool ~46 min, ~$0.8. The 5-hour account limit is shared with this supervising session; s3 alone used it
+  up in ~4 h.
+- 12:08: `scripts/auto_resume_limit.sh` now watches s3 (log `logs/auto_resume_opusx3.log`): when the session is gone and
+  the episode log ends with the usage-limit error, it waits until the reset (+2 min), resumes the episode and restarts
+  post_episode.sh if it exited. Other stops are left for a human.
+
+## Opus strict s3 finished (2026-11-09 12:51); next rules version
+- s3 ended at 12:51 after 357 turns (50/50 passes, 296/300 Python, 171 edits, $40.80 editor API-equivalent, two
+  usage-limit stops). Final edit G3g: subtract 0.25·d_L/(1+w_ln) from the output-gate rows of 18 full-attention heads
+  in q_proj of layers 11/15/19/23 (d_L an LDA loop-state direction), 0.63% of the weights: heads close only inside loops.
+  Its own held-out paired generations: 11.4% → 55.7% on 1,024 problems. MATH-500 scoring running.
+- **s3 audit** (Codex medium, desktop): 298 allowed / 0 suspicious / **0 violations, valid: true**. The LDA direction
+  is allowed under the 21:03 decision.
+- **Next rules version** (not used by any run yet): task level `-strict2` in `scripts/make_exp8_tasks.py` (appendix
+  note (6): closed-form statistics allowed; made-up-input design and extrapolation of measured outputs allowed;
+  predicting an edit's effect at recorded token positions forbidden) and `rule_gate.py --v2` (the same boundaries; the
+  reviewer also sees earlier top-level assignments, the cause of the s1 turn-73 false positive). The default
+  `rule_gate.py` prompt is byte-identical to v1.
+- Calibration (`scripts/calibrate_rule_gate.py --adjudicated`, adjudicated audits of strict s1/s2/DeepSeek s1, all
+  overruled calls, equal random allowed calls, plus s1 turns 73 (allowed) and 186 (violation); `logs/calib_gate_v2.log`):
+  v1 21/21 allowed, 1/3 violations blocked (missed DeepSeek 243/244); **v2 21/21 and 3/3**. Median 4.0 s. Small sample:
+  shows the boundary cases are handled, not an error rate.
+- **s3 MATH-500: 40.6 %** (14:23). Its two A5000s deleted at 13:01 once the episode ended (scoring and hold-out use the
+  first host only). Hold-out started 14:23 on the 3090. The nltk ownership loop had stopped at its 12-hour limit (~10:00),
+  before this hold-out copied its data, and the folder was uid 1000 again; chowned by hand at 15:12, before IFEval.
+  So Opus strict: 44.8 / 55.4 / 40.6 %, all three ≥ 30 %: the Opus part of the Phase 0 gate passes.

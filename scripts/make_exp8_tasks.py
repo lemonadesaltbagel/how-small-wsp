@@ -10,7 +10,8 @@ Variants (prompt dimension of Q1):
 
 Both variants get the same appendix (harness notes, see APPENDIX below) and the same task settings: the original
 exp8 settings plus the [rationale] rule, a mandatory save_edit reason (prelude) and per-episode editor caps.
-Each variant also has a -strict task: appendix note (5) spelling out rule (b) and a pre-execution rule reviewer.
+Each variant also has a -strict task: appendix note (5) spelling out rule (b) and a pre-execution rule reviewer, and a
+-strict2 task: also note (6), the rule boundaries decided on 2026-11-08, and the reviewer's v2 reading.
 
 usage: python3 scripts/make_exp8_tasks.py [--passes 50]
 """
@@ -45,6 +46,7 @@ APPENDIX = """NOTES FROM THE EXPERIMENTERS. The original sessions of this task r
 # Strict variants only (added 2026-11-08 after the post-hoc audit marked the first Opus runs invalid for simulating
 # layers on recorded activations). The same reading of rule (b) is given to the pre-execution reviewer (rule_gate.py).
 STRICT_NOTE = """(5) WHAT RULE (b) MEANS. "Do not implement or simulate the network's computation on any input in the kernel" includes partial computations on recorded activations. Not allowed in the kernel: multiplying activations of actual tokens (hidden states, MLP activations or anything else a forward pass returned) by the network's weight matrices or by rows or columns of them (q/k/v/o projections, gate rows, MLP up/gate/down projections, linear-attention mixers, the embedding or output layer); applying the model's norms with their weights, its gates, sigmoids or activation functions, attention, or the output layer ("logit lens") to such activations; reconstructing a layer's output, or what an edited layer would output, on recorded inputs; and scoring or ranking candidate edits by such computation. Ask a forward pass for these quantities instead (it can return hidden states, MLP activations, attention, token log-probs and top-k for the original and the edited weights). Allowed: statistics of the recorded activations themselves (means, group differences, PCA/SVD, correlations, norms, cosine similarities, projections onto directions computed from other activations); any analysis of the weights themselves, including products of weight matrices with each other and with directions such as a mean-difference vector, to see which rows or columns write or read that direction; and building edits from such analysis. A reviewer reads every Python block before it runs; a block it judges to break the rules is sent back unrun and costs nothing, with the reason. If you think a review is wrong, say why and rewrite the step."""
+STRICT2_NOTE = """(6) WHERE THE LINES ARE (decisions on earlier runs of this task). Rule (a) forbids iterative optimisation (gradient steps, optimizers, repeated fitting of weights to a loss) and any fit that needs the network's computation. Closed-form statistics of recorded activations are allowed and may be built into weights: mean differences, covariance-whitened mean differences (LDA), constant or least-squares read-outs between recorded activations, and anything else computed from activation means and covariances and their inverses. Under rule (b) it is allowed to design an edit on made-up inputs (for example, evaluate the activation function of a neuron you are building on a grid of scalar values to choose its strength) and to inter- or extrapolate quantities that forward passes measured (for example, how a measured log-prob changes with edit strength across passes). Not allowed: predicting in the kernel what a candidate edit would do at recorded positions of actual tokens (for example, projecting recorded activations onto the edit's input direction, reading the effect out through the embedding, a norm weight or the output layer, and choosing the strength by the predicted effect). Measure that with a forward pass of the edited weights instead."""
 
 PRELUDE_EXTRA = r'''
 
@@ -69,14 +71,17 @@ def save_edit(name, tensor, reason=""):
 STRICT_HOOKS = '''
 [hooks]
 # pre-execution review of every Python block against rule (b); see rule_gate.py (two attempts of <= 80 s)
-pre_tool = "python3 -I rule_gate.py"
+pre_tool = "python3 -I rule_gate.py{gate_args}"
 timeout_s = 200
 '''
 
 
-def toml(variant, passes, prompt_file, strict=False):
-    sfx, app = ("-strict", "appendix-strict.txt") if strict else ("", "appendix.txt")
-    extra = "\n# Strict: appendix note (5) on rule (b) and a pre-execution rule reviewer ([hooks])." if strict else ""
+def toml(variant, passes, prompt_file, strict=0):
+    """strict 0: original rules; 1: note (5) + reviewer; 2: also note (6) (the 2026-11-08 boundary decisions) and the
+    reviewer's matching v2 reading (rule_gate.py --v2)."""
+    sfx, app = {0: ("", "appendix.txt"), 1: ("-strict", "appendix-strict.txt"), 2: ("-strict2", "appendix-strict2.txt")}[strict]
+    extra = {0: "", 1: "\n# Strict: appendix note (5) on rule (b) and a pre-execution rule reviewer ([hooks]).",
+             2: "\n# Strict v2: appendix notes (5)-(6) (rule boundaries as decided 2026-11-08) and the v2 rule reviewer."}[strict]
     return f'''# Generated by scripts/make_exp8_tasks.py. Original exp8 settings (OpenWiSH tasks/exp8/p{passes}.toml) plus
 # [rationale], a mandatory save_edit reason (prelude.py) and per-episode editor caps.{extra}
 id = "exp8sl-{variant}-p{passes}{sfx}"
@@ -138,7 +143,7 @@ command = ["{{root}}/assets/venvs/sandbox/bin/python", "-I", "{{root}}/python/ad
 [access]
 weights = "code"
 data = ["practice problems with answers (GSM8K and MATH training sets)"]
-''' + (STRICT_HOOKS if strict else "")
+''' + (STRICT_HOOKS.format(gate_args=" --v2" if strict == 2 else "") if strict else "")
 
 
 def main():
@@ -161,10 +166,12 @@ def main():
         pf = f"prompts/{variant}-p{a.passes}.txt"
         open(os.path.join(OUT, pf), "w").write(text)
         open(os.path.join(OUT, f"{variant}-p{a.passes}.toml"), "w").write(toml(variant, a.passes, pf))
-        open(os.path.join(OUT, f"{variant}-p{a.passes}-strict.toml"), "w").write(toml(variant, a.passes, pf, strict=True))
+        open(os.path.join(OUT, f"{variant}-p{a.passes}-strict.toml"), "w").write(toml(variant, a.passes, pf, strict=1))
+        open(os.path.join(OUT, f"{variant}-p{a.passes}-strict2.toml"), "w").write(toml(variant, a.passes, pf, strict=2))
         print(variant, len(text), "chars", hashlib.sha256(text.encode()).hexdigest()[:16])
     open(os.path.join(OUT, "appendix.txt"), "w").write(APPENDIX + "\n")
     open(os.path.join(OUT, "appendix-strict.txt"), "w").write(APPENDIX + "\n" + STRICT_NOTE + "\n")
+    open(os.path.join(OUT, "appendix-strict2.txt"), "w").write(APPENDIX + "\n" + STRICT_NOTE + "\n" + STRICT2_NOTE + "\n")
     base_prelude = open(os.path.join(H, "tasks", "exp8", "prelude.py")).read()
     open(os.path.join(OUT, "prelude.py"), "w").write(base_prelude.rstrip() + "\n" + PRELUDE_EXTRA)
     print("wrote", OUT)

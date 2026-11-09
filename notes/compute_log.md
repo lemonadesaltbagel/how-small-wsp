@@ -17,7 +17,7 @@
 **Total to 2026-11-08 01:51: ≈ $81.0** (67.0 + 2.86 + 5.73 + 2.74 + 2.66). No pods running.
 
 Strict-rule reruns (task hinted-p50-strict; 5090s were out of stock):
-| 2026-11-08 | vx1mfk4ufa7137 | RTX 4090 secure ($0.89/h) | Opus strict s1 target passes (desktop harness), created 02:24 | | |
+| 2026-11-08 | vx1mfk4ufa7137 | RTX 4090 secure ($0.89/h) | Opus strict s1 target passes, then first host of its pool; 02:24 – 20:32 (after scoring and hold-out) | ~1088 | 16.36 (billed) |
 | 2026-11-08 | r2nlncawb0yqzf | RTX PRO 6000 secure ($2.49/h) | Opus strict s2 target passes (desktop harness), created 02:24 | | |
 | 2026-11-08 | hdqf0i76ys7swk | L40S secure ($1.09/h) | Opus strict s3 target passes (laptop harness), 02:24 – 04:36 (replaced by a pool: half the speed of a 5090) | ~132 | ~2.40 |
 Rule reviewer (deepseek-flash, pre_tool hook): ~1k tokens per Python block, negligible.
@@ -28,19 +28,20 @@ Rule reviewer (deepseek-flash, pre_tool hook): ~1k tokens per Python block, negl
 
 GPU pools (11-08 ~04:33; passes split across hosts, see notes/target_gpu_cost.md). All secure cloud, 100 GB disk:
 | 2026-11-08 | vbdv6tys477nvr | RTX A5000 ($0.27/h) | benchmark: replay of Opus s1 pass 1 (deletes itself) , created 03:09 | | |
-| 2026-11-08 | ym70xf2dazbop1 | RTX A5000 ($0.27/h) | split-pass test, then Opus strict s1 pool, created 03:39 | | |
-| 2026-11-08 | 522txdq1n7oz6j | RTX A5000 ($0.27/h) | Opus strict s1 pool, created 04:30 | | |
-| 2026-11-08 | blkvi438r5edfl | RTX 3090 ($0.50/h) | Opus strict s2 pool, created 04:21 | | |
-| 2026-11-08 | fjjukomg74e7x8 | RTX 3090 ($0.50/h) | Opus strict s2 pool, created 04:21 | | |
-| 2026-11-08 | 3kyhmqepm4a3jl | RTX A5000 ($0.27/h) | Opus strict s2 pool, created 04:12 | | |
+| 2026-11-08 | ym70xf2dazbop1 | RTX A5000 ($0.27/h) | split-pass test, then Opus strict s1 pool, created 03:39, deleted 18:32 (idle once s1 finished: scoring uses the first host only) | 893 | ~4.0 |
+| 2026-11-08 | 522txdq1n7oz6j | RTX A5000 ($0.27/h) | Opus strict s1 pool, created 04:30, deleted 18:32 (same) | 842 | ~3.8 |
+| 2026-11-08 | blkvi438r5edfl | RTX 3090 ($0.50/h) | Opus strict s2 pool (first host: scoring, hold-out), 04:21 – 23:09 | ~1128 | 9.32 (billed) |
+| 2026-11-08 | fjjukomg74e7x8 | RTX 3090 ($0.50/h) | Opus strict s2 pool, 04:21 – 23:09 | ~1128 | 9.32 (billed) |
+| 2026-11-08 | 3kyhmqepm4a3jl | RTX A5000 ($0.27/h) | Opus strict s2 pool, 04:12 – 23:09 | ~1137 | 5.19 (billed) |
 | 2026-11-08 | l4uv2c1qm9l4hp | RTX 3090 ($0.50/h) | Opus strict s3 pool, created 04:21 | | |
 | 2026-11-08 | 6ohqgldauh3p00 | RTX A5000 ($0.27/h) | Opus strict s3 pool, created 04:24 | | |
 | 2026-11-08 | 9o7nukwndavaro | RTX A5000 ($0.27/h) | Opus strict s3 pool, created 04:24 | | |
-| 2026-11-08 | ge3fudq3awgh7y | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:30 | | |
-| 2026-11-08 | 21q9v3a40iumt4 | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:33 | | |
+| 2026-11-08 | ge3fudq3awgh7y | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:30, deleted 21:57 (idle once the episode ended; scoring uses the first host) | 1047 | ~4.7 |
+| 2026-11-08 | 21q9v3a40iumt4 | RTX A5000 ($0.27/h) | DeepSeek strict s1 pool, created 04:33, deleted 21:57 (same) | 1044 | ~4.7 |
+| 2026-11-08 | jafz0mqatxadgl | RTX 4090 secure ($0.89/h) | DeepSeek strict s1 target passes, then first host of its pool; ~02:35 – 23:29 (hold-out skipped: the submission is the unedited model) | ~1254 | 17.97 (billed, last hour may lag) |
 Pools: s1 = 4090 + 2×A5000 + desktop 5070 Ti when free; s2 = 2×3090 + A5000 + desktop 5070 Ti (PRO 6000 retired once idle);
 s3 = 3090 + 2×A5000; DeepSeek = 4090 + 2×A5000. Spend ~$5.4/h as before, ~2.2× the bandwidth.
 
-| 2026-11-08 | jrji6yisbhzqlr | RTX A5000 ($0.27/h) | test of the split-activation fix, then Opus strict s2 pool (4th host), created 05:40 | | |
+| 2026-11-08 | jrji6yisbhzqlr | RTX A5000 ($0.27/h) | test of the split-activation fix, then Opus strict s2 pool (4th host), 05:40 – 23:09 | ~1049 | 4.77 (billed) |
 | 2026-11-08 | r2nlncawb0yqzf | RTX PRO 6000 ($2.49/h) | Opus strict s2 single target, 02:24 – 04:38 (retired: pool) | ~134 | ~5.56 |
 | 2026-11-08 | vbdv6tys477nvr | RTX A5000 ($0.27/h) | A5000 benchmark, 03:09 – 05:35 | ~146 | ~0.66 |

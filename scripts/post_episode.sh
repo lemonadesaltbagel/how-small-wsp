@@ -34,7 +34,8 @@ say "MATH-500 score $(jq -r '.score' "harness/$run/eval/score.json")"
 # hold-out data and dependencies on the pod (small files; the model and worker are there already)
 podssh "export PATH=/root/.local/bin:\$PATH; VIRTUAL_ENV=/root/vllm-env uv pip install -q langdetect nltk immutabledict absl-py pyarrow && mkdir -p /root/openwish/holdout && echo deps-ok" | tail -n 1
 read -r ip port < <(first_host)
-rx "for f in manifest.json mmlupro1k.jsonl gpqa.jsonl ifeval.jsonl; do rsync -az -e 'ssh -i ~/.ssh/id_ed25519_pods -p $port -o StrictHostKeyChecking=accept-new' harness/assets/exp8/holdout/\$f root@$ip:/root/openwish/holdout/\$f; done; rsync -az -e 'ssh -i ~/.ssh/id_ed25519_pods -p $port' harness/assets/exp8/holdout/nltk_data/ root@$ip:/root/openwish/holdout/nltk_data/ && echo data-ok" | tail -n 1
+rx "for f in manifest.json mmlupro1k.jsonl gpqa.jsonl ifeval.jsonl; do rsync -az -e 'ssh -i ~/.ssh/id_ed25519_pods -p $port -o StrictHostKeyChecking=accept-new' harness/assets/exp8/holdout/\$f root@$ip:/root/openwish/holdout/\$f; done; rsync -az --chown=root:root -e 'ssh -i ~/.ssh/id_ed25519_pods -p $port' harness/assets/exp8/holdout/nltk_data/ root@$ip:/root/openwish/holdout/nltk_data/ && echo data-ok" | tail -n 1
+podssh "chown -R root:root /root/openwish/holdout/nltk_data && echo nltk-owner-ok" | tail -n 1  # nltk refuses folders of other uids
 log="logs/holdout_$sess.log"
 rx "tmux new -d -s ho-$sess 'cd harness && OPENWISH_RUN=$run OPENWISH_FINAL_NET=$run/final/net OPENWISH_QWEN_REMOTE=\$(cd .. && pwd)/$remote assets/venvs/sandbox/bin/python -I python/adapters/qwen_pass.py --evaluate --sets mmlupro1k,gpqa,ifeval > ../$log 2>&1; echo HOLDOUT_EXIT=\$? >> ../$log'"
 say "hold-out started (tmux ho-$sess, $log)"
