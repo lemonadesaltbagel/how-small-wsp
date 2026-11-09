@@ -368,3 +368,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   its "violation" label is my reading, a boundary case). Latency median 5.9 / 5.1 s, max 25.0 / 7.5 s. Chosen:
   **Sonnet 5.5**. Tasks `{hinted,unhinted}-p50-strict2-claudegate.toml` = strict2 with this reviewer, for
   deepseek-flash as the editor (laptop).
+- 01:42: **Qwen3.5-9B unhinted seed 1** started on the desktop (task unhinted-p50-strict2, same A40 editor, now 3
+  episodes on it). GPU stock is nearly empty (only 3090/5090 listed, both "Low"; secure A5000 also gone), so its pool
+  starts with one community 3090 (hvxt8xro4itco0, found by a manual create probe and set up with the new
+  `ADOPT=` mode of acquire_pods.sh); more hosts are added as the loop (A5000/3090/4090/5090 community) finds them.
+  Seed 2 (Mac node) waits for pods.

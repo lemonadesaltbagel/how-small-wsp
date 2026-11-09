@@ -9,6 +9,7 @@ cd "$(dirname "$0")/.."
 TH=${1:-5}
 # node session run-dir(relative to harness/) pods episode-log
 RUNS=(
+  "wsl q9bux1 runs/phase0/qwen9b-unhinted-p50-strict2-s1 hvxt8xro4itco0 q9bu_strict2_s1"
   "wsl q9bx1 runs/phase0/qwen9b-hinted-p50-strict2-s1 ilppyd3ecb6qjj,8me34ta4jvcpd7,38xdiaqdbpnic7,jvoma6feywsyqm q9b_strict2_s1"
   "laptop q9bx2 runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 h2r5exuug2vo7i,ij5r2alvscupxj,bhnjb4fvgw3rkx,2pc75n05yrqfyi,mutruiktz8i5e1,5plj5dix1grckr q9b_strict2_s2"
 )

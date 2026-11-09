@@ -29,6 +29,8 @@ setup() {  # setup <id> <gpu> <weight>
     "$id" "$gpu" "$ip" "$port" "$w" "$(runpodctl pod get "$id" | jq -r .costPerHr)" >> logs/pool_hosts.jsonl
   say "ready $id $gpu $ip:$port"
 }
+# ADOPT="<pod id>:<gpu name>:<TB/s>" sets up a pod created by hand (e.g. a probe that found stock), then exits
+if [ -n "${ADOPT:-}" ]; then IFS=: read -r aid agpu aw <<< "$ADOPT"; setup "$aid" "$agpu" "$aw"; exit $?; fi
 got=0; end=$(( $(date +%s) + minutes * 60 )); n=$(wc -l < logs/pool_hosts.jsonl 2>/dev/null || echo 0)
 while [ "$got" -lt "$want" ] && [ "$(date +%s)" -lt "$end" ]; do
   for g in "${GPUS[@]}"; do
