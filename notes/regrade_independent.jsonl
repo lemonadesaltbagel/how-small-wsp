@@ -1,0 +1,6 @@
+{"file": "harness/runs/phase0/opus55-hinted-p50-strict-s1/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.448, "hendrycks_acc": 0.418, "agree": 0.97, "math_verify_only": 15, "hendrycks_only": 0}
+{"file": "harness/runs/phase0/opus55-hinted-p50-strict-s2/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.554, "hendrycks_acc": 0.526, "agree": 0.972, "math_verify_only": 14, "hendrycks_only": 0}
+{"file": "harness/runs_laptop/phase0/opus55-hinted-p50-strict-s3/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.406, "hendrycks_acc": 0.382, "agree": 0.976, "math_verify_only": 12, "hendrycks_only": 0}
+{"file": "harness/runs/phase0/opus55-hinted-p50-s1/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.508, "hendrycks_acc": 0.474, "agree": 0.966, "math_verify_only": 17, "hendrycks_only": 0}
+{"file": "harness/runs/phase0/opus55-hinted-p50-s2/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.35, "hendrycks_acc": 0.34, "agree": 0.99, "math_verify_only": 5, "hendrycks_only": 0}
+{"file": "harness/runs/phase0/deepseekflash-hinted-p50-strict-s1/eval/qwen_math500/math500.jsonl", "n": 500, "math_verify_acc": 0.072, "hendrycks_acc": 0.064, "agree": 0.992, "math_verify_only": 4, "hendrycks_only": 0}

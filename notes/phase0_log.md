@@ -402,3 +402,13 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   with a local Qwen3.8-27B editor (3 of 4 games; secondary sources only so far). Qwen3.8 exists only at ≥ 27B, which
   is why the ladder uses Qwen3.5 (0.8B / 9B / 27B, one family). Outline related work updated.
 - 04:42: deepseek-flash s1 resumed on the laptop with a community 3090 (6thmelf5g8764g, passed the torch GPU check); pipeline, auto-resume and low-balance updated.
+
+## Credibility checks (2026-11-10)
+- **Independent second grader** (`scripts/regrade_independent.py`, stdlib): re-extracts the last \boxed{} after </think>
+  from the full saved generations (`.raw.json`) with its own parser and compares with the gold answer under the original
+  MATH normalisation (Hendrycks et al. 2021 `is_equiv`), versus our scorer (math-verify, the authors' grader).
+  Agreement 96.6–99.2 % on all 6 scored runs; in every disagreement math-verify says correct and the strict string
+  match says wrong (0 cases the other way). The disagreements checked are equivalent forms (1.5 vs 3/2, East vs
+  \text{east}, 58500 vs 58,500, (C) vs \text{(C)}). Lower bounds under the strict grader: Opus strict 41.8 / 52.6 /
+  38.2 % (math-verify 44.8 / 55.4 / 40.6), first round 47.4 / 34.0, DeepSeek s1 6.4. Conclusions unchanged; all
+  Opus strict seeds stay above the 29 % repair threshold. `notes/regrade_independent.jsonl`.
