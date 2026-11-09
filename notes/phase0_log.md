@@ -458,3 +458,12 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - Prior art, primary source found: Willison (2026-11-03, simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/)
   ran only experiment 1 (which game) with Qwen3.8-27B Q4_K_M in LM Studio, weights in the prompt, no tools or code
   execution: 3 of 4 games (Freeway wrong). No weight editing, so no overlap with our editing question. Draft §2 updated.
+- 09:30: 27B editor healthy (Qwen/Qwen3.5-27B @ fc05daec, vLLM 0.33.0, KV cache 282k tokens = 1.44 × 196,608, so
+  two concurrent episodes with the 150k handoff cap). Tunnel localhost:18003 on the laptop (reconnecting loop); the
+  pod now also trusts the laptop and Mac pod keys (`serve` adds only the desktop key: fix for next time).
+- The final MATH-500 scoring of 9B hinted s2 runs on only the first host of its pool (h2r5); the other two 3090s
+  were idle, so they were moved now: ij5r → 27B hinted s1 (pool file ready), bhnj → **0.8B hinted s1**, started at
+  09:38 on the Mac node (tunnel 18002, same flags as 9B). q9bx2's post pipeline restarted without a delete list; its
+  pool is h2r5 only (hold-out, if a repair).
+- 27B hinted s1 waits for laptop memory (6.1 GB available with q9bx2 still scoring + DS; an episode needs up to
+  ~8 GB): starts when q9bx2's harness exits.
