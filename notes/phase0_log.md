@@ -501,3 +501,10 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   hvxt now **re-scores 0.8B hinted s1** (`openwish score`, Mac node, `logs/rescore_q08b_s1.log`); tir1 goes to
   27B unhinted s1 after scoring. Node memory at 10:10: wsl 9.8 GB, laptop 9.2 GB, Mac 8.7 GB available, so 27B
   unhinted s1 starts when a finished episode's harness exits (≥ 12 GB).
+- 10:39: **9B hinted s1** ended with a final answer at turn 360 (19+/50 passes, 177+ Python, 22+ edits). All four 9B
+  episodes are now done and scoring. Pods kept (post pipeline without a delete list; pool = 8me3 for scoring;
+  A5000 38xd idle → next episode). The 9B editor (A40) stays until the four scores show whether a cell splits
+  (3rd seed). Two community 5090s (lbqt, 7lxt) are being set up.
+- Plan for the freed slots: 27B unhinted s1 on wsl (when the two finished harnesses exit, ~3 GB each), pool 38xd + a
+  5090; 0.8B hinted s2 on the laptop when q9bx2 exits, pool hvxt (after the re-score) + a 5090; deepseek-flash s1 gets
+  a 5090 next to its single 3090 (its passes take ~60 min).
