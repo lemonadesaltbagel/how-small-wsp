@@ -496,3 +496,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   `pod_target_setup.sh` now deletes the cache after installing and pins vllm==0.33.0 (every target pod runs 0.33.0).
 - A third pod on the bad host 99.69.17.69, ilppyd3ecb6qjj (9B hinted s1's pool), also fails torch's CUDA check:
   removed from that pool at 10:00 (swap_pool deletes it once idle); its passes so far succeeded on the other hosts.
+- 10:06: **9B unhinted s1** ended with a final answer at turn 274 (18/50 passes, 153 Python, 27 edits). Scoring runs on
+  its first host (5090 tir1); post pipeline restarted without a delete list so both pods are reused: the idle 3090
+  hvxt now **re-scores 0.8B hinted s1** (`openwish score`, Mac node, `logs/rescore_q08b_s1.log`); tir1 goes to
+  27B unhinted s1 after scoring. Node memory at 10:10: wsl 9.8 GB, laptop 9.2 GB, Mac 8.7 GB available, so 27B
+  unhinted s1 starts when a finished episode's harness exits (≥ 12 GB).
