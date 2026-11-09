@@ -266,3 +266,38 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   IFEval 57.7 / 60.4 / 60.8 (base 9.0; 39.7 / 24.4 / 20.1). All three valid after adjudication.
 - Tracker proposal `tracker_proposals/2026-11-09_phase0_opus_done.md` (results, adjudications, costs, budget
   re-estimate) waits for the user's review; open-source editor episodes wait for the budget decision.
+
+## User decisions and follow-ups (2026-11-09 evening)
+- **DeepSeek strict s1 calls 243–244**: the user asked for a re-review with the v2 reviewer and to keep the violation
+  if v2 also blocks. `scripts/recheck_gate_v2.py`, 3 repeats per call with the history as at the time: **block 6/6**
+  (rule b; every reason names the projection of recorded activations onto the edit direction, the readout through
+  embedding rows × the norm weight, and the strength chosen by predicted flip rates). **Upheld; run invalid.**
+  `audit_adjudication.json` updated; log `logs/recheck_ds_243_244_v2.jsonl`.
+- **DeepSeek strict s1 failure type: "localised, edit failed"** (not "not localised", not "budget exhausted").
+  - Localised: ~88 % of the original's answers are cut at 32,768 tokens inside thinking; the loops are copied "Wait…"
+    lines; `</think>` is a top-5 candidate at 82 % of loop line-starts but loses by a median ~16 nats to a copied
+    whitespace token; the repetition state sits in late layers (layer-23 down_proj input features, e.g. 1835 and 12)
+    plus a candidate layer-0 DeltaNet head with near-zero decay. Same mechanism the Opus runs used.
+  - Edits failed: (1) attenuating copy/induction heads 11.3 → 1.6 % (they also do ordinary copying); (2) layer-0
+    DeltaNet decay repair slightly harmful; (3) rank-1 gated stop writes into layer-23 down_proj closed the loops
+    (cut-offs 224 → 23 of 256) but closed thinking before the boxed answer: 0/256 correct (calls 243–244, the upheld
+    violation, chose this edit's strength); (4) column 1835 × 0.5: +2.7 ± 2.2 pp on GSM8K diagnostics, 0 on MATH;
+    (5) out of sample −1.2 ± 2.0 pp → reverted. Final edit set empty by choice.
+  - The budget was also used up (50/50 passes, 300/300 Python), but the empty submission was the editor's decision
+    after the out-of-sample test, not a budget cut-off. Contrast with Opus: it gated the same heads by an LDA loop
+    state (closing them only in loops); DeepSeek attenuated them everywhere.
+- **Budget**: user approved a + b (community cloud for target pools; local GPUs join when memory allows). Q1 budget
+  unchanged for now; decide after the open-source editors. Then split Phase 0 cost into one-off (setup, debugging,
+  invalid first round, tests) and per-episode cost, and re-estimate Q1 from measured unit costs. DeepSeek (top-up,
+  seed 2): the user handles it.
+- **Why ~349 card-hours vs the planned 50 GPU-hours (~7×)**:
+  1. Different units. The plan counts H100 hours at $3/h; we ran 3–4 cheap consumer cards in parallel (A5000 $0.27/h
+     … PRO 6000 $2.49/h, average $0.61/h). Generation is memory-bandwidth bound, so by bandwidth the 349 card-hours
+     equal ~106 H100 hours (2.1×); by cost, $212.6 = ~71 H100 hours at $3/h (1.4×).
+  2. The real gap is per episode. Plan: 1–2 GPU-h of target passes per episode (from the brief). Measured: 47–103
+     card-h, ≈ 8–13 H100-h by cost, per strict episode. ~90 % of the unedited model's answers run to the 32,768-token
+     cap (the failure being fixed), so a 512-answer pass is ~15M generated tokens (~30 min on an H100-class card), and
+     note (1) (from the authors' notices) tells editors that a pass costs the same whatever its size, so they ask for
+     full-size passes. The authors' own p50c run used ~7 h of forward time; the 1–2 h estimate ignored this.
+  3. Work outside the plan: the invalid first round (62 card-h, $80, 38 % of the spend), the hold-out evaluations
+     (~2–3 h per seed on one card), idle time from the network outage and the usage-limit stops (~$12), tests.
