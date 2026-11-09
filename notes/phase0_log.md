@@ -412,3 +412,11 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   \text{east}, 58500 vs 58,500, (C) vs \text{(C)}). Lower bounds under the strict grader: Opus strict 41.8 / 52.6 /
   38.2 % (math-verify 44.8 / 55.4 / 40.6), first round 47.4 / 34.0, DeepSeek s1 6.4. Conclusions unchanged; all
   Opus strict seeds stay above the 29 % repair threshold. `notes/regrade_independent.jsonl`.
+- **Edit verification** (`scripts/verify_edits.py`, numpy, independent of the harness): for all 6 scored runs the
+  base and edited tensors hash to the edit set's sha_base / sha_edited, and the scored `final/net` equals base + edit
+  set exactly over all 320 tensors (nothing changed outside the declared edit). Changed entries: Opus strict s1 12,288,
+  s2 1,841,152, s3 4,718,592; first round s1 3,407,872, s2 45,088,335; DeepSeek s1 0. `notes/verify_edits.jsonl`.
+- Figure 1 script (`scripts/make_figures.py`, from the ledger; palette slots 1–2 validated) renders the reference lines;
+  Qwen points appear as strict2 runs finish.
+- 05:21: **Qwen3.5-9B unhinted seed 2** started on the Mac node, pool = one community 5090 (8qekaexohjxc0r).
+  Now 5 episodes run: 9B hinted ×2, 9B unhinted ×2, deepseek-flash hinted s1.

@@ -1,0 +1,6 @@
+{"run": "harness/runs/phase0/opus55-hinted-p50-strict-s1", "edited_tensors": 6, "changed_total": 12288, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs/phase0/opus55-hinted-p50-strict-s2", "edited_tensors": 7, "changed_total": 1841152, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs/phase0/opus55-hinted-p50-s1", "edited_tensors": 4, "changed_total": 3407872, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs/phase0/opus55-hinted-p50-s2", "edited_tensors": 17, "changed_total": 45088335, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs/phase0/deepseekflash-hinted-p50-strict-s1", "edited_tensors": 0, "changed_total": 0, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs_laptop/phase0/opus55-hinted-p50-strict-s3", "edited_tensors": 4, "changed_total": 4718592, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
