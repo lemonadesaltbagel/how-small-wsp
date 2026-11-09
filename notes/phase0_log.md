@@ -353,3 +353,18 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   is simulated, unlike the first-round Opus violations (26 and 11 calls, incl. RMSNorm, sigmoid gates, output layer).
   Under the authors' own rules ("any analysis of the weights and of forward-pass results") this was plausibly
   allowed. The `refused/t006_1` entry in their run is an OpenAI usage-policy rejection of one turn, not a rule matter.
+- **Outline and tracker (user, 2026-11-10: "可以，并按照你的校对修正大纲")**: outline corrected per `预印本大纲_校对意见.md`;
+  both tracker proposals (11-09, 11-10) applied. Astra reported on the "simulation allowed" side.
+- **Non-DeepSeek reviewer (user): Claude Code on the laptop** (Max subscription, unused weekly quota), so the
+  deepseek-flash episodes run on the laptop. `rule_gate.py --reviewer claude:<model>`: `claude -p --safe-mode` (no
+  CLAUDE.md, hooks, plugins), no tools, empty working directory, prompt on stdin (argv strings are capped at 128 KB),
+  usage-limit or error replies retried, then fail open (logged as unreviewed; the watcher reports those). Default
+  (no flag) unchanged; the running 9B episodes keep the DeepSeek reviewer. Calibration on the laptop (Haiku 5.5 and
+  Sonnet 5.5, v2, same 24 cases): `logs/calib_gate_claude.log`. The desktop's own Claude account hit its 5-hour
+  limit at 01:10, which is why a reviewer on that account is not used.
+- Claude reviewer calibration (v2, 24 cases): Haiku 5.5 and Sonnet 5.5 both 21/21 allowed and 2/3 violations blocked
+  (both block DeepSeek 243/244; both allow s1 call 184, the turn-186 call that was blocked at run time and so never
+  audited by Codex: it projects RMS-normalised recorded activations, without the norm weight, onto an LDA direction;
+  its "violation" label is my reading, a boundary case). Latency median 5.9 / 5.1 s, max 25.0 / 7.5 s. Chosen:
+  **Sonnet 5.5**. Tasks `{hinted,unhinted}-p50-strict2-claudegate.toml` = strict2 with this reviewer, for
+  deepseek-flash as the editor (laptop).

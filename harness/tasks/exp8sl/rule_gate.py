@@ -17,6 +17,10 @@ import time
 import urllib.request
 
 V2_MODE = "--v2" in sys.argv[1:]
+# --reviewer claude:<model>: review with Claude Code (`claude -p`, the node's subscription) instead of the DeepSeek API,
+# for runs whose editor is deepseek-flash (user, 2026-11-10: the reviewer must not be the editor's family).
+REVIEWER = next((a.split("=", 1)[1] if "=" in a else sys.argv[sys.argv.index(a) + 1]
+                 for a in sys.argv[1:] if a.startswith("--reviewer")), "deepseek")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ENV_FILE = os.path.join(HERE, "..", "..", "..", ".env")   # project root
@@ -124,6 +128,26 @@ def helper_context(code, run_dir, limit=40000):
     return text[:limit]
 
 
+def review_claude(system, user, model):
+    """One review through Claude Code in print mode: no tools, no CLAUDE.md/hooks/plugins (--safe-mode), an empty
+    working directory, the prompt on stdin (a single argv string is limited to 128 KB on Linux)."""
+    import subprocess
+    import tempfile
+    with tempfile.TemporaryDirectory() as tmp:
+        p = subprocess.run(["claude", "-p", "--safe-mode", "--model", model, "--system-prompt", system, "--tools", "",
+                            "--no-session-persistence", "--output-format", "json"],
+                           input=user, capture_output=True, text=True, cwd=tmp, timeout=ATTEMPT_TIMEOUT_S)
+    d = json.loads(p.stdout)
+    if d.get("is_error"):
+        raise RuntimeError(f"claude: {str(d.get('result'))[:200]}")
+    text = str(d.get("result") or "")
+    i, j = text.find("{"), text.rfind("}")
+    v = json.loads(text[i:j + 1])
+    u = d.get("usage") or {}
+    return v, {"model": model, "input_tokens": u.get("input_tokens"), "cache_read_input_tokens": u.get("cache_read_input_tokens"),
+               "output_tokens": u.get("output_tokens")}
+
+
 def review(code, key):
     ctx = helper_context(code, os.environ.get("OPENWISH_RUN_DIR"))
     user = "CODE:\n```python\n" + code[:60000] + "\n```"
@@ -131,6 +155,8 @@ def review(code, key):
         head = "DEFINITIONS FROM EARLIER CELLS THAT THIS CODE CALLS" + (" OR USES" if V2_MODE else "")
         user = (head + " (judge what calling them computes):\n```python\n"
                 + ctx + "\n```\n\n" + user)
+    if REVIEWER.startswith("claude:"):
+        return review_claude(RULES, user, REVIEWER.split(":", 1)[1])
     body = {"model": MODEL, "messages": [{"role": "system", "content": RULES},
                                          {"role": "user", "content": user}],
             "max_tokens": 4000, "reasoning_effort": "low", "response_format": {"type": "json_object"}}
@@ -151,9 +177,9 @@ def main():
     if ev.get("tool") != "python":
         return 0
     code = (ev.get("input") or {}).get("code") or ""
-    rec = {"turn": ev.get("turn"), "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "code_chars": len(code), "gate": "v2" if V2_MODE else "v1"}
+    rec = {"turn": ev.get("turn"), "time": time.strftime("%Y-%m-%dT%H:%M:%S"), "code_chars": len(code), "gate": "v2" if V2_MODE else "v1", "reviewer": REVIEWER}
     key = api_key()
-    if not key:
+    if not key and not REVIEWER.startswith("claude:"):
         rec.update(verdict="unreviewed", reason="no DEEPSEEK_API key")
         log(rec)
         return 0

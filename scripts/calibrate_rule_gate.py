@@ -1,7 +1,7 @@
 """Calibrate tasks/exp8sl/rule_gate.py against the post-hoc Codex audit of finished runs.
 For each run: all audited violations plus an equal number of random allowed calls; run the gate on each code block
 and print the confusion table and the gate's latency. Runs on a node (needs network); does not touch the runs.
-  python3 -I scripts/calibrate_rule_gate.py [--v2] [--adjudicated] [--extra <run>:<call>:<truth>] ... <run> [...]
+  python3 -I scripts/calibrate_rule_gate.py [--v2] [--reviewer claude:<model>] [--adjudicated] [--extra <run>:<call>:<truth>] ... <run> [...]
 --v2: run the gate with --v2 (task -strict2). --adjudicated: apply each run's audit_adjudication.json (overruled
 violations count as allowed). --extra: also test this tool_calls.jsonl row (e.g. a call the gate blocked at run time,
 whose code is under input.code) with the given truth (violation | allowed)."""
@@ -22,6 +22,8 @@ def main():
     lat = []
     argv = sys.argv[1:]
     gate_args = ["--v2"] if "--v2" in argv else []
+    if "--reviewer" in argv:  # e.g. --reviewer claude:claude-sonnet-5-5 (passed through to rule_gate.py)
+        gate_args += ["--reviewer", argv[argv.index("--reviewer") + 1]]
     adjudicated = "--adjudicated" in argv
     extra = {}
     runs = []
@@ -30,6 +32,8 @@ def main():
         if a == "--extra":
             r, c, t = next(it).rsplit(":", 2)
             extra.setdefault(os.path.normpath(r), []).append((int(c), t))
+        elif a == "--reviewer":
+            next(it)
         elif not a.startswith("--"):
             runs.append(a)
     for run in runs:
