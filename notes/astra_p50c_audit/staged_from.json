@@ -1,0 +1,9 @@
+{
+ "source": "/Users/xintianhuang/Research/wsp-scale-ladder/external/lm_understand-logs/exp8_math/runs/p50c",
+ "counts": {
+  "python": 80,
+  "forward": 69,
+  "other": 1
+ },
+ "note": "staged by scripts/stage_external_audit.py; not a run of ours"
+}
