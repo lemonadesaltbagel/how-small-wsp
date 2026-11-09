@@ -1,13 +1,14 @@
 #!/usr/bin/env bash
-# Resume an episode that stopped on the Claude account's 5-hour usage limit, once the limit resets, so its pool pods
-# do not sit idle until someone notices. Runs on the Mac:
+# Resume an episode that stopped because its editor backend kept failing (Claude usage limit, a dropped SSH tunnel to
+# a vLLM editor, an API outage), so its pool pods do not sit idle until someone notices. Runs on the Mac:
 #   nohup bash scripts/auto_resume_limit.sh <node> <session> <run dir under harness/> <remote.json> <pods> <log name> \
-#     > logs/auto_resume_<session>.log 2>&1 < /dev/null &
-# Acts only when the session is gone AND the episode log's last line is the usage-limit error; any other stop is left
-# for a human. Restarts post_episode.sh too if it exited. Exits when the episode has a score, or after 8 resumes.
+#     <task under harness/> "<env assignments>" "<openwish flags>" > logs/auto_resume_<session>.log 2>&1 < /dev/null &
+# Acts only when the session is gone AND the episode log's last line is "Error: backend kept failing ..."; any other stop
+# is left for a human. A usage-limit stop waits for the reset time (+2 min), any other backend failure 5 min. Restarts
+# post_episode.sh if it exited. Exits when the episode has a score, or after 8 resumes.
 set -u
 cd "$(dirname "$0")/.."
-node=$1; sess=$2; run=$3; remote=$4; pods=$5; name=$6
+node=$1; sess=$2; run=$3; remote=$4; pods=$5; name=$6; task=$7; envs=$8; flags=$9
 log="logs/$name.log"; post="logs/post_$name.log"
 say() { echo "$(date '+%m-%d %H:%M') $sess $*"; }
 alive() {  # yes | no | unknown (unreachable node)
@@ -24,18 +25,23 @@ reset_epoch() {
   [ "$e" -lt "$(( $(date +%s) - 43200 ))" ] && e=$(( e + 86400 ))
   echo "$e"; }
 
-say "watching for usage-limit stops"
+say "watching for backend-failure stops"
 n=0
 while true; do
   [ -f "harness/$run/eval/score.json" ] && { say "scored; exiting"; exit 0; }
-  last=$(grep -v '^[[:space:]]*$' "$log" | tail -n 1)
-  if grep -q '^Error: .*5-hour limit' <<< "$last" && [ "$(alive)" = no ]; then
-    e=$(reset_epoch "$last") || { say "ALERT could not parse reset time: $last"; exit 1; }
-    wait_s=$(( e + 120 - $(date +%s) )); [ "$wait_s" -lt 0 ] && wait_s=0
-    say "usage-limit stop; resuming at $(date -r $(( e + 120 )) '+%H:%M') (in $(( wait_s / 60 )) min)"
+  last=$(grep -v '^[[:space:]]*$' "$log" 2>/dev/null | tail -n 1)
+  if grep -q '^Error: backend kept failing' <<< "$last" && [ "$(alive)" = no ]; then
+    if grep -q '5-hour limit' <<< "$last"; then
+      e=$(reset_epoch "$last") || { say "ALERT could not parse reset time: $last"; exit 1; }
+      at=$(( e + 120 ))
+    else
+      at=$(( $(date +%s) + 300 ))
+    fi
+    wait_s=$(( at - $(date +%s) )); [ "$wait_s" -lt 0 ] && wait_s=0
+    say "backend stop ($(cut -c1-120 <<< "$last")); resuming at $(date -r "$at" '+%H:%M')"
     sleep "$wait_s"
     [ "$(alive)" = no ] || { say "session already back (resumed by hand?)"; continue; }
-    rx -n "$node" "tmux new -d -s $sess 'bash scripts/run_episode.sh tasks/exp8sl/hinted-p50-strict.toml $run $remote --backend claude --model claude-opus-5-5 2>&1 | tee -a $log'" >/dev/null 2>&1
+    rx -n "$node" "tmux new -d -s $sess '$envs bash scripts/run_episode.sh $task $run $remote $flags 2>&1 | tee -a $log'" >/dev/null 2>&1
     sleep 30
     if [ "$(alive)" = yes ]; then n=$((n + 1)); say "resumed ($n)"; else say "ALERT resume failed"; exit 1; fi
     if ! pgrep -f "[p]ost_episode.sh $sess " >/dev/null; then

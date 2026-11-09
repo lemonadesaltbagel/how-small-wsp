@@ -379,3 +379,11 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   16B (decode, where the editor's reasoning is generated) to 748B (Engram counts as stored knowledge, the user's
   reason for the total end); footnotes give 8B and 552B. The rationale (active ~ per-step depth, total ~ knowledge)
   is stated as the reason for the display, not as a finding. Monotonicity test on the three Qwen sizes only.
+- 01:59–02:50: the SSH tunnels from the desktop, laptop and Mac to the 9B editor pod all dropped (a network blip
+  here: a RunPod API call timed out at 01:59) and their tmux sessions ended. 9B unhinted s1 stopped after 9 retries
+  (02:48) and was resumed at 02:50; the hinted seeds were still retrying. Tunnels are now loops that reconnect
+  (`tun-18001` on each node, log `~/tun-18001.log`). `auto_resume_limit.sh` generalised: it resumes after any
+  "backend kept failing" stop (usage limit: at the reset; otherwise after 5 min) with each run's own task, env and
+  flags; now watching q9bx1, q9bx2, q9bux1. Idle editor and pools ~50 min (~$2.4).
+- DeepSeek topped up (balance ¥134.29 at 02:08). deepseek-flash episodes (task -strict2-claudegate) go on the laptop
+  as soon as target pods are available (stock still near zero).
