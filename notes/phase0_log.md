@@ -420,3 +420,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   Qwen points appear as strict2 runs finish.
 - 05:21: **Qwen3.5-9B unhinted seed 2** started on the Mac node, pool = one community 5090 (8qekaexohjxc0r).
   Now 5 episodes run: 9B hinted ×2, 9B unhinted ×2, deepseek-flash hinted s1.
+- **Queue (05:30), in order, as pods arrive (community stock ~1 pod / 40 min):** (1) next pod = Qwen3.5-0.8B editor
+  (`editor_pod.sh serve <pod> Qwen/Qwen3.5-0.8B 196608 --max-num-seqs 4`, tunnel port 18002), 0.8B hinted s1 on the
+  Mac (12 GB free); (2) 0.8B target pools; (3) more hosts for deepseek-flash s1 (one 3090); (4) GSM8K base, all
+  1,319 × 2 samples. 27B (A100 80GB editor, bf16) waits for node slots: the 9B hinted seeds free the desktop and
+  laptop in ~1 day (passes 6–11/50 at 05:30). deepseek-flash s2 and unhinted seeds go on the laptop (Claude reviewer)
+  as its slots free.
