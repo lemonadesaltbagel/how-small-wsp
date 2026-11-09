@@ -316,3 +316,16 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   Local GPUs: not now (other projects' jobs; Windows commit would fall below 15 GB with a local worker).
 - Bug found and fixed in acquire_pods.sh: two acquisition loops running at once used the same pod name, and the
   by-name fallback made one loop claim (and set up a second time) the other's pod. Names are now unique per process.
+- 22:58, after ~1 h 45 min: s1 turn 108 (4/50 passes, 50 Python), s2 turn 117 (6/50). The 9B editor sends many
+  malformed forward requests, all rejected uncharged: unknown practice ids ('0', '8234', 'gsm8k_train_20'), invalid
+  JSON escapes, a missing texts file, attention on too many texts, 320 generations (max 256 per model). One (s1 turn
+  107) had a `null` prompt, which the worker did not validate: it crashed with a Python traceback (`NoneType has no
+  attribute encode`), returned to the editor as the error, uncharged. Not changed mid-run (it would change the
+  conditions); for the next harness version, validate that prompts are strings and return a plain request error.
+- Editor throughput (vLLM log): 17–58 tok/s total with 1–2 running requests on the A40.
+- Two community 3090s (8me34ta4jvcpd7, h2r5exuug2vo7i) were ready at 21:21 but only added to the pools at 22:59 (my
+  slip: no wake-up on new pods; ~$0.7 idle). Pools now 3 hosts each: s1 = 2 community 3090 + secure A5000, s2 =
+  community 3090 + 2 secure A5000. A community loop (up to 10 h) is getting 3 more to retire the secure A5000s.
+- 23:28: three more community pods (A5000 $0.16, 2 × 3090 $0.22) replace the secure A5000s: s1 = 3090 + 3090 + A5000,
+  s2 = 3 × 3090, all community. `swap_pool.sh` retires jvoma6feywsyqm, 2pc75n05yrqfyi, mutruiktz8i5e1 once no pass
+  uses them. Target side ~$1.26/h for both episodes (was ~$1.57).
