@@ -110,3 +110,12 @@ first such episode, deepseek-flash hinted s1, was known to anyone)
 ### A4 — 2026-11-10 14:01 +11:00 (commit 854ce75): empty edit sets (user decision)
 - An episode whose submitted edit set is empty is scored and counts like any other. In Figure 1 it is drawn as a
   hollow marker at its measured score (the unedited network sampled again), not as a filled point.
+
+### A5 — 2026-11-10 14:25 +11:00: sub-annotations split (refines A3; no score involved)
+- Applying A3's "tool-use failure" showed that every finished Qwen episode ended through the 5 nudges (an early final
+  answer accepted with passes left), so the flag would mix two things. Split into:
+  - **tool-use failure**: at least half of the Python runs end in an error, at least half of the forward requests are
+    rejected or fail, or the editor states that its tools do not exist or do not work;
+  - **early stop**: the episode ended with forward passes left (final answer accepted after the 5 nudges, or the
+    empty-reply stop).
+- Both are reported per run with their underlying rates (`scripts/tool_use_stats.py`).
