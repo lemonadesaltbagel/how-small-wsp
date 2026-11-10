@@ -615,3 +615,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   -2.1..+2.7 in the log; ">1.9 SE" vs at most 1.74). Claude label waits for the DS episodes to end.
 - 00:45 27B unhinted s2 started on wsl (q27ux2) with pool xd0x only; tir1 was also on the bad host 80.15.7.37 and was
   deleted; a second pool pod is being acquired (to be added with swap_pool.sh).
+- 02:06 27B unhinted s2 pool: + c6mb (3090) via swap_pool.sh. 27B hinted s2: one split pass lost at turn 40 after 24 min (uzfo closed the connection; uncharged; retried at once).
