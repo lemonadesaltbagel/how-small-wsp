@@ -565,3 +565,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   inside the reasoning field, content empty. Localising work under way (loop positions, stop logit, lag heads; edit 3
   installed). Being scored as it stands; pods kept. Resume decision → user (`notes/pending_user_decisions.md`).
 - 14:10 user decision 1 (A): 9B unhinted s1 valid (amendment A2); 9B cells complete (4 valid seeds, no split). 9B editor A40 5plj deleted, tunnels tun-18001 closed.
+- 14:40 27B hinted s1: pass at turn 148 failed after 13 min ("split pass: 50 of 99 generations came back"): the
+  second pool host eg5o (5090, 80.15.7.37:39353) returned no part. Uncharged (the editor lost time, not budget).
+  RunPod's API showed "no container reported yet" for eg5o and for agvu around then; both containers had not
+  restarted (start times 11-10 02:02 UTC and 11-09 16:26 UTC) and both serve again (eg5o took the next pass at 14:49;
+  agvu is scoring DS hinted stop 1). Kept eg5o; it leaves the pool if it fails another pass. pool_health's "BAD agvu
+  Connection closed" was transient.
