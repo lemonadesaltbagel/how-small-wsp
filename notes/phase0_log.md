@@ -560,3 +560,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   24 failed requests, none charged; 3 of them crashed the GPU worker on malformed `prompts`/`texts` (a clean
   validation error would be better; harness left unchanged mid-matrix, the editor sees an error either way).
 - 13:27 deepseek-flash unhinted s1 started on the laptop (Claude Sonnet 5.5 reviewer), pool 5090 bvar.
+- 13:41 5090 xd0x (acquired) added to the pool of 27B unhinted s1 (tir1 stays first). Acquire loop done (3/3).
