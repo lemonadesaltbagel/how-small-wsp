@@ -571,3 +571,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   restarted (start times 11-10 02:02 UTC and 11-09 16:26 UTC) and both serve again (eg5o took the next pass at 14:49;
   agvu is scoring DS hinted stop 1). Kept eg5o; it leaves the pool if it fails another pass. pool_health's "BAD agvu
   Connection closed" was transient.
+- 14:50 0.8B hinted s2 scoring on hvxt failed: 'server 80.15.7.37 not responding' (the same host outage as eg5o); rejected by post_episode (no 0 written). Moved to eval_failed_hostdown/; re-scoring on h2r5 (3090, 64.119.209.250) since 14:53. DS hinted resume will use agvu alone until h2r5 is free.
