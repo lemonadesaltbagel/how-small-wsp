@@ -564,3 +564,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 13:44 **deepseek-flash hinted s1 stopped on 4 consecutive empty replies** (turn 122, 11/50 passes): its code was
   inside the reasoning field, content empty. Localising work under way (loop positions, stop logit, lag heads; edit 3
   installed). Being scored as it stands; pods kept. Resume decision → user (`notes/pending_user_decisions.md`).
+- 14:10 user decision 1 (A): 9B unhinted s1 valid (amendment A2); 9B cells complete (4 valid seeds, no split). 9B editor A40 5plj deleted, tunnels tun-18001 closed.
