@@ -21,6 +21,8 @@ say() { echo "$(date +%H:%M) acquire $*"; }
 setup() {  # setup <id> <gpu> <weight>
   local id=$1 gpu=$2 w=$3 ip port sha
   read -r ip port < <(scripts/editor_pod.sh wait "$id") || { say "pod $id: no ssh; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
+  # hosts that failed before (logs/bad_hosts.txt: "<ip> # why") are dropped at once instead of after a long setup
+  if grep -q "^$ip " logs/bad_hosts.txt 2>/dev/null; then say "pod $id: known bad host $ip; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; fi
   ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=30 -p "$port" -i "$KEY" "root@$ip" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys" <<< "$keys" \
     && scp -q -o StrictHostKeyChecking=accept-new -P "$port" -i "$KEY" scripts/pod_target_setup.sh "root@$ip:/root/" || { say "pod $id: ssh setup failed; deleting"; runpodctl pod delete "$id" >/dev/null; return 1; }
   sha=$(ssh -p "$port" -i "$KEY" "root@$ip" 'bash /root/pod_target_setup.sh 2>&1 | grep model.safetensors | cut -c1-64; export PATH=/root/.local/bin:$PATH; VIRTUAL_ENV=/root/vllm-env uv pip install -q langdetect nltk immutabledict absl-py pyarrow >/dev/null 2>&1' < /dev/null)
