@@ -559,3 +559,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   not in effect; wrong: 6 tensors / 4.44M entries changed (q_proj L3-19, uniform +0.001 on L23 down_proj).
   24 failed requests, none charged; 3 of them crashed the GPU worker on malformed `prompts`/`texts` (a clean
   validation error would be better; harness left unchanged mid-matrix, the editor sees an error either way).
+- 13:27 deepseek-flash unhinted s1 started on the laptop (Claude Sonnet 5.5 reviewer), pool 5090 bvar.
