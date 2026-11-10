@@ -591,3 +591,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 16:53 0.8B hinted s2 re-scored on h2r5: **7.2 %** (no error), empty edit set. h2r5 back in the DS hinted pool (agvu first). Audit + labels + self-report queued serially on the desktop.
 - 17:10 0.8B hinted s2 counts: 7.2 %, audit 1/0/0, not localised (both labellers), tool-use failure, early stop, 5 material self-report mismatches (fabricated passes and edits).
 - 17:36 0.8B unhinted s2 scored **9.4 %** (no error), empty edit set, 22 turns, 8 Python runs, 0 passes, final answer after 5 nudges. All four 0.8B seeds done (no split): 0.8B editor 8qek deleted, tunnels 18002 closed. Audit + labels + self-report queued.
+- 17:55 0.8B unhinted s2 counts: 9.4 %, audit 8/0/0, not localised (both), tool-use failure, early stop, 1 material self-report mismatch. **0.8B row complete: 7.0 / 7.2 (hinted), 9.2 / 9.4 (unhinted), all empty edits.**

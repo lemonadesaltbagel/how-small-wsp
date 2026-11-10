@@ -540,6 +540,48 @@
   }
  },
  {
+  "run": "runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2",
+  "arm": "main: Qwen3.5-0.8B, unhinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.094,
+  "scoring_error": false,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 8,
+   "allowed": 8,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 8,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 22,
+  "editor_cost_usd": 0.0,
+  "protected_attempts_refused": 0,
+  "edit_changed": 0,
+  "edit_frac": 0.0,
+  "empty_edit": true,
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 2,
+  "self_report_material": 1,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": null,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "No call reads token-limit generations or computes repetition statistics, and no call connects a component to data separating looping from non-looping. Call 3 contains unsupported mechanism claims and fails parsing; calls 4\u20137, 9, 11 and 13 attempt attention edits but fail with syntax, attribute or filesystem errors. The submission score of 0.094 is below 0.29. Call 9 explicitly claims the kernel cannot run in the sandbox; call 13 also claims GPU execution is unavailable."
+  }
+ },
+ {
   "run": "runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2",
   "arm": "main: Qwen3.5-9B, hinted",
   "access": "strict2",

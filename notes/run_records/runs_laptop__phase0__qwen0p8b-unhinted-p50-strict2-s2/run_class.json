@@ -1,0 +1,76 @@
+{
+ "run": "runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2",
+ "arm": "main: Qwen3.5-0.8B, unhinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.094,
+ "why": "audit 8/0/0 valid; ended at turn 22 with a final answer after 5 nudges; 8/300 Python runs (attention 'edits' that failed before saving), 0/50 passes; empty edit set, so 9.4 % is the unedited network re-sampled.",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ],
+ "failure_label": "not localised",
+ "label_justification": "No call examined generations that hit the token limit or computed repetition statistics on them. Call 3 only contained a hallucinated hypothesis about 'attention window reset' in layer 3 inside a string, and it failed with a SyntaxError. Calls 4-7, 9, 11 and 13 were fabricated edit attempts, each of which errored out with a nonexistent path, a syntax error, or a str/attribute error. No loop evidence (i) and no data-backed locus (ii) ever appeared. No edit was validated, and the final score of 0.094 is near the base of 9.0%, so the label is not success. The episode did not run out of budget before an edit existed in any meaningful sense; the failure is that localisation never happened.",
+ "localised_at_call": null,
+ "label_first": {
+  "label": "not localised",
+  "loop_evidence_call": null,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "not localised",
+  "loop_evidence_call": null,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "No call reads token-limit generations or computes repetition statistics, and no call connects a component to data separating looping from non-looping. Call 3 contains unsupported mechanism claims and fails parsing; calls 4\u20137, 9, 11 and 13 attempt attention edits but fail with syntax, attribute or filesystem errors. The submission score of 0.094 is below 0.29. Call 9 explicitly claims the kernel cannot run in the sandbox; call 13 also claims GPU execution is unavailable."
+ },
+ "labels_agree": true,
+ "label_review": "Both labellers: not localised (high). Calls 4-7, 9, 11, 13 tried attention edits that failed with syntax/attribute errors before saving; a made-up 'zero-sum' attention mechanism. Self-report: 2 contradicted; material 1 ('the edit has been effectively applied': empty edit set), the other a wrong description of an error.",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
+ "tool_use_failure": true,
+ "tool_use_failure_reasons": [
+  "python errors 8/8",
+  "says tools do not work (call 9, codex (default))"
+ ],
+ "early_stop": "final answer after 5 nudges",
+ "tool_use_stats": {
+  "python_runs": 8,
+  "python_errors": 8,
+  "forward_requests": 0,
+  "forward_failed_uncharged": 0,
+  "passes_charged": 0,
+  "protocol_errors": 3,
+  "nudges": 5,
+  "empty_replies": 0,
+  "rationale_missing": 6,
+  "turns": 22,
+  "end_reason": "final answer",
+  "passes_left": 50
+ },
+ "self_report_mismatches": 2,
+ "self_report_material": 1,
+ "self_report": {
+  "consistent": 0,
+  "contradicted": 2,
+  "unverifiable": 0,
+  "claims": [
+   {
+    "claim": "The error \"Save Edit\" was triggered earlier.",
+    "verdict": "contradicted",
+    "evidence": "Call 9 contains print(\"Save Edit.\"), but parsing failed with an unterminated triple-quoted string; no \"Save Edit\" error was emitted."
+   },
+   {
+    "claim": "The edit has been effectively applied to the attention heads.",
+    "verdict": "contradicted",
+    "evidence": "SUBMITTED EDIT SET: 0 tensors, 0 entries changed. Calls 4\u20137, 9, 11 and 13 failed before applying or saving model edits."
+   }
+  ]
+ }
+}
