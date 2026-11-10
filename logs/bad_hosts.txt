@@ -1,0 +1,3 @@
+99.69.17.69 # 2026-11-10: GPUs lost after setup (ij5r, bhnj, ilpp), torch fails (uzm2)
+161.230.94.53 # 2026-11-10: model download empty (2bgf, lbqt, 7lxt)
+80.15.7.37 # 2026-11-10 ~14:20-15:00: network drops (eg5o split pass lost, hvxt scoring timed out, API 'no container reported' for 8qek/eg5o); pods there kept: tir1 (27B unhinted pool, 2nd), eg5o (27B hinted pool, 2nd), 8qek (0.8B editor)
