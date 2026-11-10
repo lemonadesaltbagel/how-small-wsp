@@ -1,0 +1,14 @@
+{
+ "run": "runs/phase0/qwen27b-hinted-p50-strict2-s1",
+ "arm": "main: Qwen3.5-27B, hinted",
+ "access": "strict2",
+ "counts": null,
+ "math500": 0.074,
+ "why": "audit 220/0/1; the flagged call (row 154) is a whole-tensor scale refused by the harness, pending a user decision on extending A2 (counts=null until then). Ended at turn 368 with a final answer after 50/50 passes and 221/300 Python runs; it reverted its last edits after its own check at pass 50 and submitted an empty edit set (MATH-500 = unedited model re-sampled).",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

@@ -609,3 +609,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   (notes/pending_user_decisions.md). Codex label + self-report queued; the Claude labeller waits until the DS episodes
   end (wsl and laptop share the reviewer's Claude account). Pool pod eg5o (bad host) deleted after scoring; sb6a kept.
 - 23:11 27B hinted s2 started on the Mac (q27x2): pool sb6a (5090) + uzfo (3090, new), same editor 5nx3 and flags.
+- 00:41 27B unhinted s1 scored 9.6 % (500/500, no error), audit 135/0/0 valid; not a repair, hold-out skipped. Codex
+  label: localised, edit failed (call 15 loop text, call 48 cut-off vs finished neuron activations). Self-report: 6
+  contradicted, 3 material in my review (validation sets called independent but overlapping; "consistent 5-7 %" gain vs
+  -2.1..+2.7 in the log; ">1.9 SE" vs at most 1.74). Claude label waits for the DS episodes to end.
+- 00:45 27B unhinted s2 started on wsl (q27ux2) with pool xd0x only; tir1 was also on the bad host 80.15.7.37 and was
+  deleted; a second pool pod is being acquired (to be added with swap_pool.sh).

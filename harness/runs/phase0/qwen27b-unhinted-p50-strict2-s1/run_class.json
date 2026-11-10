@@ -1,0 +1,14 @@
+{
+ "run": "runs/phase0/qwen27b-unhinted-p50-strict2-s1",
+ "arm": "main: Qwen3.5-27B, unhinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.096,
+ "why": "audit 135/0/0. Ended at turn 258 with a final answer after 5 nudges, 29/50 passes and 135/300 Python runs. Submitted edit: layer-23 mlp.gate_proj, 20 neuron rows (20,480 entries, 0.56 %). Not a repair (+0.6 points), hold-out skipped. Resumed once after the 15:20-15:59 WSL outage (harness restart, kernel variables lost; standard).",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}
