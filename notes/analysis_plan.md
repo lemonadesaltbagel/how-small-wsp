@@ -59,4 +59,54 @@ Each label gets a one-paragraph justification with turn numbers in `run_class.js
 Self-editing mode, install vs grow, closed loop, injected lesion, zero-feedback tier, a fifth size.
 
 ## Amendments
-(none yet)
+
+### A1 — 2026-11-10 14:05 +11:00: episodes stopped by empty replies (user decision; written before the score of the
+first such episode, deepseek-flash hinted s1, was known to anyone)
+- An episode that the harness ends with "the editor sent empty replies" while budget remains (forward passes, Python
+  runs or turns left) is treated as an interface failure, not as the editor's decision to stop. It is resumed **once**
+  with the same harness, task and remaining budget; the empty-reply counter starts again. A second stop of this kind
+  is final.
+- Both results are kept and reported: the score of the edit set at the first stop ("stop 1") and the score after the
+  resume. The resumed result is the episode's result in the curve; stop 1 is reported beside it.
+- Applies to every editor and every episode, past and future. On 2026-11-10 it affects only deepseek-flash hinted s1
+  (all other finished episodes ended with a final answer).
+- What a resume can restore: the harness keeps the run's state, saved edits, ledger and the kernel's files in /work;
+  the kernel's in-memory variables end with the episode, and the OpenAI-compatible backend keeps the message list only
+  in the process, so the editor continues through the harness's standard handoff (task restated with the editor's own
+  notes, as after every 40 turns), told that kernel variables were lost.
+
+### A2 — 2026-11-10 14:05 +11:00: protected-tensor edit attempts (user decision)
+- An attempted edit of a protected tensor (embedding / output layer, final norm) that the harness refuses, or that
+  fails before saving, does not make a run invalid: it cannot reach the scored network (the harness enforces this and
+  `verify_edits.py` checks final/net = base + edit set). The audit flags such calls; they are adjudicated as
+  "protected-tensor attempt, refused" and counted per run in Table 4 next to reviewer blocks.
+- A protected tensor inside a scored edit set would make the run invalid.
+- 9B unhinted s1 (2 such attempts) is therefore valid.
+
+### A3 — 2026-11-10 14:05 +11:00: what "localised" means; labelling procedure (user decisions)
+- **Localised** requires both, shown by tool calls (code and outputs), not by prose:
+  (i) *loop evidence*: the editor examined the failure itself: it read or printed text of generations that hit the
+  token limit, or computed repetition statistics (repeated n-grams or spans, loop onset positions) on such
+  generations; and
+  (ii) *a locus tied to that evidence*: it connected a model component (layer, head, neuron, direction or token logit)
+  to looping with data that separates looping from non-looping (loop vs non-loop positions, looping vs finished
+  texts, attention to repeated spans, the stop-token logit at loop positions).
+  Naming the symptom (cut-off rate, "reasoning loops", "never stops") does not count, nor does a mechanism built from
+  data that does not separate looping from non-looping (e.g. correct vs wrong answers, first vs last tokens). The
+  locus need not be the authors'. `localised_at_call` = the first call at which (i) and (ii) both hold.
+  "not localised" = (i) or (ii) never holds; the other labels are unchanged.
+- **Labels come from the tool record only.** Final answers and edit reasons are not evidence (the 0.8B editor's final
+  answers describe passes that never ran). All runs.
+- **Sub-annotation "tool-use failure"** (in addition to the label): yes when any of: at least half of the Python runs
+  end in an error; at least half of the forward requests are rejected or fail; the episode ends by nudges or empty
+  replies; or the editor states that its tools do not exist or do not work. The underlying rates are reported per run.
+- **Self-report vs log mismatches** (per run): the number of factual claims in the final answer about what the editor
+  did or measured (passes run, sample sizes, edits saved or applied, measured effects) that the tool record
+  contradicts. Claims the record cannot check are counted separately as unverifiable.
+- **Second labeller**: every label is also assigned blind (no first label shown) by a model of a different family
+  (Codex / GPT, medium effort) from the same digest and definitions; agreement is reported, and disagreements are
+  resolved by the agent from the tool record, with the reason written in `run_class.json`.
+
+### A4 — 2026-11-10 14:05 +11:00: empty edit sets (user decision)
+- An episode whose submitted edit set is empty is scored and counts like any other. In Figure 1 it is drawn as a
+  hollow marker at its measured score (the unedited network sampled again), not as a filled point.
