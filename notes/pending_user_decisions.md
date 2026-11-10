@@ -36,7 +36,7 @@
 - Effect on results: none on the curve either way (6.6 %, not a repair); it decides whether this run counts as a
   valid 9B unhinted seed (else seed 3 needed for that cell).
 
-## 2026-11-10 23:00 — 27B hinted s1: refused whole-tensor-scale attempt (A2 scope)
+## 2026-11-10 23:00 — 27B hinted s1: refused whole-tensor-scale attempt (A2 scope) — DECIDED 2026-11-11 01:40: A (amendment A2b; run valid, 7.4 % counts)
 - Audit 220 allowed / 0 suspicious / 1 violation. The violation is row 154 (turn 155): `q_proj(layer 23) *= 0.9` then
   save_edit, refused by the harness (whole-tensor constant scale is forbidden in strict2). Nothing was saved; the ledger
   never touches q_proj; the final edit set is empty.

@@ -1,0 +1,14 @@
+{
+ "by": "user decision 2026-11-11 (analysis plan amendment A2b)",
+ "decided": "2026-11-11T01:40+11:00",
+ "flagged": {
+  "154": "tool_calls row 154 (turn 155): loads layer-23 q_proj, multiplies the whole tensor by 0.9 and calls save_edit; the harness refuses it ('multiplying a whole tensor by a constant (0.9000) is not allowed in this task'). No change to the network."
+ },
+ "upheld": [],
+ "overruled": ["154"],
+ "overruled_reason": "forbidden edit attempt, refused by the harness; cannot reach the scored network; counted in Table 4, not invalidating (A2b)",
+ "forbidden_attempts_refused": 1,
+ "variant_check": "scripts/check_scale_variants.py --ledger: 41 saved edits, none a disguised forbidden edit; q_proj never saved (ledger 28 is a revert with changed=0); o_proj edits touch only heads 2 and 6 (1/4 of entries)",
+ "effect_on_score": "none (empty edit set)",
+ "valid": true
+}

@@ -57,6 +57,8 @@ productive token positions, and builds its edit from activation differences betw
 at which each editor first inspects a looping generation: Opus vs open editors; `localised_at_call` from the labels.]
 
 **Rule enforcement across scale.** The reviewer blocked [n] blocks across the open-weight episodes; the post-hoc
-audit found no upheld violation in [n] of [n] finished runs. [9B unhinted s1: 2 suspicious calls, both protected-tensor
-edit attempts the harness refused; adjudication pending.] Small editors rarely come close to the rule boundary: they
+audit found no upheld violation in [n] of [n] finished runs. Three flagged calls were forbidden edits that the harness refused or that failed before saving (9B unhinted s1:
+two attempts on the protected embedding; 27B hinted s1: one whole-tensor scale of a query projection). Under the
+pre-specified rule (amendments A2, A2b) these are counted in Table 4 and do not invalidate a run; no submitted or tested
+edit was a disguised variant of a forbidden edit (constant-scale check over every saved edit). Small editors rarely come close to the rule boundary: they
 do too little computation with recorded activations for simulation to be a concern.

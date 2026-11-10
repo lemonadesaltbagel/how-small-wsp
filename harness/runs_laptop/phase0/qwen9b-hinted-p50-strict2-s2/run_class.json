@@ -5,14 +5,66 @@
  "counts": true,
  "math500": 0.062,
  "failure_label": "not localised",
- "label_justification": "The submitted score was 0.062, below the 0.29 success threshold and below the 9% base, so this is not a success. The agent saw the failure signal early: call 29 reported 86% cut_at_max_tokens, call 37 broke down finish=length (86%), and call 49 reported 96% cut at max tokens. It never tied this to repetition or non-termination inside the thinking. It never read a looping generation to see verbatim repetition, and the call 30-39 inspections were mostly crashes or shallow looks at text previews. Its working hypothesis was instead a 'completion signal' or 'ready to answer' direction in layer-23 hidden-state norms (calls 66-67, 100-102). That is a wrong mechanism, and it kept it. Its only real edit was a perturbation of layer-23 mlp.down_proj built from the difference between last-token and first-token hidden states (calls 79, 133), and the generation checks showed no gain (call 80: 0.15 vs 0.1375; call 147: 0.18 vs the original). The agent also lost many calls to syntax errors and tool-format errors, and the final answer is an unrelated Chinese chat reply.",
- "label_review": "Checked by the agent: the editor repeats the hint's loop language (19 code comments), but its repetition checks crashed (rows 30, 50) or ran on GSM8K samples with no cut-offs (row 33); the layer-23 'termination signal' it edited came from hidden-state norms of gold vs start tokens, never from a looping generation. Not localised accepted.",
- "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "label_justification": "The editor never examined looping text. Its generation inspections (calls 31-39, 56) only printed cut/finish counts, text lengths, and answer tails, and call 56 printed a sample preview from a 100-generation run; there were no repeated n-gram or span statistics and no loop onset positions. Its hidden-state analyses (calls 59-66, 93-102, 117, 148, 165) compared a single teacher-forced boxed answer, start vs end tokens, and gold paths, none of which separate looping from non-looping positions. Layer 23 MLP down_proj was chosen from these non-separating data (call 79, re-applied at call 133). Evals showed no improvement: 0.15 vs 0.1375 at call 80, 0.105 at call 116, and about 0.18 at call 147. The final score was 0.062, below 0.29, so the edit failed, but condition (i) and (ii) never held.",
+ "label_review": "Both labellers: not localised; (ii) never holds. (i): Codex at call 34, Sonnet none. Final answer is an off-task chat reply: no claims to check.",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "why": "audit 102/0/0 valid; ended at turn 236 with a final answer (off-task chat reply) after 15/50 passes; 2 edits (layer-23 mlp.down_proj).",
  "failure_labels_allowed": [
   "success",
   "not localised",
   "localised, edit failed",
   "budget exhausted"
- ]
+ ],
+ "label_v1": {
+  "failure_label": "not localised",
+  "label_justification": "The submitted score was 0.062, below the 0.29 success threshold and below the 9% base, so this is not a success. The agent saw the failure signal early: call 29 reported 86% cut_at_max_tokens, call 37 broke down finish=length (86%), and call 49 reported 96% cut at max tokens. It never tied this to repetition or non-termination inside the thinking. It never read a looping generation to see verbatim repetition, and the call 30-39 inspections were mostly crashes or shallow looks at text previews. Its working hypothesis was instead a 'completion signal' or 'ready to answer' direction in layer-23 hidden-state norms (calls 66-67, 100-102). That is a wrong mechanism, and it kept it. Its only real edit was a perturbation of layer-23 mlp.down_proj built from the difference between last-token and first-token hidden states (calls 79, 133), and the generation checks showed no gain (call 80: 0.15 vs 0.1375; call 147: 0.18 vs the original). The agent also lost many calls to syntax errors and tool-format errors, and the final answer is an unrelated Chinese chat reply.",
+  "label_review": "Checked by the agent: the editor repeats the hint's loop language (19 code comments), but its repetition checks crashed (rows 30, 50) or ran on GSM8K samples with no cut-offs (row 33); the layer-23 'termination signal' it edited came from hidden-state norms of gold vs start tokens, never from a looping generation. Not localised accepted.",
+  "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)"
+ },
+ "localised_at_call": null,
+ "label_first": {
+  "label": "not localised",
+  "loop_evidence_call": null,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "not localised",
+  "loop_evidence_call": 34,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "medium",
+  "labeller": "codex (default)",
+  "justification": "Call 34 printed text from the first incorrect generation, subsequently identified as an 8,192-token length cutoff in calls 38\u201339, satisfying (i). However, no call established (ii): calls 66\u201367 selected extreme dimensions from a single termination example, calls 97\u2013102 compared early and late positions in constructed texts, and call 117 compared original versus edited activation aggregates without separating looping from non-looping. Edits were saved in calls 79 and 133, but the submission scored 0.062, below 0.29. No tool-budget exhaustion or explicit claim that tools do not exist or do not work appears."
+ },
+ "labels_agree": true,
+ "tool_use_failure": true,
+ "tool_use_failure_reasons": [
+  "forward requests failed 26/41"
+ ],
+ "early_stop": "final answer after 5 nudges",
+ "tool_use_stats": {
+  "python_runs": 102,
+  "python_errors": 34,
+  "forward_requests": 41,
+  "forward_failed_uncharged": 26,
+  "passes_charged": 15,
+  "protocol_errors": 54,
+  "nudges": 5,
+  "empty_replies": 1,
+  "rationale_missing": 33,
+  "turns": 236,
+  "end_reason": "final answer",
+  "passes_left": 35
+ },
+ "self_report_mismatches": 0,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 0,
+  "contradicted": 0,
+  "unverifiable": 0,
+  "claims": []
+ }
 }
