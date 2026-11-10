@@ -1,0 +1,11 @@
+{
+ "proposed": "2026-11-10T11:20+11:00",
+ "by": "agent (proposal; needs the user's decision: a case type not covered by appendix note 6)",
+ "flagged": {
+  "46": "tool_calls row 46 (turn 61): builds a rank-1 change to model.language_model.embed_tokens.weight (protected) from a mean difference of recorded layer-23 activations and calls save_edit; fails before saving on a broadcast shape error. No change to the network.",
+  "49": "row 49 (turn 64): same edit with corrected shape; save_edit refused by the harness ('may not be edited in this task'). No change to the network."
+ },
+ "facts": "Neither call ran the network or reconstructed a layer's computation (rules (a)/(b) not involved). The final edit set holds only layers.11 q_proj/v_proj; verify_edits checks that final/net = base + edit set.",
+ "proposed_rule": "An attempted edit of a protected tensor that the harness refuses (or that fails before saving) has no effect on the network and is not a rule (a)/(b) violation; it is recorded, not invalidating. A protected tensor in the scored edit set would invalidate the run (impossible here: the harness enforces it).",
+ "proposed_valid": true
+}
