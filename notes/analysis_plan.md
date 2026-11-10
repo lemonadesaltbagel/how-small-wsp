@@ -60,7 +60,7 @@ Self-editing mode, install vs grow, closed loop, injected lesion, zero-feedback 
 
 ## Amendments
 
-### A1 — 2026-11-10 14:05 +11:00: episodes stopped by empty replies (user decision; written before the score of the
+### A1 — 2026-11-10 14:01 +11:00 (commit 854ce75): episodes stopped by empty replies (user decision; written before the score of the
 first such episode, deepseek-flash hinted s1, was known to anyone)
 - An episode that the harness ends with "the editor sent empty replies" while budget remains (forward passes, Python
   runs or turns left) is treated as an interface failure, not as the editor's decision to stop. It is resumed **once**
@@ -75,7 +75,7 @@ first such episode, deepseek-flash hinted s1, was known to anyone)
   in the process, so the editor continues through the harness's standard handoff (task restated with the editor's own
   notes, as after every 40 turns), told that kernel variables were lost.
 
-### A2 — 2026-11-10 14:05 +11:00: protected-tensor edit attempts (user decision)
+### A2 — 2026-11-10 14:01 +11:00 (commit 854ce75): protected-tensor edit attempts (user decision)
 - An attempted edit of a protected tensor (embedding / output layer, final norm) that the harness refuses, or that
   fails before saving, does not make a run invalid: it cannot reach the scored network (the harness enforces this and
   `verify_edits.py` checks final/net = base + edit set). The audit flags such calls; they are adjudicated as
@@ -83,7 +83,7 @@ first such episode, deepseek-flash hinted s1, was known to anyone)
 - A protected tensor inside a scored edit set would make the run invalid.
 - 9B unhinted s1 (2 such attempts) is therefore valid.
 
-### A3 — 2026-11-10 14:05 +11:00: what "localised" means; labelling procedure (user decisions)
+### A3 — 2026-11-10 14:01 +11:00 (commit 854ce75): what "localised" means; labelling procedure (user decisions)
 - **Localised** requires both, shown by tool calls (code and outputs), not by prose:
   (i) *loop evidence*: the editor examined the failure itself: it read or printed text of generations that hit the
   token limit, or computed repetition statistics (repeated n-grams or spans, loop onset positions) on such
@@ -107,6 +107,6 @@ first such episode, deepseek-flash hinted s1, was known to anyone)
   (Codex / GPT, medium effort) from the same digest and definitions; agreement is reported, and disagreements are
   resolved by the agent from the tool record, with the reason written in `run_class.json`.
 
-### A4 — 2026-11-10 14:05 +11:00: empty edit sets (user decision)
+### A4 — 2026-11-10 14:01 +11:00 (commit 854ce75): empty edit sets (user decision)
 - An episode whose submitted edit set is empty is scored and counts like any other. In Figure 1 it is drawn as a
   hollow marker at its measured score (the unedited network sampled again), not as a filled point.
