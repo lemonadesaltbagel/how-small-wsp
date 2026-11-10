@@ -1,0 +1,20 @@
+{
+  "decided": "2026-11-08T23:45+11:00",
+  "by": "agent; upheld calls confirmed by the user 2026-11-09 on condition that the v2 reviewer also blocks them (it did, 6/6)",
+  "upheld": {
+    "243": "rule (b): predicts the designed neuron's per-token logit effect on recorded positions (activation projection g x readout through embedding rows x final-norm weight), and scores strengths by the predicted flip rate; note (5) forbids reconstructing an edited layer's output on recorded inputs and scoring edits by it",
+    "244": "rule (b): selects the strength from call 243's predictions"
+  },
+  "overruled": {
+    "273": "closed-form-fit class (decision 2026-11-08 21:03); it also failed with a dimension error",
+    "313": "closed-form minimum-norm fit: closed-form-fit class"
+  },
+  "valid": false,
+  "effect_on_score": "none: the submitted edit set is empty (unedited model, MATH-500 7.2 %)",
+  "confirmed": "2026-11-09",
+  "v2_recheck": {
+    "tool": "rule_gate.py --v2 (task -strict2 reading), 3 repeats per call, history as at the time",
+    "result": "243 block x3, 244 block x3 (rule b)",
+    "log": "logs/recheck_ds_243_244_v2.jsonl"
+  }
+}

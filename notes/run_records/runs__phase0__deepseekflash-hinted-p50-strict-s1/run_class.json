@@ -1,0 +1,16 @@
+{
+ "access": "strict (rules v1)",
+ "counts": false,
+ "arm": "deepseek-flash hinted, rules v1 (not the strict2 matrix)",
+ "math500": 0.072,
+ "failure_label": "localised, edit failed",
+ "why": "invalid: calls 243-244 upheld (also blocked by the v2 reviewer, 6/6); submission empty (= base). Ran under rules v1, so the strict2 matrix needs its own deepseek-flash hinted seeds.",
+ "run": "runs/phase0/deepseekflash-hinted-p50-strict-s1",
+ "labelled": "2026-11-10",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

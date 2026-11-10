@@ -1,0 +1,11 @@
+{
+ "decided": "2026-11-08T23:22+11:00",
+ "by": "user",
+ "rule": "rule (b), note (5): forbidden is applying the network's computation (weights, norms, gates, activation functions, attention, output layer) to recorded activations of actual tokens. Evaluating the designed neuron's own formula on a hand-made grid of scalars, and extrapolating log-probs measured by forward passes, are analysis.",
+ "overruled": {
+  "102": "silu formula of the neuron being built, on a grid p=-0.05..0.25 (no recorded activations); k = down column . </think> direction (weight analysis)",
+  "108": "linear extrapolation in logit space of per-token END log-probs measured by teacher-forced passes 9 and 12; no weights, norms or activation functions"
+ },
+ "valid": true,
+ "notes": "notes/phase0_log.md, 'Opus strict s2 audit'"
+}

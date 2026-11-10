@@ -1,0 +1,16 @@
+{
+  "access": "simulation allowed",
+  "counts": false,
+  "arm": "aborted",
+  "math500": null,
+  "failure_label": null,
+  "why": "first round seed 3, stopped when the strict rules were introduced; no result.",
+  "run": "runs_laptop/phase0/opus55-hinted-p50-s3",
+  "labelled": "2026-11-10",
+  "failure_labels_allowed": [
+    "success",
+    "not localised",
+    "localised, edit failed",
+    "budget exhausted"
+  ]
+}

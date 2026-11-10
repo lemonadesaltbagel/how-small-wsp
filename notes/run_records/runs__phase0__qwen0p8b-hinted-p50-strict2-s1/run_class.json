@@ -1,0 +1,18 @@
+{
+ "run": "runs/phase0/qwen0p8b-hinted-p50-strict2-s1",
+ "arm": "main: Qwen3.5-0.8B, hinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.07,
+ "failure_label": "not localised",
+ "label_justification": "The score is 0.07, below the 0.29 success threshold and below the 9.0% base. The editor never analysed the model's actual outputs, so it never found the looping mechanism (verbatim repetition inside the thinking until the token limit). From call 0 (turn 1) onward it asserted without evidence that gated attention layers (3, 7, 11, 15, 19, 23) rely on 'lookahead loops' and proposed disabling them. This diagnosis was invented, not derived from any analysis of generations, and it was never revised. Call 1 failed on a missing file. Calls 2-39 are mostly syntax errors, or scripts that print a dict containing the same diagnosis string, with no weight loading or modification. Calls 40-41 added a different, equally unfounded story about attention weights and high-temperature prompts. The final answer then claims a 'both' generation pass with 512 samples, but no tool call shows one, and its mechanism (norm.weight applied to logit_lens, cosh scaling, NaN) has nothing to do with repetition. The editor settled on a wrong mechanism and kept it, and no validated edit was made.",
+ "label_review": "Checked by the agent: 0 forward passes used (state.json passes_used {}), so the 512-sample 'both' pass described in the final answer never happened; the submitted edit set is empty (0 tensors, 0 entries changed), so 7.0% is the unedited network re-sampled (base 9.0%, one sample). 8 of 42 tool rows were rejected for missing rationale; no python call loaded or changed weights in a way tied to repetition. Not localised accepted.",
+ "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "why": "audit 34/0/0 valid; ended at turn 49 with a final answer after 3 minutes, using 34/300 python runs and 0/50 passes; empty edit set. First score errored on a dead GPU (eval_failed_deadgpu/); re-scored 2026-11-10 on a healthy pod.",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

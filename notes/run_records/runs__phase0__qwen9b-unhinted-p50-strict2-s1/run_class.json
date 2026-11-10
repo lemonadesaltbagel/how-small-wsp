@@ -1,0 +1,18 @@
+{
+ "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s1",
+ "arm": "main: Qwen3.5-9B, unhinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.066,
+ "failure_label": "not localised",
+ "label_justification": "The score was 0.066, below base and far under the 0.29 success bar. Across 274 turns the editor never tied the failure to looping or non-termination in the model's thinking. Early outputs showed cut_at_max_tokens failures (call 32, call 156 with 32768 tokens), and later passes reported ~92% cut-offs (call 123). But it only called these 'cut-offs' and 'attention destabilization'. It never inspected the thinking text for verbatim repetition and never identified a repetition mechanism. It settled on a wrong mechanism, a loss of attention to early prompt tokens ('reach'/'retention'), and kept it. It then made blind V/Q-projection nudges (calls 51, 99-102, 106, 168, 175, 191, 196) with no mechanistic basis. The edits were reverted or left as residuals, and the final answer was a refusal that ignored the task. The editor never got as far as a localised-but-failed edit.",
+ "label_review": "Checked by the agent (earlier): 'not localised' accepted; the editor described cut-offs as 'attention destabilization' and kept a lost-attention-to-early-tokens story.",
+ "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "why": "audit 151/0/2; the 2 flagged calls are refused protected-tensor attempts, valid under amendment A2 (user, 2026-11-10). Ended at turn 274 with a final answer (a refusal) after 18/50 passes and 153/300 Python runs.",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

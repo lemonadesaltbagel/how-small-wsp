@@ -1,0 +1,16 @@
+{
+  "access": "simulation allowed",
+  "counts": false,
+  "arm": "aborted",
+  "math500": null,
+  "failure_label": null,
+  "why": "first round, stopped when the strict rules were introduced; no result.",
+  "run": "runs/phase0/deepseekflash-hinted-p50-s1",
+  "labelled": "2026-11-10",
+  "failure_labels_allowed": [
+    "success",
+    "not localised",
+    "localised, edit failed",
+    "budget exhausted"
+  ]
+}

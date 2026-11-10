@@ -1,0 +1,16 @@
+{
+ "access": "simulation allowed",
+ "counts": false,
+ "arm": "reference: Opus 5.5, simulation allowed (first round)",
+ "math500": 0.35,
+ "failure_label": "success",
+ "why": "first round, original rules; post-hoc audit: 11 rule-(b) violations. Kept as its own access level.",
+ "run": "runs/phase0/opus55-hinted-p50-s2",
+ "labelled": "2026-11-10",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

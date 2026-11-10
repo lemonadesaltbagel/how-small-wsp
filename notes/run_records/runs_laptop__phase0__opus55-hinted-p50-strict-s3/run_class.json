@@ -1,0 +1,16 @@
+{
+ "access": "strict (rules v1)",
+ "counts": true,
+ "arm": "reference: Opus 5.5, strict",
+ "math500": 0.406,
+ "failure_label": "success",
+ "why": "audit clean (298/0/0).",
+ "run": "runs_laptop/phase0/opus55-hinted-p50-strict-s3",
+ "labelled": "2026-11-10",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

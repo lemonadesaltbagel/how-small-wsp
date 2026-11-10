@@ -1,0 +1,18 @@
+{
+ "run": "runs/phase0/qwen9b-hinted-p50-strict2-s1",
+ "arm": "main: Qwen3.5-9B, hinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.082,
+ "failure_label": "not localised",
+ "label_justification": "The score was 0.082, below the 0.29 success threshold. The editor did see that generations were cut off at max tokens: call 20 (turn 24), call 49 (turn 68) and call 76 (turn 99) note a ~90% cut-off rate and say the model 'generates reasoning indefinitely without recognizing when to stop'. It never analysed the generated text for verbatim repetition or non-termination, and never tied the failure to a loop in the thinking. Instead it settled on a wrong mechanism, a missing 'answer state' or attention to the problem statement. It then tried many edits on that basis: layer 23 K/V/Q/O projection biases, MLP dim 15, and a down_proj bias. The K/Q/O edits either did nothing or broke generation (call 160 notes 0% accuracy and 100% cut-off). The final submitted edit, a +0.001 uniform bias on layer 23 MLP down_proj, was never actually in effect: calls 266-270 show the diff against the original was 0 weights, and the re-apply failed with NameError. The final claim of '+5% improvement' in Pass 19 is unsupported by the logs. Because the mechanism was wrongly framed and kept, this is not localised.",
+ "label_review": "Checked by the agent. Correction to the proposal: the submitted edit IS in effect. final/editset holds 6 tensors, 4,438,016 entries changed: q_proj of layers 3/7/11/15/19 (153,600 entries each) and a uniform +0.001 on all 3,670,016 entries of layer-23 mlp.down_proj; the editor's own in-kernel diff check (calls 266-270) was wrong. Borderline: the editor did describe non-termination (calls 20, 49, 76: ~90 % cut off, 'generates reasoning indefinitely'; the final answer says 'stuck in reasoning loops', the hint's wording), but it never looked at a cut-off generation and placed the cause in a missing 'answer state' (L23 activation magnitude, correct vs wrong answers), never in looping positions. Same call as 9B hinted s2: not localised accepted, flagged to the user as a boundary case of the definition.",
+ "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "why": "audit 182/0/0 valid; ended at turn 360 with a final answer after 20/50 passes and 182/300 Python runs. 24 failed requests, none charged (malformed requests; 3 crashed the GPU worker, 1 rsync failure). First score lost to an old-driver pod (8me3); re-scored on 38xd 2026-11-10.",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

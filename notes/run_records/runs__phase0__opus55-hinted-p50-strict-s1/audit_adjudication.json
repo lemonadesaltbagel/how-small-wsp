@@ -1,0 +1,19 @@
+{
+ "decided": "2026-11-08T21:03+11:00",
+ "by": "user",
+ "rule": "closed-form statistics of recorded activations (mean differences, LDA, covariance-whitened means, constant / least-squares read-outs) are analysis, not training; rule (a) forbids iterative optimisation and fitting that needs the network's computation",
+ "overruled": [
+  104,
+  218,
+  222,
+  234,
+  235,
+  313
+ ],
+ "suspicious_reviewed": {
+  "128": "projects rms-scaled h18 onto cb2_w, the shrinkage-LDA unit direction saved in call 103 (an activation statistic, not a weight row); allowed",
+  "151": "nl_score / pe_score are projections onto LDA directions w_nl (call 137) and w_pe (call 139); allowed"
+ },
+ "valid": true,
+ "notes": "notes/phase0_log.md, 'Opus strict s1 finished'"
+}

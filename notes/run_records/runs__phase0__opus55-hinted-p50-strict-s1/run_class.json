@@ -1,0 +1,16 @@
+{
+ "access": "strict (rules v1 + adjudication)",
+ "counts": true,
+ "arm": "reference: Opus 5.5, strict",
+ "math500": 0.448,
+ "failure_label": "success",
+ "why": "valid after adjudication (closed-form statistics, 2026-11-08 21:03).",
+ "run": "runs/phase0/opus55-hinted-p50-strict-s1",
+ "labelled": "2026-11-10",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}
