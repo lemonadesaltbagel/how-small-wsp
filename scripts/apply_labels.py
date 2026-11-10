@@ -1,5 +1,8 @@
 """Merge the A3/A5 labelling outputs of a run into its run_class.json (stdlib only; I review before committing).
   python3 -I scripts/apply_labels.py <run dir> "<my review, one paragraph>" [--label "<final label if I overrule>"]
+      [--material N] [--tools-claim "<where the editor said its tools do not work, e.g. final answer>"]
+--material: how many of the checker's contradicted claims I judge material after review (fabricated actions, false
+claims that tools do not work, data used for choices reported as untouched); the rest are imprecisions.
 Reads logs/labels_a3/<run>.claude.json (first labeller, Claude Sonnet 5.5), logs/labels_a3/<run>.codex.json (second,
 blind, different family), logs/selfreport/<run>.json (self-report check) and tool_use_stats.py; keeps the run's
 other fields (arm, access, counts, math500, why)."""
@@ -19,7 +22,8 @@ def load(p):
 
 def main():
     run, review = sys.argv[1], sys.argv[2]
-    over = sys.argv[sys.argv.index("--label") + 1] if "--label" in sys.argv else None
+    arg = lambda k: sys.argv[sys.argv.index(k) + 1] if k in sys.argv else None
+    over, material, tools_claim = arg("--label"), arg("--material"), arg("--tools-claim")
     name = os.path.basename(run.rstrip("/"))
     first = load(os.path.join(ROOT, "logs", "labels_a3", f"{name}.claude.json"))
     second = load(os.path.join(ROOT, "logs", "labels_a3", f"{name}.codex.json"))
@@ -35,6 +39,8 @@ def main():
     for lab in (first, second):
         if lab.get("claims_tools_unavailable_call") is not None:
             tool_reasons.append(f"says tools do not work (call {lab['claims_tools_unavailable_call']}, {lab['labeller']})")
+    if tools_claim:
+        tool_reasons.append(f"says tools do not work ({tools_claim})")
     rc.update({
         "failure_label": over or first["label"],
         "label_justification": first["justification"],
@@ -47,6 +53,7 @@ def main():
         "tool_use_failure": bool(tool_reasons), "tool_use_failure_reasons": tool_reasons,
         "early_stop": ts["early_stop"], "tool_use_stats": {k: v for k, v in ts.items() if k not in ("run", "tool_use_failure_auto", "early_stop")},
         "self_report_mismatches": None if sr is None else sr.get("contradicted"),
+        "self_report_material": None if material is None else int(material),
         "self_report": None if sr is None else {k: sr.get(k) for k in ("consistent", "contradicted", "unverifiable", "claims")},
     })
     if over:

@@ -53,7 +53,8 @@ def row(run):
         "protected_attempts_refused": adj.get("protected_attempts_refused", 0) if adj else 0,
         "edit_changed": man.get("changed_total"), "edit_frac": (man["changed_total"] / man["numel_total"]) if man.get("numel_total") else None,
         "empty_edit": (man.get("changed_total") == 0) if man else None,  # amendment A4: hollow marker in Figure 1
-        "tool_use_failure": c.get("tool_use_failure"), "self_report_mismatches": c.get("self_report_mismatches"),
+        "tool_use_failure": c.get("tool_use_failure"), "early_stop": c.get("early_stop"),
+        "self_report_mismatches": c.get("self_report_mismatches"), "self_report_material": c.get("self_report_material"),
         "label_second": c.get("label_second"),
     }
 
@@ -90,7 +91,7 @@ def main():
         ef = "—" if r["edit_frac"] is None else f"{100 * r['edit_frac']:.3f}"
         out.append(f"| {r['run']} | {fmt(r['arm'])} | {fmt(r['access'])} | {fmt(r['counts'])} | {fmt(r['math500'], True)} | {hs} | "
                    f"{aus} | {fmt(valid)} | {g['block'] if g else '—'} | {r['protected_attempts_refused']} | {ef} | {fmt(r['failure_label'])} | "
-                   f"{fmt(r['tool_use_failure'])} | {fmt(r['self_report_mismatches'])} | {fmt(r['turns'])} |")
+                   f"{fmt(r['tool_use_failure'])} | {fmt(r['self_report_mismatches'])}{'' if r['self_report_material'] is None else ' (' + str(r['self_report_material']) + ' material)'} | {fmt(r['turns'])} |")
     open(os.path.join(ROOT, "notes", "episode_ledger.md"), "w").write("\n".join(out) + "\n")
     print("\n".join(out))
 

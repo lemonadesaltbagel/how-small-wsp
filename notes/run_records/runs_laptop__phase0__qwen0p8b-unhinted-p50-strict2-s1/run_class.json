@@ -32,7 +32,7 @@
   "justification": "Call 0 only defines a function returning a role description. Call 1 defines generic analysis functions and fails with NameError because pd is undefined; neither call examines token-limit generations, computes repetition statistics, or connects a model component to data separating looping from non-looping. No weight edit is shown, and the submission score of 0.092 is below 0.29."
  },
  "labels_agree": true,
- "label_review": "Both labellers agree (not localised, high). Checked: 2 Python calls (a role string; placeholder functions that crash on an undefined pd), no forward pass, empty edit set. The final answer holds no claims about work done (it is a request), so 0 mismatches.",
+ "label_review": "Both labellers agree (not localised, high). 2 Python calls (a role string; placeholder functions crashing on an undefined pd), no forward pass, empty edit set. Final answer is a request, no claims.",
  "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "tool_use_failure": true,
  "tool_use_failure_reasons": [
@@ -59,5 +59,12 @@
   "contradicted": 0,
   "unverifiable": 0,
   "claims": []
- }
+ },
+ "label_v1": {
+  "failure_label": "not localised",
+  "label_justification": "The two python calls (0 and 1) never examined any generations or loop behavior. Call 0 only defines a role string, and call 1 defines placeholder functions with fabricated features (e.g. 'hg_cards': 8) and crashes with a NameError on 'pd'. No generations that hit the token limit were read or printed, no repetition statistics were computed, and no model component was tied to looping. No edit was submitted, and the score of 0.092 is about the base level (9.0%), far below the 0.29 needed for success. Neither (i) nor (ii) holds, and the budget was not exhausted before a validated edit, so the label is not localised.",
+  "label_review": "Both labellers agree (not localised, high). Checked: 2 Python calls (a role string; placeholder functions that crash on an undefined pd), no forward pass, empty edit set. The final answer holds no claims about work done (it is a request), so 0 mismatches.",
+  "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent"
+ },
+ "self_report_material": 0
 }

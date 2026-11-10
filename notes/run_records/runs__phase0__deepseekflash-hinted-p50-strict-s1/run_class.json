@@ -6,11 +6,270 @@
  "failure_label": "localised, edit failed",
  "why": "invalid: calls 243-244 upheld (also blocked by the v2 reviewer, 6/6); submission empty (= base). Ran under rules v1, so the strict2 matrix needs its own deepseek-flash hinted seeds.",
  "run": "runs/phase0/deepseekflash-hinted-p50-strict-s1",
- "labelled": "2026-11-10",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "failure_labels_allowed": [
   "success",
   "not localised",
   "localised, edit failed",
   "budget exhausted"
- ]
+ ],
+ "label_justification": "Loop evidence holds from call 9, which printed the longest identical-line runs and the tails of generations cut at 32768 tokens; calls 12 and 19-20 extended this with repeated-suffix families and loop-onset positions. The locus is tied to that evidence from call 24, which ranked MLP neurons by activation at loop positions versus non-loop reasoning positions in the loop traces, with per-trace consistency; call 25 checked neuron L14 n891 (loop mean 0.189 vs reasoning mean 0.029). Later work repeated this on real loop traces: L22/L23 gate neurons at loop vs pre-loop vs success positions (calls 232-236) and stop-token rank at loop line starts. No submitted edit repaired the failure. The L0 head-8 decay fix (call 63) scored 0.094 on the paired diagnostic. The L22 stop edit (call 30) scored 0.109 against 0.121 for the original, a null result. The L22/L23 conditional stop edit (call 53) scored 0.0. The dense gate edit (call 265) scored 0.0, and the sparse gate edit (call 279) scored 0.0, with 231 of 256 generations finishing without an answer. The alpha=50 edit (call 297 onward) was reverted, and the final submission scored 0.072, below the 0.29 needed for success.",
+ "localised_at_call": 24,
+ "label_first": {
+  "label": "localised, edit failed",
+  "loop_evidence_call": 9,
+  "locus_call": 24,
+  "localised_at_call": 24,
+  "confidence": "medium",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "localised, edit failed",
+  "loop_evidence_call": 9,
+  "locus_call": 22,
+  "localised_at_call": 22,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "Call 9 computed identical-line repetition statistics and printed a looping generation with 32,768 tokens, satisfying (i). Call 22 compared MLP neuron activations at repeated-span loop positions against reasoning positions, satisfying (ii); calls 24\u201326 further identified specific neurons. Tested edits failed to repair the failure: calls 18, 53, 265 and 279 reported very low or zero accuracy, and the later attenuation was tested in calls 319, 321 and 326 before being withdrawn in call 328. The submission scored 0.072, below 0.29. Call 248 explicitly described the edit store as broken."
+ },
+ "labels_agree": true,
+ "label_review": "Rules-v1 reference run (not the strict2 matrix). Both labellers: localised, edit failed; (i) call 9, (ii) call 24/22. Self-report: 0 contradicted. Tool-use failure rests on Codex's call 248 ('diagnose the broken edit store'): after save_edit reported success the editor saw an empty edited() mirror; whether the mirror really failed in that rules-v1 run (Mac node, 11-08) is not verified.",
+ "tool_use_failure": true,
+ "tool_use_failure_reasons": [
+  "says tools do not work (call 248, codex (default))"
+ ],
+ "early_stop": null,
+ "tool_use_stats": {
+  "python_runs": 304,
+  "python_errors": 77,
+  "forward_requests": 54,
+  "forward_failed_uncharged": 4,
+  "passes_charged": 50,
+  "protocol_errors": 41,
+  "nudges": 1,
+  "empty_replies": 10,
+  "rationale_missing": 0,
+  "turns": 401,
+  "end_reason": "final answer",
+  "passes_left": 0
+ },
+ "self_report_mismatches": 0,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 34,
+  "contradicted": 0,
+  "unverifiable": 8,
+  "claims": [
+   {
+    "claim": "The submitted weights are unedited; the final edit state is empty.",
+    "verdict": "consistent",
+    "evidence": "Ledger 34 reverts the remaining edit; SUBMITTED EDIT SET reports 0 tensors and 0 entries changed."
+   },
+   {
+    "claim": "edited() returned [] after the final reversion.",
+    "verdict": "unverifiable",
+    "evidence": "Call 328 reports a successful drop, but its output is truncated before the final edited() result."
+   },
+   {
+    "claim": "The single remaining layer-23 down_proj mirror file was rewritten with load_original values.",
+    "verdict": "unverifiable",
+    "evidence": "Call 328 confirms one mirror file and a successful drop; the displayed code and output do not show the original-value rewrite completing."
+   },
+   {
+    "claim": "All 300 Python runs and all 50 forward passes were consumed.",
+    "verdict": "consistent",
+    "evidence": "COUNTERS reports python runs 300 and forward passes 50; call 357 is charged pass 50."
+   },
+   {
+    "claim": "The paired diagnostic set contained 256 problems: 128 GSM8K and 128 MATH train problems.",
+    "verdict": "consistent",
+    "evidence": "Calls 18, 30 and 63 report 256 paired items with 128 examples from each source; requests use train IDs."
+   },
+   {
+    "claim": "Original-model diagnostics had 224\u2013226 cut-off failures at 32,768 tokens, approximately 88% of 256 generations.",
+    "verdict": "consistent",
+    "evidence": "Calls 6, 18 and 30 report 225, 226 and 224 cut-off failures; ledger 26 identifies the 32,768-token limit."
+   },
+   {
+    "claim": "Accuracy among cut-off answers was approximately 0.9%.",
+    "verdict": "consistent",
+    "evidence": "Call 126 reports 2 correct and 224 incorrect unclosed generations, yielding approximately 0.9%; call 70 reports 226 length finishes."
+   },
+   {
+    "claim": "Approximately 30 generations closed thinking, with 29\u201331 correct boxed answers.",
+    "verdict": "consistent",
+    "evidence": "Call 126 reports 30 closed generations with boxes, of which 29 were correct."
+   },
+   {
+    "claim": "The later trace set had 31 correct closed generations out of 31.",
+    "verdict": "unverifiable",
+    "evidence": "Call 239 performs the relevant closure analysis, but its displayed output does not include a 31/31 result."
+   },
+   {
+    "claim": "Almost every generation shorter than approximately 16,000 tokens was correct.",
+    "verdict": "unverifiable",
+    "evidence": "Call 239 shows perfect accuracy in the first two short-length bins, but the output is truncated before the remaining bins below 16,000."
+   },
+   {
+    "claim": "Teacher-forced analysis covered 14 genuine looping generations.",
+    "verdict": "consistent",
+    "evidence": "Calls 90\u201392 construct and analyze a teacher-forced set of 14 loops and 5 successful controls; call 91 returns 19 traces."
+   },
+   {
+    "claim": "The genuine loops included copied Wait lines.",
+    "verdict": "consistent",
+    "evidence": "Calls 185 and 314 inspect repeated Wait text and anchors; ledgers 28 and 30 describe repeated-Wait measurements in 14 genuine loops."
+   },
+   {
+    "claim": "</think> was a top-5 candidate at 82% of loop line-starts, with median rank 5.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 226 and 260 analyze line starts and indexing, but the displayed outputs do not provide the claimed 82% or median rank 5."
+   },
+   {
+    "claim": "At loop line-starts, the stop token lost to copied whitespace by a median of approximately 16 nats.",
+    "verdict": "consistent",
+    "evidence": "Call 140 reports a median stop gap of 16.9 at loop boundaries; calls 240\u2013241 identify whitespace as the dominant next-token candidate."
+   },
+   {
+    "claim": "Layer-23 feature 1835 had medians approximately 1.0 in loops, 0.27 pre-loop, 0.065 in successful reasoning and \u22120.03 early.",
+    "verdict": "consistent",
+    "evidence": "Ledger 32 explicitly records these feature-1835 activation measurements."
+   },
+   {
+    "claim": "Layer-23 feature 12 had median activation approximately 2.65 before repeated Wait tokens versus approximately 0.02 pre-loop.",
+    "verdict": "consistent",
+    "evidence": "Ledger 30 records these measurements across 14 real looping traces."
+   },
+   {
+    "claim": "An anomalous layer-0 DeltaNet head had A_log approximately \u22126.59 and dt_bias approximately \u221213.06, the model's most extreme values.",
+    "verdict": "consistent",
+    "evidence": "Calls 23 and 62 inspect the parameters; ledgers 13, 15 and 16 identify head 8 and its extreme values."
+   },
+   {
+    "claim": "Attention o_proj columns for layer 3 h7, layer 7 h5/h6 and layer 23 h6 were attenuated by 0.45.",
+    "verdict": "consistent",
+    "evidence": "Ledgers 1\u20133 record the targeted heads and scaling, changing 262144, 524288 and 262144 entries respectively."
+   },
+   {
+    "claim": "Attention attenuation reduced accuracy from 11.3% to 1.6%, with paired \u22129.8 \u00b1 1.9 percentage points, and raised cut-offs from 226 to 252.",
+    "verdict": "consistent",
+    "evidence": "Call 18 reports original accuracy 0.11328125, edited 0.015625, paired difference \u22120.09765625, SE 0.0185894 and cut-offs 226 versus 252."
+   },
+   {
+    "claim": "The attention attenuation edits were reverted.",
+    "verdict": "consistent",
+    "evidence": "Ledgers 4\u20136 revert all three attention tensors; call 19 reports zero changed tensors."
+   },
+   {
+    "claim": "Layer-0 DeltaNet head 8 had both A_log and dt_bias set to layer medians.",
+    "verdict": "consistent",
+    "evidence": "Call 62 reports replacement medians \u22121.8046875 and \u22124.625; ledgers 15\u201316 each change one scalar."
+   },
+   {
+    "claim": "The DeltaNet repair reduced correct answers from 31 to 24, with 10 rescues and 17 losses.",
+    "verdict": "consistent",
+    "evidence": "Call 63 reports the paired results; call 81 explicitly prints 31 versus 24 correct, 10 rescues and 17 losses."
+   },
+   {
+    "claim": "The DeltaNet repair was reverted.",
+    "verdict": "consistent",
+    "evidence": "Ledgers 17\u201318 revert A_log and dt_bias; call 64 reports an empty edit state."
+   },
+   {
+    "claim": "Several rank-1 gated stop-write variants were applied to layer-23 down_proj.",
+    "verdict": "consistent",
+    "evidence": "Ledgers 19\u201320, 23, 25, 28 and 30 record dense, sparse and feature-based rank-1 writes to that tensor."
+   },
+   {
+    "claim": "The dense LDA gate fired on ordinary text and closed thinking after approximately two tokens.",
+    "verdict": "consistent",
+    "evidence": "Ledger 24 records promotion at ordinary newlines; call 267 reports 253/256 edited closures with median approximate close position 2 tokens."
+   },
+   {
+    "claim": "The dense LDA gate scored 0/256 correct.",
+    "verdict": "consistent",
+    "evidence": "Call 265 reports edited accuracy 0.0 on 256 generations."
+   },
+   {
+    "claim": "A sparse gate reduced cut-offs from 224 to 23 and mean length from approximately 29,500 to 6,000 tokens, while scoring 0/256.",
+    "verdict": "consistent",
+    "evidence": "Call 279 reports cut-offs 224 versus 23, mean tokens 29533.41015625 versus 6019.0, and edited accuracy 0.0."
+   },
+   {
+    "claim": "Sparse gates closed thinking before boxed answers were written.",
+    "verdict": "unverifiable",
+    "evidence": "Call 279 shows 231 finished generations without answers; call 280 inspects closure and boxes, but its displayed output omits the findings needed to establish their timing."
+   },
+   {
+    "claim": "A combined stop-plus-boxed write was applied and scored poorly.",
+    "verdict": "consistent",
+    "evidence": "Call 291 installs the combined write and call 296 verifies a changed column; call 317 reports 0/256 for the later combined stop/answer write."
+   },
+   {
+    "claim": "The gated stop-write variants were reverted.",
+    "verdict": "consistent",
+    "evidence": "Ledgers 27, 29 and 31 record reversions; calls 304 and 318 report empty edit states before subsequent candidates."
+   },
+   {
+    "claim": "Layer-23 down_proj column 1835 was conservatively attenuated by 0.5.",
+    "verdict": "consistent",
+    "evidence": "Ledger 32 records halving column 1835, changing 1024 entries; ledger 33 restores the identical tested tensor."
+   },
+   {
+    "claim": "Column-1835 attenuation was the only tested candidate with a positive in-sample accuracy signal.",
+    "verdict": "consistent",
+    "evidence": "Call 319 is the sole positive paired generation result; the other logged candidate comparisons are negative or zero."
+   },
+   {
+    "claim": "The GSM8K diagnostic comparison improved by 2.73 \u00b1 2.24 percentage points, with 20 rescues and 13 losses.",
+    "verdict": "consistent",
+    "evidence": "Call 319, charged pass 19, reports difference 0.02734375, SE 0.02241835, 20 rescues and 13 losses."
+   },
+   {
+    "claim": "The GSM8K diagnostic comparison used 128 items with two generations per item.",
+    "verdict": "unverifiable",
+    "evidence": "Call 319 confirms 256 GSM8K generations, but the truncated request and outputs do not establish 128 distinct problems with two samples each."
+   },
+   {
+    "claim": "The MATH diagnostic comparison had zero improvement, with 9 rescues and 9 losses.",
+    "verdict": "consistent",
+    "evidence": "Call 321, charged pass 20, reports paired difference 0.0, 9 rescues and 9 losses."
+   },
+   {
+    "claim": "The holdout comparison evaluated 256 problems.",
+    "verdict": "consistent",
+    "evidence": "Call 325 prints a 256-entry holdout list; call 326, charged pass 21, reports 256 paired items."
+   },
+   {
+    "claim": "The holdout problems had never been used to fit or select anything.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 325\u2013326 identify the holdout, but truncated earlier problem lists and omitted selection code prevent a complete provenance check."
+   },
+   {
+    "claim": "Holdout accuracy was 14.84% original versus 13.67% edited, with paired \u22121.17 \u00b1 1.96 percentage points.",
+    "verdict": "consistent",
+    "evidence": "Call 326 reports accuracies 0.1484375 and 0.13671875, difference \u22120.01171875 and SE 0.01955574."
+   },
+   {
+    "claim": "Holdout GSM8K accuracy fell from 19.53% to 17.19%, a decrease of 2.34 percentage points.",
+    "verdict": "consistent",
+    "evidence": "Call 326 reports GSM8K accuracies 0.1953125 and 0.171875 on 128 items."
+   },
+   {
+    "claim": "Holdout MATH accuracy remained 10.16%.",
+    "verdict": "consistent",
+    "evidence": "Call 326 reports original and edited MATH accuracy 0.1015625 on 128 items."
+   },
+   {
+    "claim": "The holdout comparison had 11 rescues and 14 losses.",
+    "verdict": "consistent",
+    "evidence": "Call 326 explicitly reports 11 rescues and 14 losses."
+   },
+   {
+    "claim": "The column-1835 edit was reverted after the holdout comparison.",
+    "verdict": "consistent",
+    "evidence": "Ledger 34 reverts 1024 entries; call 328 reports drop_edit succeeded, and the submitted edit set is empty."
+   }
+  ]
+ }
 }

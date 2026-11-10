@@ -5,14 +5,64 @@
  "counts": true,
  "math500": 0.066,
  "failure_label": "not localised",
- "label_justification": "The score was 0.066, below base and far under the 0.29 success bar. Across 274 turns the editor never tied the failure to looping or non-termination in the model's thinking. Early outputs showed cut_at_max_tokens failures (call 32, call 156 with 32768 tokens), and later passes reported ~92% cut-offs (call 123). But it only called these 'cut-offs' and 'attention destabilization'. It never inspected the thinking text for verbatim repetition and never identified a repetition mechanism. It settled on a wrong mechanism, a loss of attention to early prompt tokens ('reach'/'retention'), and kept it. It then made blind V/Q-projection nudges (calls 51, 99-102, 106, 168, 175, 191, 196) with no mechanistic basis. The edits were reverted or left as residuals, and the final answer was a refusal that ignored the task. The editor never got as far as a localised-but-failed edit.",
- "label_review": "Checked by the agent (earlier): 'not localised' accepted; the editor described cut-offs as 'attention destabilization' and kept a lost-attention-to-early-tokens story.",
- "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "label_justification": "The submission scored 0.066, below the 0.29 threshold, so success is out. Loop evidence (i) never holds. Tool calls report only aggregate cut_at_max_tokens rates (calls 32, 123, 150), and call 156 prints only the first ~100 characters of a cut-off text. No call reads the looping text or computes n-gram, span, or loop-onset statistics on generations that hit the token limit. Condition (ii) also fails. The analyses compare mean-answer hidden states for one correct vs six incorrect samples (calls 33-46), 'stable neurons' by mean-answer vs last-prompt difference (calls 164-168), and attention on a short teacher-forced reference text (calls 119-121, 134, 146). None of these separate looping from non-looping positions, and none look at stop-token logits at loop positions. The edits were guesses: V/Q-proj column boosts on layers 3, 7, 11, 15, 23, plus an embed-matrix edit that was refused. None improved accuracy, and all were reverted or ended near-null. Budget was not exhausted (about 148/300 Python runs and 32/50 forward passes remained), so 'budget exhausted' does not apply.",
+ "label_review": "Both labellers: not localised; (ii) never holds. (i): Codex at call 156, Sonnet none. Final answer is a refusal: no claims to check.",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "why": "audit 151/0/2; the 2 flagged calls are refused protected-tensor attempts, valid under amendment A2 (user, 2026-11-10). Ended at turn 274 with a final answer (a refusal) after 18/50 passes and 153/300 Python runs.",
  "failure_labels_allowed": [
   "success",
   "not localised",
   "localised, edit failed",
   "budget exhausted"
- ]
+ ],
+ "label_v1": {
+  "failure_label": "not localised",
+  "label_justification": "The score was 0.066, below base and far under the 0.29 success bar. Across 274 turns the editor never tied the failure to looping or non-termination in the model's thinking. Early outputs showed cut_at_max_tokens failures (call 32, call 156 with 32768 tokens), and later passes reported ~92% cut-offs (call 123). But it only called these 'cut-offs' and 'attention destabilization'. It never inspected the thinking text for verbatim repetition and never identified a repetition mechanism. It settled on a wrong mechanism, a loss of attention to early prompt tokens ('reach'/'retention'), and kept it. It then made blind V/Q-projection nudges (calls 51, 99-102, 106, 168, 175, 191, 196) with no mechanistic basis. The edits were reverted or left as residuals, and the final answer was a refusal that ignored the task. The editor never got as far as a localised-but-failed edit.",
+  "label_review": "Checked by the agent (earlier): 'not localised' accepted; the editor described cut-offs as 'attention destabilization' and kept a lost-attention-to-early-tokens story.",
+  "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)"
+ },
+ "localised_at_call": null,
+ "label_first": {
+  "label": "not localised",
+  "loop_evidence_call": null,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "not localised",
+  "loop_evidence_call": 156,
+  "locus_call": null,
+  "localised_at_call": null,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "Call 156 first examines actual generation text alongside finish='length', tokens=32768 and failure='cut_at_max_tokens', satisfying (i). No call satisfies (ii): calls 40\u201345 compare correct versus incorrect answers, calls 121 and 134 examine attention on short reference texts, and calls 164\u2013170 use answer-versus-prompt activation differences without separating looping from non-looping. The submission scored 0.066, below 0.29; no output establishes budget exhaustion. No visible call claims the tools do not exist or do not work."
+ },
+ "labels_agree": true,
+ "tool_use_failure": false,
+ "tool_use_failure_reasons": [],
+ "early_stop": "final answer after 5 nudges",
+ "tool_use_stats": {
+  "python_runs": 153,
+  "python_errors": 60,
+  "forward_requests": 30,
+  "forward_failed_uncharged": 12,
+  "passes_charged": 18,
+  "protocol_errors": 53,
+  "nudges": 5,
+  "empty_replies": 2,
+  "rationale_missing": 32,
+  "turns": 274,
+  "end_reason": "final answer",
+  "passes_left": 32
+ },
+ "self_report_mismatches": 0,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 0,
+  "contradicted": 0,
+  "unverifiable": 0,
+  "claims": []
+ }
 }

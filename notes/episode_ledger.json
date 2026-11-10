@@ -18,7 +18,9 @@
   "edit_frac": null,
   "empty_edit": null,
   "tool_use_failure": null,
+  "early_stop": null,
   "self_report_mismatches": null,
+  "self_report_material": null,
   "label_second": null
  },
  {
@@ -49,9 +51,19 @@
   "edit_changed": 0,
   "edit_frac": 0.0,
   "empty_edit": true,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": null,
+  "self_report_mismatches": 0,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "localised, edit failed",
+   "loop_evidence_call": 9,
+   "locus_call": 22,
+   "localised_at_call": 22,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 9 computed identical-line repetition statistics and printed a looping generation with 32,768 tokens, satisfying (i). Call 22 compared MLP neuron activations at repeated-span loop positions against reasoning positions, satisfying (ii); calls 24\u201326 further identified specific neurons. Tested edits failed to repair the failure: calls 18, 53, 265 and 279 reported very low or zero accuracy, and the later attenuation was tested in calls 319, 321 and 326 before being withdrawn in call 328. The submission scored 0.072, below 0.29. Call 248 explicitly described the edit store as broken."
+  }
  },
  {
   "run": "runs/phase0/opus55-hinted-p50-s1",
@@ -78,7 +90,9 @@
   "edit_frac": 0.004529377454727704,
   "empty_edit": false,
   "tool_use_failure": null,
+  "early_stop": null,
   "self_report_mismatches": null,
+  "self_report_material": null,
   "label_second": null
  },
  {
@@ -106,7 +120,9 @@
   "edit_frac": 0.059926572365455635,
   "empty_edit": false,
   "tool_use_failure": null,
+  "early_stop": null,
   "self_report_mismatches": null,
+  "self_report_material": null,
   "label_second": null
  },
  {
@@ -141,9 +157,19 @@
   "edit_changed": 12288,
   "edit_frac": 1.6331889860797008e-05,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": false,
+  "early_stop": null,
+  "self_report_mismatches": 6,
+  "self_report_material": 2,
+  "label_second": {
+   "label": "success",
+   "loop_evidence_call": 7,
+   "locus_call": 20,
+   "localised_at_call": 20,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 7 computed repetition statistics on 32,768-token generations, establishing loop evidence. Call 20 measured individual attention heads' attention to repeated cycles and compared looping with pre-loop and finished text, establishing a tied locus; call 21 further quantified heads' increasing attention to previous cycles. Validated edits exceeded the 0.29 threshold, including MATH accuracy 0.4609375 in call 243 and 0.44921875 on fresh problems in call 256. Call 350 verified the final edit's changed neurons and six edited tensors. No call claimed the tools generally did not exist or work; call 49 identified an unsupported request parameter."
+  }
  },
  {
   "run": "runs/phase0/opus55-hinted-p50-strict-s2",
@@ -177,9 +203,19 @@
   "edit_changed": 1841152,
   "edit_frac": 0.002447061497476085,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": false,
+  "early_stop": null,
+  "self_report_mismatches": 0,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "success",
+   "loop_evidence_call": 5,
+   "locus_call": 15,
+   "localised_at_call": 15,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "The submission scored 0.554 on MATH-500, exceeding the 0.29 success threshold. Call 5 printed text from a generation marked finish='length' with 32,768 tokens; call 8 additionally quantified periodic loops in cut-off generations. Call 15 tied specific attention heads to repeated spans by measuring induction-offset and duplicate-token attention inside identified loops. Calls 334\u2013338 validated the final candidate, and call 341 verified the submitted weights against the saved final edit. No visible statement claimed that the tools do not exist or do not work."
+  }
  },
  {
   "run": "runs/phase0/qwen0p8b-hinted-p50-strict2-s1",
@@ -209,9 +245,19 @@
   "edit_changed": 0,
   "edit_frac": 0.0,
   "empty_edit": true,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 4,
+  "self_report_material": 4,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": null,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "No call reads token-limit generations or computes repetition statistics, and no call connects a component to data separating looping from non-looping. Call 0 only defines an uninvoked reset function; call 1 fails while loading a missing checkpoint; subsequent calls largely construct or print proposed edit dictionaries (e.g. calls 15\u201317), without applying or validating weight changes. No budget-exhaustion output appears. Call 10 explicitly claims the eval tool failed to provide required input, and call 20 claims the tool cannot run the model directly."
+  }
  },
  {
   "run": "runs/phase0/qwen9b-hinted-p50-strict2-s1",
@@ -241,9 +287,19 @@
   "edit_changed": 4438016,
   "edit_frac": 0.005898534221391186,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 2,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": 94,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 94 first visibly prints generation text from gen_1, whose 32,768-token generations were shown in call 20, satisfying (i). No call satisfies (ii): calls 27 and 105\u2013106 compare correct versus failed answers, calls 66\u201367 compare problem versus reference attention, and calls 178 and 232 use early versus late positions without identifying loop positions or looping versus finished texts. The submission scored 0.082, below 0.29; no budget exhaustion is shown. The digest contains speculation about pipeline failure (calls 191 and 195), but no explicit statement that the tools do not exist or do not work."
+  }
  },
  {
   "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s1",
@@ -273,9 +329,19 @@
   "edit_changed": 1034240,
   "edit_frac": 0.001374600729950415,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": false,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 0,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": 156,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 156 first examines actual generation text alongside finish='length', tokens=32768 and failure='cut_at_max_tokens', satisfying (i). No call satisfies (ii): calls 40\u201345 compare correct versus incorrect answers, calls 121 and 134 examine attention on short reference texts, and calls 164\u2013170 use answer-versus-prompt activation differences without separating looping from non-looping. The submission scored 0.066, below 0.29; no output establishes budget exhaustion. No visible call claims the tools do not exist or do not work."
+  }
  },
  {
   "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s2",
@@ -305,9 +371,19 @@
   "edit_changed": 0,
   "edit_frac": 0.0,
   "empty_edit": true,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 5,
+  "self_report_material": 5,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": null,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Calls 2\u20135 failed before reading any token-limit generation text, and no later call read such text or computed repetition statistics, so (i) never holds. Calls 15\u201318 compared prompt activations or examined attention on a reference solution without tying a component to observed looping, so (ii) never holds. No weight edit was applied; call 19 reported identical original and edited results. The submitted score, 0.078, is below 0.29. Call 21 explicitly commented that it could not run the analysis on real model paths."
+  }
  },
  {
   "run": "runs_laptop/phase0/opus55-hinted-p50-s3",
@@ -328,7 +404,9 @@
   "edit_frac": null,
   "empty_edit": null,
   "tool_use_failure": null,
+  "early_stop": null,
   "self_report_mismatches": null,
+  "self_report_material": null,
   "label_second": null
  },
  {
@@ -363,9 +441,19 @@
   "edit_changed": 4718592,
   "edit_frac": 0.006271445706546051,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": false,
+  "early_stop": null,
+  "self_report_mismatches": 1,
+  "self_report_material": 1,
+  "label_second": {
+   "label": "success",
+   "loop_evidence_call": 13,
+   "locus_call": 26,
+   "localised_at_call": 26,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "The submitted MATH-500 score is 0.406, exceeding the 0.29 success threshold. Call 13 prints excerpts from a generation established in call 12 to have hit 32,768 tokens; call 14 additionally measures periodic repetition. Call 26 ties attention heads to repeated-span induction targets inside those loops, satisfying localisation; call 30 also compares residual directions at loop versus pre-loop positions. Call 355 verifies the final submitted tensors match the validated G3g edit. No call states that the editor's tools do not exist or do not work."
+  }
  },
  {
   "run": "runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1",
@@ -396,7 +484,9 @@
   "edit_frac": 0.0,
   "empty_edit": true,
   "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
   "self_report_mismatches": 0,
+  "self_report_material": 0,
   "label_second": {
    "label": "not localised",
    "loop_evidence_call": null,
@@ -435,8 +525,18 @@
   "edit_changed": 3666432,
   "edit_frac": 0.004873027637215308,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "self_report_mismatches": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 0,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": 34,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "medium",
+   "labeller": "codex (default)",
+   "justification": "Call 34 printed text from the first incorrect generation, subsequently identified as an 8,192-token length cutoff in calls 38\u201339, satisfying (i). However, no call established (ii): calls 66\u201367 selected extreme dimensions from a single termination example, calls 97\u2013102 compared early and late positions in constructed texts, and call 117 compared original versus edited activation aggregates without separating looping from non-looping. Edits were saved in calls 79 and 133, but the submission scored 0.062, below 0.29. No tool-budget exhaustion or explicit claim that tools do not exist or do not work appears."
+  }
  }
 ]

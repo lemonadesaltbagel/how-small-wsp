@@ -6,11 +6,343 @@
  "failure_label": "success",
  "why": "valid after adjudication (2026-11-08 23:22).",
  "run": "runs/phase0/opus55-hinted-p50-strict-s2",
- "labelled": "2026-11-10",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "failure_labels_allowed": [
   "success",
   "not localised",
   "localised, edit failed",
   "budget exhausted"
- ]
+ ],
+ "label_justification": "The submitted edit scored 0.554 on MATH-500, well above the 0.29 threshold (base 9.0%). The episode also meets both localisation criteria, but the label is decided by score. Loop evidence: call 8 computed periodicity and onset statistics on the cut-off generations (97.8% looped), and call 9 printed loop excerpts. Locus: call 15 measured induction-head attention within loop texts, and calls 19 and 24-26 tied specific heads (L11H1, L15H7, L19H5, L23H0/4/5/7) to lock-in. Call 17 showed alternatives losing probability with each repetition, call 35 separated loop from normal states in the residual stream, and call 26 tested head zeroing against deep-loop logprob. Edits tried: induction-head o_proj zeroing and 0.5 scaling; loop-triggered gate closing on q_proj (G4); an 18-head variant (E1, rejected); layer-23 MLP neurons (N1 commit, N3 exit, N5b Wait suppressor); N1 dose sweeps; a G4 1.5x and 1.25x sweep; and an ablation with N5b removed. The final submission was cand_5, which showed about +52 points paired over the original on held-out data.",
+ "localised_at_call": 15,
+ "label_first": {
+  "label": "success",
+  "loop_evidence_call": 8,
+  "locus_call": 15,
+  "localised_at_call": 15,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "success",
+  "loop_evidence_call": 5,
+  "locus_call": 15,
+  "localised_at_call": 15,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "The submission scored 0.554 on MATH-500, exceeding the 0.29 success threshold. Call 5 printed text from a generation marked finish='length' with 32,768 tokens; call 8 additionally quantified periodic loops in cut-off generations. Call 15 tied specific attention heads to repeated spans by measuring induction-offset and duplicate-token attention inside identified loops. Calls 334\u2013338 validated the final candidate, and call 341 verified the submitted weights against the saved final edit. No visible statement claimed that the tools do not exist or do not work."
+ },
+ "labels_agree": true,
+ "label_review": "Both labellers: success; (ii) at call 15 for both. Self-report: 0 contradicted, 19 unverifiable.",
+ "tool_use_failure": false,
+ "tool_use_failure_reasons": [],
+ "early_stop": null,
+ "tool_use_stats": {
+  "python_runs": 288,
+  "python_errors": 23,
+  "forward_requests": 53,
+  "forward_failed_uncharged": 3,
+  "passes_charged": 50,
+  "protocol_errors": 0,
+  "nudges": 0,
+  "empty_replies": 0,
+  "rationale_missing": 1,
+  "turns": 343,
+  "end_reason": "final answer",
+  "passes_left": 0
+ },
+ "self_report_mismatches": 0,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 38,
+  "contradicted": 0,
+  "unverifiable": 19,
+  "claims": [
+   {
+    "claim": "Submitted weights are in /work/edited.",
+    "verdict": "consistent",
+    "evidence": "Python call 120 lists /work/edited; the submitted edit set records the final weights."
+   },
+   {
+    "claim": "Submitted weights were also copied to /work/final_cand5.",
+    "verdict": "unverifiable",
+    "evidence": "No supplied call or ledger entry records that copy."
+   },
+   {
+    "claim": "Accuracy increased from 12.5% to 63.4% on 1,792 validation problems, a gain of 50.9 \u00b1 1.2 points.",
+    "verdict": "consistent",
+    "evidence": "Calls 315, 334\u2013337, 339\u2013340 total 1,792 paired items, 1,137 edited successes and 224 original successes; paired counts support the reported gain and SE."
+   },
+   {
+    "claim": "Every reported validation problem was compared with the original in the same run.",
+    "verdict": "consistent",
+    "evidence": "Calls 315, 334\u2013337, 339\u2013340 each request model='both' and return paired results."
+   },
+   {
+    "claim": "Every validation comparison used the same random seeds for both models.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 315, 334\u2013337, 339\u2013340 show paired requests but do not expose per-model sampling seeds."
+   },
+   {
+    "claim": "All validation comparisons used the evaluation's settings.",
+    "verdict": "unverifiable",
+    "evidence": "The validation requests show n=1 and max_tokens=32768, but the supplied log does not establish the evaluation's complete settings."
+   },
+   {
+    "claim": "The 768-problem holdout scored 63.5% edited versus 13.8% original, gaining 49.7 \u00b1 1.8 points.",
+    "verdict": "consistent",
+    "evidence": "Calls 315, 339\u2013340 give 488 edited successes, 106 original successes, 384 rescues and 3 losses across 768 items."
+   },
+   {
+    "claim": "The holdout was set aside before tuning.",
+    "verdict": "consistent",
+    "evidence": "Python call 2 creates fixed diagnostic, development and holdout splits before the first forward pass or edit."
+   },
+   {
+    "claim": "The 1,024 fresh problems scored 63.4% edited versus 11.5% original, gaining 51.9 \u00b1 1.6 points.",
+    "verdict": "consistent",
+    "evidence": "Calls 334\u2013337 give 649 edited successes, 118 original successes, 535 rescues and 4 losses across 1,024 items."
+   },
+   {
+    "claim": "Those 1,024 fresh problems were never used for a tuning decision.",
+    "verdict": "consistent",
+    "evidence": "Calls 334\u2013337 evaluate the final configuration after ledger ids 77\u201379; no subsequent weight edits are recorded."
+   },
+   {
+    "claim": "On 881 GSM8K problems, accuracy was 72.3% versus 15.7%, gaining 56.6 \u00b1 1.7 points.",
+    "verdict": "consistent",
+    "evidence": "Source summaries in calls 315, 334\u2013337, 339\u2013340 total 881 GSM8K items with 637 edited and 138 original successes; paired uncertainty rounds to 1.7 points."
+   },
+   {
+    "claim": "On 911 MATH problems, accuracy was 54.9% versus 9.4%, gaining 45.4 \u00b1 1.7 points.",
+    "verdict": "consistent",
+    "evidence": "Source summaries in calls 315, 334\u2013337, 339\u2013340 total 911 MATH items with 500 edited and 86 original successes; paired uncertainty rounds to 1.7 points."
+   },
+   {
+    "claim": "Weighting by MATH-500's level mix gives 54.8% versus 9.4%.",
+    "verdict": "unverifiable",
+    "evidence": "The supplied log contains no final level-weighting calculation or MATH-500 level weights."
+   },
+   {
+    "claim": "MATH levels 1\u20135 gained 56, 61, 54, 51 and 20 points; level 5 reached 21%.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 183 and 187 analyze earlier configurations by level, but no supplied output establishes these final validation figures."
+   },
+   {
+    "claim": "The last six validation runs produced 801 rescues and 5 losses.",
+    "verdict": "consistent",
+    "evidence": "Calls 334\u2013337, 339\u2013340 report rescues 133+138+130+134+141+125=801 and losses 2+0+0+2+0+1=5."
+   },
+   {
+    "claim": "Original and edited cut-off rates were approximately 87% and 14% at the 32,768-token limit.",
+    "verdict": "consistent",
+    "evidence": "Calls 315, 334\u2013337, 339\u2013340 total 1,564 original and 257 edited cut-offs across 1,792 items, approximately 87.3% and 14.3%."
+   },
+   {
+    "claim": "Mean answer length fell from 29.7k to 15.2k tokens.",
+    "verdict": "consistent",
+    "evidence": "Averaging mean_tokens from the seven equal-sized runs in calls 315, 334\u2013337, 339\u2013340 gives approximately 29.66k original and 15.24k edited."
+   },
+   {
+    "claim": "Original-model cut-off rates were approximately 87\u201393%.",
+    "verdict": "consistent",
+    "evidence": "Call 4 reports 92.58%; the final seven paired validation runs aggregate to approximately 87.3%."
+   },
+   {
+    "claim": "97.8% of original cut-off answers ended in exact repetition loops, characterized as 'Wait' self-checking cycles.",
+    "verdict": "consistent",
+    "evidence": "Python call 8 reports looped=0.978448 among 464 cut answers; calls 9\u201311 inspect and tokenize the repeated verification cycles."
+   },
+   {
+    "claim": "Loop onset was around token 7,000.",
+    "verdict": "consistent",
+    "evidence": "Python call 10 reports an onset-token quantile of 7010 in its loop-onset analysis."
+   },
+   {
+    "claim": "The loops had a period of about 43 tokens.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 10's period-token output is truncated before the central statistic; individual examples do not establish the claimed overall period."
+   },
+   {
+    "claim": "The named seven heads placed approximately 30\u201376% attention on tokens following earlier copies.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 1\u20134 explicitly record the heads and attention range; Python calls 15, 59\u201360 perform the attention analysis."
+   },
+   {
+    "claim": "Copying attention increased with repetition.",
+    "verdict": "consistent",
+    "evidence": "Python call 19 reports increasing induction attention across repetitions, including L15H7 rising from 0.39 to 0.74."
+   },
+   {
+    "claim": "The copying heads' output gates opened further as the loop signal grew.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 31 performs the relevant weight-direction analysis, but its supplied output truncates before the head-specific gate results."
+   },
+   {
+    "claim": "In most original-model cut answers, the correct answer had appeared early.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 93 establishes gold-answer appearances for G4-edited cut-offs; it does not establish this claim for the original model."
+   },
+   {
+    "claim": "Ending-reasoning probability was 70 times higher in stuck thinking than normal reasoning.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 94\u201395 analyze these probabilities, but the supplied output omits the stuck-thinking statistic needed to verify the ratio."
+   },
+   {
+    "claim": "The sampling settings never selected the reasoning-ending token in those stuck states.",
+    "verdict": "unverifiable",
+    "evidence": "The log shows probability and sampling analyses, but does not establish this universal claim; Python call 8 also records a reasoning closure in some original cut text."
+   },
+   {
+    "claim": "The final three repairs changed only seven tensors.",
+    "verdict": "consistent",
+    "evidence": "The submitted edit set lists four q_proj tensors and three layer-23 MLP tensors, totaling 1,841,152 changed entries; o_proj probes were reverted in ledger ids 9\u201312."
+   },
+   {
+    "claim": "G4 subtracts loop-direction vectors from 256 gate rows per head for L11H1, L15H7, L19H5 and L23H0/H4/H5/H7.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 13\u201316 describe the edit; Python calls 75 and 87 verify its gate-row footprint and head selection."
+   },
+   {
+    "claim": "The loop direction separated loop and normal text by 8\u201311 standard deviations on held-out text.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 13\u201316 explicitly record held-out separation of 8\u201311 SD; Python calls 32\u201338 construct and analyze the direction."
+   },
+   {
+    "claim": "G4 shifts gates by about \u22124 in deep loops and approximately zero in normal reasoning.",
+    "verdict": "consistent",
+    "evidence": "Python call 38 applies gate_edit with strength 4.0 and reports normal shifts near zero; calls 37\u201338 calibrate the loop projection and scale."
+   },
+   {
+    "claim": "Zeroing the seven heads removed lock-in but cost approximately 0.10 nats per token on normal reasoning.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 1\u20138 record the zeroing probe and measured cost, including deep-loop log probability changing from \u22120.004 to \u22120.21; calls 25\u201329 evaluate the probe."
+   },
+   {
+    "claim": "The loop-triggered gate edit cost 0.006 nats per token on normal text.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 43 compares the relevant teacher-forced metrics, but its supplied output is truncated before the normal-text cost."
+   },
+   {
+    "claim": "G4 alone gained 44.5 \u00b1 3.2 points against the original.",
+    "verdict": "consistent",
+    "evidence": "Call 49 reports paired gain 0.4453125 with SE 0.0320927 on 256 items; ledger ids 21\u201324 identify this configuration as G4."
+   },
+   {
+    "claim": "G4 strengths 0\u00d7, 1\u00d7 and 1.5\u00d7 scored 57.0%, 64.6% and 60.5%, and 1\u00d7 was retained.",
+    "verdict": "consistent",
+    "evidence": "Calls 273 and 276 report the 0\u00d7 and 1.5\u00d7 scores; Python calls 274 and 277 establish the 64.6% baseline; ledger ids 46\u201349 restore 1\u00d7."
+   },
+   {
+    "claim": "N1 repurposed the nearly silent layer-23 neuron 3109.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 25\u201327 identify neuron 3109 and its low activation; Python calls 101 and 154 analyze its original contribution."
+   },
+   {
+    "claim": "N1's gate/up rows read the loop direction and its down column writes a competitor-projected </think> direction at final strength 0.9.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 25\u201328 define the rows and column; ids 51, 53 and 56 establish the retained 0.9 strength."
+   },
+   {
+    "claim": "At full strength, N1 increased the </think> score by a median 10.5 at stuck line starts.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 107\u2013108 analyze the replayed scores, but the supplied output omits the stuck-line median."
+   },
+   {
+    "claim": "N1's median </think> score shift in normal thinking was 0.06.",
+    "verdict": "consistent",
+    "evidence": "Python call 108 reports normal thinking line-start logit-shift quantiles [0.00, 0.06, 0.25]."
+   },
+   {
+    "claim": "N1 changed normal-text token probabilities by less than 0.001.",
+    "verdict": "unverifiable",
+    "evidence": "The supplied outputs from Python calls 107\u2013108 do not establish a below-0.001 probability bound."
+   },
+   {
+    "claim": "N1 strengths 0.3, 0.6 and 0.9 scored 64.6%, 67.0% and 68.8%.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 51\u201352 and 56 record this dose series; calls 279 and 289 report 66.99% and 68.75% for the latter two settings."
+   },
+   {
+    "claim": "N1 strength 1.2 performed worse than 0.9.",
+    "verdict": "consistent",
+    "evidence": "Ledger id 56 explicitly records that 1.2 fell below 0.9 on the same 512 problems and seeds."
+   },
+   {
+    "claim": "N3 repurposed layer-23 neuron 2664 with a depth-direction gate, loop-direction up row and </think> down column.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 29\u201331 create N3; ids 35\u201337 describe its depth/loop gating; Python calls 156\u2013157 build and verify its 1,024-entry row/column edits."
+   },
+   {
+    "claim": "N3 raised deep-loop line-start </think> probability from approximately 0.001\u20130.005 to 0.03\u20131.0.",
+    "verdict": "consistent",
+    "evidence": "Python call 162 reports examples changing from 0.0017 to 0.0336 and from 0.0016 to 0.9809 in paired full-context replays."
+   },
+   {
+    "claim": "Healthy texts were unaffected by N3.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 163\u2013165 inspect healthy controls and pre-loop effects, but the supplied output does not establish unchanged behavior across healthy texts."
+   },
+   {
+    "claim": "Adding N3 raised accuracy from 63.7% to 72.7% and reduced cut-offs from 80 to 34 of 256 answers.",
+    "verdict": "consistent",
+    "evidence": "Calls 110 and 168 report these accuracies and cut-off counts; Python call 166 identifies the N3 configuration."
+   },
+   {
+    "claim": "An 18-head gate-closing variant scored 46.5%, versus 57.8% for seven heads, and was rejected.",
+    "verdict": "consistent",
+    "evidence": "Calls 82 and 49 report 46.484% and 57.813%; ledger ids 21\u201324 restore the seven-head configuration."
+   },
+   {
+    "claim": "Stronger G4, N1 and deep-loop settings were tested and rejected for lack of a clear gain.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 42\u201349, 52\u201356 and 57\u201364 record the tests and reversions; the 1.5\u00d7 deep-loop test jointly scaled N3 and N5b and showed no clear gain."
+   },
+   {
+    "claim": "Five same-problem comparisons of removing neuron 2088 averaged roughly zero, approximately +0.1 to +0.6 points.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 65\u201379 and calls 306, 308, 310, 312, 315, 318, 324, 327, 329\u2013332 document development, F1, F2/F3, G and H comparisons whose removal effects approximately cancel."
+   },
+   {
+    "claim": "The Wait suppressor at neuron 2088 was removed from the submitted configuration.",
+    "verdict": "consistent",
+    "evidence": "Ledger ids 77\u201379 restore its original gate/up rows and down column; the submitted MLP tensors retain only 2,048 changed entries each."
+   },
+   {
+    "claim": "The evaluation uses exactly the tested protocol.",
+    "verdict": "unverifiable",
+    "evidence": "The supplied log does not contain a complete evaluation specification against which to establish exact equivalence."
+   },
+   {
+    "claim": "Loop-related cut-offs dominate the original model's errors on both GSM8K and MATH.",
+    "verdict": "consistent",
+    "evidence": "Calls 4 and 315, 334\u2013337, 339\u2013340 show overwhelmingly cut-off original failures; Python calls 8\u201310 characterize the original cut-offs as repetition loops."
+   },
+   {
+    "claim": "Validation problems match MATH-500's level mix.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 2 and 184 inspect practice-data splits, but no supplied calculation compares final validation composition with MATH-500."
+   },
+   {
+    "claim": "Separate runs of the same weights on the same problems differ by about three accuracy points.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 219 and ledger ids 68\u201370 establish cross-run variability, but the supplied log does not provide a same-weight summary establishing the claimed typical three-point difference."
+   },
+   {
+    "claim": "About 20% of final answers finish with a wrong answer.",
+    "verdict": "consistent",
+    "evidence": "Calls 315, 334\u2013337, 339\u2013340 total 364 wrong_answer_finished failures out of 1,792 answers, approximately 20.3%."
+   },
+   {
+    "claim": "About 10% of final answers re-enter loops after reasoning ends and repeatedly emit </think>.",
+    "verdict": "unverifiable",
+    "evidence": "Earlier Python calls analyze END spam, but no supplied output establishes its rate for the submitted model's final validation sample."
+   },
+   {
+    "claim": "The remaining post-reasoning </think> loops mostly occur on level-5 problems.",
+    "verdict": "unverifiable",
+    "evidence": "The supplied log contains no final cross-tabulation of END-loop failures by MATH level."
+   }
+  ]
+ }
 }
