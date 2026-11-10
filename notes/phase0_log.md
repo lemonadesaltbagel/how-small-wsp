@@ -592,3 +592,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 17:10 0.8B hinted s2 counts: 7.2 %, audit 1/0/0, not localised (both labellers), tool-use failure, early stop, 5 material self-report mismatches (fabricated passes and edits).
 - 17:36 0.8B unhinted s2 scored **9.4 %** (no error), empty edit set, 22 turns, 8 Python runs, 0 passes, final answer after 5 nudges. All four 0.8B seeds done (no split): 0.8B editor 8qek deleted, tunnels 18002 closed. Audit + labels + self-report queued.
 - 17:55 0.8B unhinted s2 counts: 9.4 %, audit 8/0/0, not localised (both), tool-use failure, early stop, 1 material self-report mismatch. **0.8B row complete: 7.0 / 7.2 (hinted), 9.2 / 9.4 (unhinted), all empty edits.**
+- 2026-11-10 20:35–21:05: the laptop's WSL went down (cause unknown, not the episodes; the user restarted the laptop). Both
+  DS episodes were cut mid-turn (hinted s1 at turn 201, 13/50 passes; unhinted s1 at turn 300, 25/50) and resumed at
+  21:05 with `openwish run --resume` through launch_ds_episode.sh: a host interruption, not an A1 empty-reply stop, so
+  it does not use up the hinted run's A1 resume. Kernel variables were lost (standard handoff). Same evening: the RunPod
+  balance fell below $5 at 20:58; low_balance_stop.sh started (killed the post helpers, stopped only the already
+  finished q9bux2) and was stopped by hand when the user's top-up arrived; no pod was deleted; helpers restarted.
