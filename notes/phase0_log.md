@@ -544,3 +544,12 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   tensors), so this is the unedited network re-sampled (base 9.0 %).
 - Audit 34/0/0 valid. 0/50 passes, 34/300 python runs, final answer at turn 49 (3 minutes). The final answer
   describes a 512-sample generation pass that never ran. Label "not localised" (Sonnet 5.5 proposal, checked).
+
+## 2026-11-10 ~12:50 — 9B hinted s1 re-scored 8.2 %; 0.8B unhinted s1 started
+- 9B hinted s1 re-score on 38xd (A5000): **8.2 %**, no scoring error. Not a repair, so no hold-out. All four 9B
+  seeds are below the threshold, so no 9B cell splits and no third seed is needed (9B unhinted s1 validity still
+  waits for the user). Audit and label of 9B hinted s1 started on the desktop.
+- 0.8B hinted s2 ended at turn 7 with 0 Python runs; its final answer claims 30 forward passes that never ran.
+  Scoring on hvxt.
+- 0.8B unhinted s1 started on the laptop (tunnel 18002 → 8qek), pool 38xd.
+- acquire_pods now drops pods on hosts in `logs/bad_hosts.txt` (99.69.17.69, 161.230.94.53) at once.
