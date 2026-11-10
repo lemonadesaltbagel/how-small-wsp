@@ -140,6 +140,31 @@
   "editor_cost_usd": 36.62018880000002
  },
  {
+  "run": "runs/phase0/qwen0p8b-hinted-p50-strict2-s1",
+  "arm": "main: Qwen3.5-0.8B, hinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.07,
+  "scoring_error": false,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 34,
+   "allowed": 34,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 34,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 49,
+  "editor_cost_usd": 0.0
+ },
+ {
   "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s2",
   "arm": "main: Qwen3.5-9B, unhinted",
   "access": "strict2",

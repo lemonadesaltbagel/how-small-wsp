@@ -538,3 +538,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 9B unhinted s1 audit: 151 / 0 / **2 violations**, both attempts to edit the protected embedding (one shape error,
   one refused by the harness; no effect on the network). New case type → proposal in
   `notes/pending_user_decisions.md`, run not marked as counting until the user decides.
+
+## 2026-11-10 — 0.8B hinted s1 counts (7.0 %, not localised)
+- Re-scored on a healthy pod after the dead-GPU error: 7.0 % (1 sample), no scoring error. The edit set is empty (0
+  tensors), so this is the unedited network re-sampled (base 9.0 %).
+- Audit 34/0/0 valid. 0/50 passes, 34/300 python runs, final answer at turn 49 (3 minutes). The final answer
+  describes a 512-sample generation pass that never ran. Label "not localised" (Sonnet 5.5 proposal, checked).

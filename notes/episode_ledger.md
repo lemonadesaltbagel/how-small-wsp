@@ -8,6 +8,7 @@
 | runs/phase0/opus55-hinted-p50-s2 | reference: Opus 5.5, simulation allowed (first round) | simulation allowed | False | 35.0 | — | 277/1/11 | False | — | success | 357 |
 | runs/phase0/opus55-hinted-p50-strict-s1 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 44.8 | 40.4 / 27.8 / 57.7 | 293/2/6 | True | 2 | success | 356 |
 | runs/phase0/opus55-hinted-p50-strict-s2 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 55.4 | 44.8 / 30.8 / 60.4 | 286/0/2 | True | 0 | success | 343 |
+| runs/phase0/qwen0p8b-hinted-p50-strict2-s1 | main: Qwen3.5-0.8B, hinted | strict2 | True | 7.0 | — | 34/0/0 | True | 0 | not localised | 49 |
 | runs/phase0/qwen9b-unhinted-p50-strict2-s2 | main: Qwen3.5-9B, unhinted | strict2 | True | 7.8 | — | 17/0/0 | True | 0 | not localised | 35 |
 | runs_laptop/phase0/opus55-hinted-p50-s3 | aborted | simulation allowed | False | — | — | — | — | — | — | 71 |
 | runs_laptop/phase0/opus55-hinted-p50-strict-s3 | reference: Opus 5.5, strict | strict (rules v1) | True | 40.6 | 44.7 / 30.1 / 60.8 | 298/0/0 | True | 2 | success | 357 |
