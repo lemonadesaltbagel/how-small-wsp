@@ -575,3 +575,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 15:11 RunPod alerts for 8qek too (API glitch; the editor answers). Host 80.15.7.37 added to logs/bad_hosts.txt. 27B unhinted pool reordered so xd0x (140.82.47.249) is first: final scoring runs on the first host only. hvxt (idle, on that host) deleted.
 - 15:20 0.8B unhinted s1 scored **9.2 %** (no error), empty edit set, 0 passes, 2 Python runs; its 'final answer' (turn 9) was a forward request in a json fence, accepted after 5 nudges. Audit + two labellers + self-report check started (desktop). 0.8B unhinted s2 started on the laptop, pool 38xd.
 - ~15:20 **WSL (desktop) went down**: Windows answers (tailscale ping), ssh 2222 closed. 27B unhinted s1 stopped at turn ~129 (17/50 passes); audit/labels of 0.8B unhinted s1 and the codex retries interrupted. WSL had 5.7 GB available just before (other projects' jobs ~13 GB). Asked the user to restart WSL; pods xd0x, tir1 wait for the resume.
+- 15:51 **deepseek-flash hinted s1 resumed under A1** (user decision 5 = B). Stop 1: MATH-500 **7.4 %** (no scoring
+  error, 463/500 cut; empty edit set: the editor itself reverted its 4 remaining edits at 13:23, before the stop);
+  kept in `stop1/` (eval, final, final answer, state, loop log, edit ledger, a1_resume.json). Resumed at turn 123
+  with 39 passes left through the standard handoff (kernel variables lost; /work, edits and notes kept). Pool = agvu
+  only until h2r5 finishes re-scoring 0.8B hinted s2.
