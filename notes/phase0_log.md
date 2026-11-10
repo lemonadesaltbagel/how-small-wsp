@@ -515,3 +515,13 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   (`logs/rescore_q9b_s1.log`, desktop).
 - New `scripts/pool_health.sh`: torch CUDA check on every live pool pod; the watcher runs it every 20 min and wakes
   me on any BAD pod. At 10:45 all 8 live pool pods pass.
+
+## Qwen3.5-9B unhinted seed 1 scored; 27B unhinted seed 1 started (2026-11-10 11:02–11:10)
+- **9B unhinted s1: MATH-500 6.6 %** (base 9.0 %; its 27 edits made the model slightly worse), hold-out skipped.
+  Codex audit started on the desktop; failure label proposed by `label_failure.py` (desktop) for my review.
+- 0.8B hinted s1 audit: 34/0/0, valid (the re-score is still running).
+- **27B unhinted s1** started 11:05 on the desktop (10.5 GB available, commit 19.8 GB free; a 27B episode measured
+  4.2 GB on the Mac, ~7 GB at most), tunnel 18003 on the desktop, pool = 5090 tir1. Both 27B seeds now share the A100
+  editor (2 concurrent fit its KV cache).
+- Laptop memory fell to 4.1 GB (another project started three ~2.2 GB training jobs at 10:55); DS s1 runs there,
+  nothing new goes on the laptop until it recovers.
