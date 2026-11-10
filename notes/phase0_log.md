@@ -572,3 +572,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   agvu is scoring DS hinted stop 1). Kept eg5o; it leaves the pool if it fails another pass. pool_health's "BAD agvu
   Connection closed" was transient.
 - 14:50 0.8B hinted s2 scoring on hvxt failed: 'server 80.15.7.37 not responding' (the same host outage as eg5o); rejected by post_episode (no 0 written). Moved to eval_failed_hostdown/; re-scoring on h2r5 (3090, 64.119.209.250) since 14:53. DS hinted resume will use agvu alone until h2r5 is free.
+- 15:11 RunPod alerts for 8qek too (API glitch; the editor answers). Host 80.15.7.37 added to logs/bad_hosts.txt. 27B unhinted pool reordered so xd0x (140.82.47.249) is first: final scoring runs on the first host only. hvxt (idle, on that host) deleted.
