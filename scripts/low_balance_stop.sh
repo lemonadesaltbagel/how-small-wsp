@@ -15,7 +15,7 @@ RUNS=(
   "wsl q9bx1 runs/phase0/qwen9b-hinted-p50-strict2-s1 ilppyd3ecb6qjj,8me34ta4jvcpd7,38xdiaqdbpnic7,jvoma6feywsyqm q9b_strict2_s1"
   "laptop q9bx2 runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 5plj5dix1grckr q9b_strict2_s2"
   "mac q08x1 runs/phase0/qwen0p8b-hinted-p50-strict2-s1 bhnjb4fvgw3rkx q08b_strict2_s1"
-  "wsl q27ux2 runs/phase0/qwen27b-unhinted-p50-strict2-s2 xd0xzyagl9crvq q27bu_strict2_s2"
+  "wsl q27ux2 runs/phase0/qwen27b-unhinted-p50-strict2-s2 xd0xzyagl9crvq,c6mbs1dx8vju9b q27bu_strict2_s2"
   "mac q27x1 runs/phase0/qwen27b-hinted-p50-strict2-s1 eg5okt5fyutzpp q27b_strict2_s1"
   "mac q27x2 runs/phase0/qwen27b-hinted-p50-strict2-s2 sb6ag2bbexn6z6,uzfolakc40cf5m,5nx3he1hfn44dd q27b_strict2_s2"
   "laptop q08x2 runs_laptop/phase0/qwen0p8b-hinted-p50-strict2-s2 hvxt8xro4itco0,8qekaexohjxc0r q08b_strict2_s2"
