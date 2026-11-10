@@ -1,5 +1,23 @@
 # Decisions waiting for the user (newest first)
 
+## 2026-11-10 13:55 — deepseek-flash hinted s1 stopped on 4 empty replies in a row (time-sensitive)
+- Ended at turn 122 ("the editor sent empty replies") with **11/50 passes and 82/300 Python runs used**. In each of
+  the last 4 replies DeepSeek wrote a complete ```python block **inside its reasoning field** and returned empty
+  visible content (finish_reason "stop"); the harness's 3 nudges ("your last reply was empty") did not help.
+  DeepSeek does this now and then: 9 of 122 turns here, 10 of 401 in its rules-v1 run, which never had 4 in a row.
+- It was working on the right mechanism: loop positions, the stop-token logit at loop positions, attention heads that
+  track lags in its own repeated text; 3 edits tested, edit 3 (amplify lag heads ×1.5) installed, pass 11 pending.
+- Precedent: the smoke test's early stop on an empty reply (a literal `<|im_end|>`) was treated as an interface bug.
+- Scoring of the edits as they stand is running (pods kept: agvu, h2r5).
+- Options:
+  - **A. Final.** The empty-reply stop is part of the frozen harness for every editor; label probably
+    "localised, edit failed".
+  - **B. Resume once (proposal).** Treat N empty replies with budget left as an interface failure, not an editor
+    decision: resume once with the same harness and remaining budget (the counter restarts); a second such stop is
+    final. Fixed now as a rule for all editors, before this run's score is known; reported in the paper. So far it
+    affects only this run (every other finished episode ended with a final answer).
+  - C. Change the harness to read a tool block from the reasoning field: rejected (changes the interface mid-matrix).
+
 ## 2026-11-10 13:20 — label boundary: "noticed non-termination" vs "localised" (9B hinted s1 and s2)
 - Both 9B hinted seeds noticed that ~90 % of answers are cut off and wrote that the model "reasons indefinitely" /
   is "stuck in reasoning loops" (the hint's wording), but never looked at a cut-off generation and put the cause in an

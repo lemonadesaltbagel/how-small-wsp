@@ -561,3 +561,6 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   validation error would be better; harness left unchanged mid-matrix, the editor sees an error either way).
 - 13:27 deepseek-flash unhinted s1 started on the laptop (Claude Sonnet 5.5 reviewer), pool 5090 bvar.
 - 13:41 5090 xd0x (acquired) added to the pool of 27B unhinted s1 (tir1 stays first). Acquire loop done (3/3).
+- 13:44 **deepseek-flash hinted s1 stopped on 4 consecutive empty replies** (turn 122, 11/50 passes): its code was
+  inside the reasoning field, content empty. Localising work under way (loop positions, stop logit, lag heads; edit 3
+  installed). Being scored as it stands; pods kept. Resume decision → user (`notes/pending_user_decisions.md`).
