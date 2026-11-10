@@ -77,8 +77,11 @@ def ask_codex(user, model, system=DEFS):
                 "--output-last-message", last, "-"]
         if model:
             args[2:2] = ["-m", model]
-        subprocess.run(args, input=system + "\n\n" + user, capture_output=True, text=True, cwd=tmp, timeout=1800)
-        return open(last).read() if os.path.exists(last) else ""
+        p = subprocess.run(args, input=system + "\n\n" + user, capture_output=True, text=True, cwd=tmp, timeout=1800)
+        out = open(last).read() if os.path.exists(last) else ""
+        if not out.strip():
+            sys.stderr.write(f"codex exit {p.returncode}; stdout tail:\n{p.stdout[-3000:]}\nstderr tail:\n{p.stderr[-3000:]}\n")
+        return out
 
 
 def main():
