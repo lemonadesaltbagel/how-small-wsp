@@ -15,7 +15,7 @@ Episodes finished so far (strict2, all audited):
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Qwen3.5-0.8B | hinted | 1 | 7.0 % | not localised | 49 | 34 | 0 | 0 | 34/0/0 |
 | Qwen3.5-0.8B | hinted | 2 | [scoring] | [not localised] | 7 | 0 | 0 | 0 | — (no Python) |
-| Qwen3.5-9B | hinted | 1 | [re-scoring] | [pending] | 360 | 182 | 20 | [n] | [pending] |
+| Qwen3.5-9B | hinted | 1 | 8.2 % | not localised | 360 | 182 | 20 | 6 tensors | 182/0/0 |
 | Qwen3.5-9B | hinted | 2 | 6.2 % | not localised | 236 | 102 | 15 | 2 | 102/0/0 |
 | Qwen3.5-9B | unhinted | 1 | 6.6 % | not localised | 274 | 153 | 18 | [n] | 151/0/2 [validity pending] |
 | Qwen3.5-9B | unhinted | 2 | 7.8 % | not localised | 35 | 17 | 3 | 0 | 17/0/0 |

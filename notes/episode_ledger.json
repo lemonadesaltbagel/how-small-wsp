@@ -165,6 +165,31 @@
   "editor_cost_usd": 0.0
  },
  {
+  "run": "runs/phase0/qwen9b-hinted-p50-strict2-s1",
+  "arm": "main: Qwen3.5-9B, hinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.082,
+  "scoring_error": false,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 182,
+   "allowed": 182,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 182,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 360,
+  "editor_cost_usd": 0.0
+ },
+ {
   "run": "runs/phase0/qwen9b-unhinted-p50-strict2-s2",
   "arm": "main: Qwen3.5-9B, unhinted",
   "access": "strict2",

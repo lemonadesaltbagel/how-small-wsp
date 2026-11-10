@@ -554,3 +554,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 0.8B unhinted s1 started on the laptop (tunnel 18002 → 8qek), pool 38xd.
 - acquire_pods now drops pods on hosts in `logs/bad_hosts.txt` (99.69.17.69, 161.230.94.53) at once.
 - 13:06 5090 eg5o (acquired) added to the pool of 27B hinted s1 (second host; sb6a stays first for final scoring).
+- 13:20 9B hinted s1 **counts**: audit 182/0/0 valid, 8.2 %, not localised (boundary case flagged to the user:
+  it named non-termination but placed it in an untested "answer state"). The Sonnet proposal said the final edit was
+  not in effect; wrong: 6 tensors / 4.44M entries changed (q_proj L3-19, uniform +0.001 on L23 down_proj).
+  24 failed requests, none charged; 3 of them crashed the GPU worker on malformed `prompts`/`texts` (a clean
+  validation error would be better; harness left unchanged mid-matrix, the editor sees an error either way).
