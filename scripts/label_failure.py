@@ -62,22 +62,22 @@ def digest(run, budget=300_000):
     return "\n".join(out)[:budget]
 
 
-def ask_claude(user, model):
+def ask_claude(user, model, system=DEFS):
     with tempfile.TemporaryDirectory() as tmp:
-        p = subprocess.run(["claude", "-p", "--safe-mode", "--model", model, "--system-prompt", DEFS, "--tools", "",
+        p = subprocess.run(["claude", "-p", "--safe-mode", "--model", model, "--system-prompt", system, "--tools", "",
                             "--no-session-persistence", "--output-format", "json"],
                            input=user, capture_output=True, text=True, cwd=tmp, timeout=900)
     return str(json.loads(p.stdout).get("result") or "")
 
 
-def ask_codex(user, model):
+def ask_codex(user, model, system=DEFS):
     with tempfile.TemporaryDirectory() as tmp:
         last = os.path.join(tmp, "last.txt")
         args = ["codex", "exec", "-s", "read-only", "--skip-git-repo-check", "-c", 'model_reasoning_effort="medium"',
                 "--output-last-message", last, "-"]
         if model:
             args[2:2] = ["-m", model]
-        subprocess.run(args, input=DEFS + "\n\n" + user, capture_output=True, text=True, cwd=tmp, timeout=1800)
+        subprocess.run(args, input=system + "\n\n" + user, capture_output=True, text=True, cwd=tmp, timeout=1800)
         return open(last).read() if os.path.exists(last) else ""
 
 

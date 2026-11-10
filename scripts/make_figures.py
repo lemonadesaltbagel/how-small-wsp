@@ -41,7 +41,7 @@ def main():
     for r in rows:
         if not r.get("counts") or "strict2" not in r["run"] or r.get("math500") is None:
             continue
-        pts.setdefault(editor_and_prompt(r["run"]), []).append(r["math500"])
+        pts.setdefault(editor_and_prompt(r["run"]), []).append((r["math500"], bool(r.get("empty_edit"))))
 
     fig, ax = plt.subplots(figsize=(6.4, 4.0), dpi=200)
     ax.set_xscale("log")
@@ -73,17 +73,24 @@ def main():
 
     for prompt, c in COLOR.items():
         xs, ys = [], []
-        for ed, size in sorted(SIZES.items(), key=lambda kv: kv[1]):
-            for y in pts.get((ed, prompt), []):
-                ax.plot(size, y, "o", color=c, markersize=5, markeredgecolor="white", markeredgewidth=1.0, zorder=3)
+        dx = 0.94 if prompt == "hinted" else 1.06  # small offset on the log axis so the two prompts do not overlap
+        for ed, size0 in sorted(SIZES.items(), key=lambda kv: kv[1]):
+            size = size0 * dx
+            for y, empty in pts.get((ed, prompt), []):
+                # amendment A4: an empty edit set is drawn hollow at its measured score
+                ax.plot(size, y, "o", color=c, markersize=5, zorder=3, markerfacecolor="white" if empty else c,
+                        markeredgecolor=c if empty else "white", markeredgewidth=1.2 if empty else 1.0)
             if pts.get((ed, prompt)):
-                xs.append(size); ys.append(sum(pts[(ed, prompt)]) / len(pts[(ed, prompt)]))
+                ys_cell = [y for y, _ in pts[(ed, prompt)]]
+                xs.append(size); ys.append(sum(ys_cell) / len(ys_cell))
         if xs:
             ax.plot(xs, ys, "-", color=c, linewidth=2, zorder=2, label=f"Qwen3.5, {prompt} prompt")
-        for y in pts.get(("deepseekflash", prompt), []):
+        for y, empty in pts.get(("deepseekflash", prompt), []):
             ax.plot(DS_INTERVAL, (y, y), "-", color=c, linewidth=2, alpha=0.6, zorder=2)
-            ax.plot(DS_INTERVAL, (y, y), "D", color=c, markersize=5, markeredgecolor="white", markeredgewidth=1.0, zorder=3)
+            ax.plot(DS_INTERVAL, (y, y), "D", color=c, markersize=5, zorder=3, markerfacecolor="white" if empty else c,
+                    markeredgecolor=c if empty else "white", markeredgewidth=1.2 if empty else 1.0)
     ax.plot([], [], "D-", color=MUTED, markersize=5, linewidth=2, label="deepseek-flash (activated → total)")
+    ax.plot([], [], "o", color=MUTED, markersize=5, markerfacecolor="white", linestyle="none", label="empty edit set (unedited model re-sampled)")
     leg = ax.legend(loc="upper left", fontsize=7, frameon=False)
     for t in leg.get_texts():
         t.set_color(INK)
@@ -91,7 +98,7 @@ def main():
     fig.tight_layout()
     for ext in ("pdf", "png"):
         fig.savefig(os.path.join(OUT, f"fig1_scale_curve.{ext}"))
-    print("points:", {f"{k[0]}/{k[1]}": v for k, v in pts.items()})
+    print("points:", {f"{k[0]}/{k[1]}": v for k, v in pts.items()})  # (score, empty edit)
 
 
 if __name__ == "__main__":
