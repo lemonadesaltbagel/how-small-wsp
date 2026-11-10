@@ -598,3 +598,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   it does not use up the hinted run's A1 resume. Kernel variables were lost (standard handoff). Same evening: the RunPod
   balance fell below $5 at 20:58; low_balance_stop.sh started (killed the post helpers, stopped only the already
   finished q9bux2) and was stopped by hand when the user's top-up arrived; no pod was deleted; helpers restarted.
+- 21:05–21:08: the laptop's Claude reviewer hit its 5-hour limit (resets 21:40), so the gate failed open: unreviewed
+  calls DS hinted s1 turns 203–204, DS unhinted s1 turns 301–303 (in each rule_gate.jsonl; the post-hoc audit covers
+  them). Both episodes paused by Ctrl-C at 21:09 (turns 204 / 303) and resumed after the reset once a test call to the
+  reviewer succeeds, so no further call runs unreviewed.
