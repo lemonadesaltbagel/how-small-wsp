@@ -553,3 +553,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   Scoring on hvxt.
 - 0.8B unhinted s1 started on the laptop (tunnel 18002 → 8qek), pool 38xd.
 - acquire_pods now drops pods on hosts in `logs/bad_hosts.txt` (99.69.17.69, 161.230.94.53) at once.
+- 13:06 5090 eg5o (acquired) added to the pool of 27B hinted s1 (second host; sb6a stays first for final scoring).
