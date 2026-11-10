@@ -10,10 +10,10 @@ TH=${1:-5}
 # node session run-dir(relative to harness/) pods episode-log
 RUNS=(
   "mac q9bux2 runs/phase0/qwen9b-unhinted-p50-strict2-s2 8qekaexohjxc0r q9bu_strict2_s2"
-  "laptop dsx2h1 runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 agvuzshz20d1ax ds_strict2_s1"
+  "laptop dsx2h1 runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 agvuzshz20d1ax,h2r5exuug2vo7i ds_strict2_s1"
   "wsl q9bux1 runs/phase0/qwen9b-unhinted-p50-strict2-s1 tir1xfpqk91vvz,hvxt8xro4itco0 q9bu_strict2_s1"
   "wsl q9bx1 runs/phase0/qwen9b-hinted-p50-strict2-s1 ilppyd3ecb6qjj,8me34ta4jvcpd7,38xdiaqdbpnic7,jvoma6feywsyqm q9b_strict2_s1"
-  "laptop q9bx2 runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 h2r5exuug2vo7i,5plj5dix1grckr q9b_strict2_s2"
+  "laptop q9bx2 runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 5plj5dix1grckr q9b_strict2_s2"
   "mac q08x1 runs/phase0/qwen0p8b-hinted-p50-strict2-s1 bhnjb4fvgw3rkx q08b_strict2_s1"
   "wsl q27ux1 runs/phase0/qwen27b-unhinted-p50-strict2-s1 tir1xfpqk91vvz q27bu_strict2_s1"
   "mac q27x1 runs/phase0/qwen27b-hinted-p50-strict2-s1 sb6ag2bbexn6z6,5nx3he1hfn44dd q27b_strict2_s1"

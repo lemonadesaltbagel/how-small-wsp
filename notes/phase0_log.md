@@ -525,3 +525,10 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   editor (2 concurrent fit its KV cache).
 - Laptop memory fell to 4.1 GB (another project started three ~2.2 GB training jobs at 10:55); DS s1 runs there,
   nothing new goes on the laptop until it recovers.
+- 11:07: **9B hinted s2: MATH-500 6.2 %** (not a repair; hold-out skipped). Audit and label started on the desktop.
+  Its 3090 h2r5 joined deepseek-flash s1's pool (now 3090 agvu + 3090 h2r5; passes split, ~2× faster).
+- 9B unhinted s1 label proposal **not localised** (Sonnet 5.5), reviewed: I checked the turns myself; "repetition/
+  looping" appears only as one of three guesses (turn 207) and as a speculation (turn 228); the editor never read a
+  generation for repetition and kept an attention-loss theory ("forgetting early tokens"), editing V/Q projections.
+  Accepted; run_class.json after its audit.
+- 9B so far: hinted s2 6.2 %, unhinted s1 6.6 %, unhinted s2 7.8 %; hinted s1 re-scoring. No 9B repair yet.
