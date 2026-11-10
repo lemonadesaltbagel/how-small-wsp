@@ -368,6 +368,46 @@
   "label_second": null
  },
  {
+  "run": "runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1",
+  "arm": "main: Qwen3.5-0.8B, unhinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.092,
+  "scoring_error": false,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 2,
+   "allowed": 2,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 2,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 9,
+  "editor_cost_usd": 0.0,
+  "protected_attempts_refused": 0,
+  "edit_changed": 0,
+  "edit_frac": 0.0,
+  "empty_edit": true,
+  "tool_use_failure": true,
+  "self_report_mismatches": 0,
+  "label_second": {
+   "label": "not localised",
+   "loop_evidence_call": null,
+   "locus_call": null,
+   "localised_at_call": null,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 0 only defines a function returning a role description. Call 1 defines generic analysis functions and fails with NameError because pd is undefined; neither call examines token-limit generations, computes repetition statistics, or connects a model component to data separating looping from non-looping. No weight edit is shown, and the submission score of 0.092 is below 0.29."
+  }
+ },
+ {
   "run": "runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2",
   "arm": "main: Qwen3.5-9B, hinted",
   "access": "strict2",

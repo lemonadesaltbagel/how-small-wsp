@@ -14,4 +14,5 @@
 | runs/phase0/qwen9b-unhinted-p50-strict2-s2 | main: Qwen3.5-9B, unhinted | strict2 | True | 7.8 | — | 17/0/0 | True | 0 | 0 | 0.000 | not localised | — | — | 35 |
 | runs_laptop/phase0/opus55-hinted-p50-s3 | aborted | simulation allowed | False | — | — | — | — | — | 0 | — | — | — | — | 71 |
 | runs_laptop/phase0/opus55-hinted-p50-strict-s3 | reference: Opus 5.5, strict | strict (rules v1) | True | 40.6 | 44.7 / 30.1 / 60.8 | 298/0/0 | True | 2 | 0 | 0.627 | success | — | — | 357 |
+| runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1 | main: Qwen3.5-0.8B, unhinted | strict2 | True | 9.2 | — | 2/0/0 | True | 0 | 0 | 0.000 | not localised | True | 0 | 9 |
 | runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2 | main: Qwen3.5-9B, hinted | strict2 | True | 6.2 | — | 102/0/0 | True | 0 | 0 | 0.487 | not localised | — | — | 236 |
