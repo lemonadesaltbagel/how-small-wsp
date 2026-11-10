@@ -20,6 +20,7 @@ RUNS=(
   "laptop q08x2 runs_laptop/phase0/qwen0p8b-hinted-p50-strict2-s2 hvxt8xro4itco0,8qekaexohjxc0r q08b_strict2_s2"
   "laptop q08ux1 runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1 38xdiaqdbpnic7,8qekaexohjxc0r q08bu_strict2_s1"
   "laptop dsux1 runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1 bvaro4l3gey4xo dsu_strict2_s1"
+  "laptop q08ux2 runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2 38xdiaqdbpnic7,8qekaexohjxc0r q08bu_strict2_s2"
 )
 say() { echo "$(date '+%m-%d %H:%M') $*"; }
 all_pods() { for r in "${RUNS[@]}"; do set -- $r; echo "${4//,/ }"; done; }
