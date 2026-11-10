@@ -1,0 +1,18 @@
+{
+ "run": "runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2",
+ "arm": "main: Qwen3.5-9B, hinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.062,
+ "failure_label": "not localised",
+ "label_justification": "The submitted score was 0.062, below the 0.29 success threshold and below the 9% base, so this is not a success. The agent saw the failure signal early: call 29 reported 86% cut_at_max_tokens, call 37 broke down finish=length (86%), and call 49 reported 96% cut at max tokens. It never tied this to repetition or non-termination inside the thinking. It never read a looping generation to see verbatim repetition, and the call 30-39 inspections were mostly crashes or shallow looks at text previews. Its working hypothesis was instead a 'completion signal' or 'ready to answer' direction in layer-23 hidden-state norms (calls 66-67, 100-102). That is a wrong mechanism, and it kept it. Its only real edit was a perturbation of layer-23 mlp.down_proj built from the difference between last-token and first-token hidden states (calls 79, 133), and the generation checks showed no gain (call 80: 0.15 vs 0.1375; call 147: 0.18 vs the original). The agent also lost many calls to syntax errors and tool-format errors, and the final answer is an unrelated Chinese chat reply.",
+ "label_review": "Checked by the agent: the editor repeats the hint's loop language (19 code comments), but its repetition checks crashed (rows 30, 50) or ran on GSM8K samples with no cut-offs (row 33); the layer-23 'termination signal' it edited came from hidden-state norms of gold vs start tokens, never from a looping generation. Not localised accepted.",
+ "labelled": "2026-11-10 (Claude Sonnet 5.5 proposal, reviewed by the agent)",
+ "why": "audit 102/0/0 valid; ended at turn 236 with a final answer (off-task chat reply) after 15/50 passes; 2 edits (layer-23 mlp.down_proj).",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}

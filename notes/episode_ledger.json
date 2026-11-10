@@ -207,5 +207,30 @@
   },
   "turns": 357,
   "editor_cost_usd": 40.80152000000001
+ },
+ {
+  "run": "runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2",
+  "arm": "main: Qwen3.5-9B, hinted",
+  "access": "strict2",
+  "counts": true,
+  "math500": 0.062,
+  "scoring_error": false,
+  "failure_label": "not localised",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 102,
+   "allowed": 102,
+   "suspicious": 0,
+   "violations": 0,
+   "valid": true
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 102,
+   "block": 0,
+   "unreviewed": 0
+  },
+  "turns": 236,
+  "editor_cost_usd": 0.0
  }
 ]

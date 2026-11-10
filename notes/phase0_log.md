@@ -532,3 +532,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   generation for repetition and kept an attention-loss theory ("forgetting early tokens"), editing V/Q projections.
   Accepted; run_class.json after its audit.
 - 9B so far: hinted s2 6.2 %, unhinted s1 6.6 %, unhinted s2 7.8 %; hinted s1 re-scoring. No 9B repair yet.
+- 11:12: 9B hinted s2 audit 102/0/0 valid → **counts** (6.2 %, not localised; label reviewed: the hinted editor repeats
+  the hint's loop language but its repetition checks crashed or ran on samples without cut-offs; the edited
+  "termination signal" came from hidden-state norms). run_class.json written, ledger regenerated.
+- 9B unhinted s1 audit: 151 / 0 / **2 violations**, both attempts to edit the protected embedding (one shape error,
+  one refused by the harness; no effect on the network). New case type → proposal in
+  `notes/pending_user_decisions.md`, run not marked as counting until the user decides.
