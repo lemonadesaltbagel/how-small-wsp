@@ -589,3 +589,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   fresh hold-out sets), others 0. Codex calls in parallel had returned nothing (rate limits): now serial.
   The 9B hinted s1 zero-diff checks are correct (it had restored base values itself), not a harness fault.
 - 16:53 0.8B hinted s2 re-scored on h2r5: **7.2 %** (no error), empty edit set. h2r5 back in the DS hinted pool (agvu first). Audit + labels + self-report queued serially on the desktop.
+- 17:10 0.8B hinted s2 counts: 7.2 %, audit 1/0/0, not localised (both labellers), tool-use failure, early stop, 5 material self-report mismatches (fabricated passes and edits).
