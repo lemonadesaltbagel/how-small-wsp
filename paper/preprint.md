@@ -64,6 +64,17 @@ or audit tool calls; we vary the editor and audit. Community reproductions:
   prompt, without tools or code, and identifies 3 of 4 games (Willison 2026,
   simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/). This is interpretation only, with no editing;
 - edited Qwen3.8-27B checkpoints [ReBatch; Teylersf], where the 27B model is the target, not the editor.
+- a reproduction with Astra, Opus and Fable on experiments 1–6, which also finds that with thinking turned off the
+  unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [cite shapor/weight-space-experiments];
+- random-direction controls for the p50c edit (a random edit of the same 64 neurons per layer recovers about a fifth of
+  the gain) and a blind Claude attempt that found no fix [cite kyle-chalmers/weight-space-programming];
+- a framework report that a vLLM-served Qwen3.5-0.8B editor "couldn't do the job" [cite Ahmedn1/wsplab], the only
+  open-weight editor attempt we found, without a systematic comparison.
+
+**Non-agent repairs.** Tree-Ising (Salloum and Ali 2026, arXiv 2611.14210) finds the repair without an LLM, as a
+discrete optimisation of bit-level sign and exponent edits over forward-pass statistics, and reports 54.6–55.1 % against
+the agent edit's 51.7 % in its harness. It shows that once the objective is written down, search can do the editing;
+our question is whether a smaller agent can find the objective.
 
 **Model editing and steering.** Locate-and-edit methods (ROME, MEMIT) and direction-based interventions (activation
 addition, directional ablation) change behaviour with small, targeted weight or activation changes [cite]. Several of
@@ -333,7 +344,10 @@ runs, including the three strict repairs: 0 of 500 each. deepseek-flash hinted s
 samples). The median position is 0: the reply starts with `</think>`. 243 of its 259 correct answers are among these
 473.
 
-A control corroborates this. The unedited model with thinking turned off (the chat template's empty
+A control corroborates this. It also shows that the repair threshold lies below what the base reaches without
+thinking, as an independent reproduction found (45.2 % with thinking off [cite shapor]); meeting the threshold
+therefore does not by itself show that the thinking was repaired, and the thinking-skip check is what separates the
+two. The unedited model with thinking turned off (the chat template's empty
 thinking block), on the same items with the same per-item seeds, sampling and grading, scores 48.2 % (± 2.2). The
 edit's 51.8 % (50.9 % over 4 samples) is within about 1.5 standard errors of this no-thinking score; per item the two
 agree on 382 of 500. Same per-item seeds do not make separate passes identical (a re-run of the edit's scored sample
