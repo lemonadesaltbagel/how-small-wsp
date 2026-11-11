@@ -1,0 +1,14 @@
+{
+ "run": "runs/phase0/qwen27b-unhinted-p50-strict2-s2",
+ "arm": "main: Qwen3.5-27B, unhinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.124,
+ "why": "audit 130/0/0. Ended at turn 251 with a final answer, 34/50 passes and 129/300 Python runs. Submitted edit: 10 MLP tensors in layers 5/10/15/20/23 (gate_proj: 5 'loop' neuron rows x0.25 and 5 'convergence' rows x2 per layer; down_proj: residual dim 37 x0.1 and dim 0 x2), 87,040 entries changed. MATH-500 12.4 +- 1.5 % (87.6 % cut): +3.4 points over the base, not a repair; hold-out skipped.",
+ "failure_labels_allowed": [
+  "success",
+  "not localised",
+  "localised, edit failed",
+  "budget exhausted"
+ ]
+}
