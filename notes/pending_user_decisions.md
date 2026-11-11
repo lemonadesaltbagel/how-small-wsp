@@ -86,3 +86,5 @@
   measured either way. Planned control, no decision needed: base model with thinking off on MATH-500 (same
   sampling), to show whether the edit's score is the no-thinking score.
 - Proposal: `harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1/audit_adjudication.proposed.json`.
+- 00:31 (11-12) hold-out of DS hinted s1: MMLU-Pro 39.6 / GPQA 22.9 / IFEval 45.9 % (base 39.7 / 24.4 / 20.1): no
+  regression, so by the plan's numbers alone it would be a repair. IFEval +25.8 fits the thinking skip.
