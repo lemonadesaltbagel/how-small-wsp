@@ -1,4 +1,4 @@
-# Collision check, 2026-11-12 ~08:00 (after preprint review round 1)
+# Collision check, 2026-11-12 07:24 (after preprint review round 1)
 
 Question: has anyone published (arXiv, blog, GitHub) a study that varies the *editor* in weight-space programming,
 in particular open-weight / smaller editors on experiment 8, or audits editors for simulating the network?

@@ -1,4 +1,4 @@
-# Preprint review round 1 (Codex, read-only, 2026-11-12 ~07:40): what changed
+# Preprint review round 1 (Codex, read-only, 2026-11-12 07:20): what changed
 
 Review: `notes/preprint_review_codex_r1.md` (major revision; main numbers verified against the ledger).
 

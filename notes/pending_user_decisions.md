@@ -93,7 +93,7 @@
 - 01:02 (11-12) thinking-off control: the unedited model with thinking off scores 48.2 % on the same items and seeds,
   so the edit's 51.8 / 50.9 % is the no-thinking score (within ~1-1.5 SE). Supports A.
 
-## 2026-11-12 08:05 — Preprint draft ready for your review (except the DS s2 results)
+## 2026-11-12 07:24 — Preprint draft ready for your review (except the DS s2 results)
 - `paper/preprint.md`: all sections merged; one review round done (Codex, `notes/preprint_review_codex_r1.md`), changes
   in `notes/preprint_review_r1_response.md`. Collision check: no collision (`notes/collision_check_2026-11-12.md`).
 - Still open: DS s2 rows (running), the two DS adjudications (yours), citations, Opus localised_at_call (after DS s2).
