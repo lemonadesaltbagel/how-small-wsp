@@ -661,3 +661,5 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   same items (`scripts/nothink_control.py`).
 - 23:15 27B unhinted s2 labels applied: localised, edit failed (call 14), 4 material self-report mismatches (all
   overstated effects). Ledger and figures regenerated.
+- 23:25 27B editor pod 5nx3 deleted (both 27B s2 episodes ended; scoring uses the pool only).
+- 23:27 4-sample MATH-500 rescore of DS hinted s1 started on wsl (tmux rescore-dsh1, pod 5090 lwin1r2r, $0.69/h); scripts/chain_rescore_control.sh then runs the thinking-off control on the same pod.
