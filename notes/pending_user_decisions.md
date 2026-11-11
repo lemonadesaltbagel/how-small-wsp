@@ -60,3 +60,6 @@
   the gate's reading) → valid, 6.8 % counts.
 - Either way: report the gate–audit disagreement (8 calls allowed online, violations post hoc) in Table 4.
 - Proposal: `harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1/audit_adjudication.proposed.json`.
+- 21:30 note: DS hinted s1 scored 51.8 % (a repair) at 21:26, after this proposal (18:15). Its audit may flag the same
+  class (read vector evaluated on recorded positions); the decision here would then apply to it as well. The decision
+  is about the class, so it should rest on the rule text and the DS unhinted calls, not on the repair.

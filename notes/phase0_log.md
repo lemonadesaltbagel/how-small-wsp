@@ -636,3 +636,12 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   far (+3.4 points, ~2.3 SE above the base), not a repair, hold-out skipped; pods xd0x, c6mb deleted. Audit, variant
   check, both labellers and self-report queued on wsl (tmux q27us2lab; labels after the Claude backlog in claudelab).
   The user topped up (balance $153 at 21:24); the low-balance stop did not fire.
+- 21:26 **DS hinted s1 scored 51.8 % (500/500, no error; 27.6 % cut at max tokens): a repair** (>= 29.0 %). Stop 1
+  (A1) was 7.4 %. Ended 20:42 with a final answer, 420 turns, 50/50 passes, 300/300 Python runs. Submitted edit: one
+  tensor, L23 mlp.down_proj + 3.0 * r w2^T (r = normalize(final-norm gain * E[</think>]) from the weights; w2 = a
+  closed-form LDA/ridge loop detector on recorded L23 MLP inputs). Hold-out (post helper, agvu) and the 3 extra
+  MATH-500 samples (new pod) follow; audit queued on wsl (tmux dsh1lab). Its final answer describes the detector's
+  value on healthy text and loop positions: the audit decides whether those numbers came from the kernel (same class as
+  the DS unhinted s1 calls) or from forward passes. The DS unhinted s1 adjudication proposal (18:15) was written before
+  this score existed.
+- 21:30 27B unhinted s2 audit 130/0/0 → counts (12.4 %).
