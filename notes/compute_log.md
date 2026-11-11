@@ -50,3 +50,12 @@ s3 = 3090 + 2×A5000; DeepSeek = 4090 + 2×A5000. Spend ~$5.4/h as before, ~2.2�
 summed over the 27 pods above; ~349 card-hours = GPU amount ÷ hourly price). Strict episodes, target side incl. scoring,
 hold-out and idle time: s1 $24.57, s2 $35.19, s3 $39.42 (2 usage-limit stops, network outage), DeepSeek s1 $28.76;
 first round, tests and the stray pod $84.62. DeepSeek API: ¥65.2 → ¥35.9 (¥29.3 ≈ $4, strict s1 + rule reviewer).
+
+**Main matrix, interim (2026-11-12 00:40, `runpodctl billing pods --bucket-size day` from 11-09 00:00Z; last hours lag):**
+42 pods of this project billed **$237.64** since 11-09 (pods found in logs/pool_hosts.jsonl, acquire/post/swap logs,
+plus the two editor pods); 25 more pods on the account in the same window ($74.61) belong to other projects
+(rw-*, wnt-*) or could not be attributed. Editors: 27B editor (A100, 5nx3) $68.89, 9B editor (5plj) $10.36; the
+0.8B editor ran on its pool pods. Pools are shared and swapped between runs, so a per-episode split needs the pod
+timelines (to do once the DS s2 seeds end). Lower bounds from each run's post-helper pods: DS hinted s1 $20.98,
+DS unhinted s1 $20.17, 27B hinted s2 $32.08 (with the editor's share not included), 27B unhinted s2 $26.62.
+DeepSeek API: ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) for DS hinted s1 + unhinted s1 (¥34.2 ≈ $4.7).
