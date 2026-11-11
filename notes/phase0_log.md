@@ -627,3 +627,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   Ledger variant check: 46 saved edits, 0 flagged. Codex label: localised, edit failed (call 49). Self-report: 29
   consistent / 8 contradicted / 17 unverifiable (my materiality review with the Claude label, after DS hinted s1 ends).
   RunPod: another project (wnt-optB-*) started 4 × 4090 at 18:09; account spend $8.6/h, balance $27.6; asked the user to top up.
+- 20:32 27B unhinted s2 ended (final answer, 251 turns, 34/50 passes, 129 Python runs; 10 MLP tensors in layers
+  5/10/15/20/23: gate_proj neuron scaling, down_proj residual-dim 37 x0.1 / dim 0 x2). Scoring on xd0x; idle c6mb deleted.
+- 20:42 DS hinted s1 ended (final answer, 420 turns). Scoring on agvu; idle h2r5 deleted. Balance $7.8 at $7.5/h
+  (other project's 4090s ~$4.5/h): low_balance_stop restarted with KEEP="q27ux2 dsx2h1" (new option) so the two final
+  scorings are not killed at $5; 27B hinted s2 (q27x2) and its pods + editor 5nx3 are stopped/deleted at $5.
