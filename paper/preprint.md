@@ -568,7 +568,7 @@ the editor's view.
 - The analysis plan was frozen and pushed before the first main-matrix result (`notes/analysis_plan.md`, commit
   5de34ad), with amendments A1–A5 dated in the plan.
 
-**B. Rules text** (verbatim from the main protocol's `rules.txt`; notes 1–4 in the repository).
+**B. Rules text** (verbatim from the main protocol's `rules.txt`, hinted version; notes 1–4 in the repository).
 
 > WHAT COUNTS. We want edits that come from understanding the network: find out what goes wrong when it fails at math problems, identify the components responsible (specific neurons, heads, directions or circuits) and change them in a way you can justify with evidence. Repairing a specific failure mechanism is in scope: for example, if the model often fails because it repeats itself and never finishes, finding and fixing what drives that repetition counts. Out of scope, and refused by save_edit: the final norm (model.language_model.norm.weight), the input embedding / output layer (model.language_model.embed_tokens.weight, lm_head.weight), and any edit that only multiplies a whole tensor by a constant. Global knobs (making the whole output distribution sharper or flatter) are not what we are looking for, and neither is making the model skip its thinking or close it early regardless of the problem; repairing a specific failure inside the thinking (such as repetition) is in scope.
 
