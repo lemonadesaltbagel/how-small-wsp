@@ -10,12 +10,13 @@
 | runs/phase0/opus55-hinted-p50-strict-s2 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 55.4 | 44.8 / 30.8 / 60.4 | 286/0/2 | True | 0 | 0 | 0.245 | success | False | 0 (0 material) | 343 |
 | runs/phase0/qwen0p8b-hinted-p50-strict2-s1 | main: Qwen3.5-0.8B, hinted | strict2 | True | 7.0 | — | 34/0/0 | True | 0 | 0 | 0.000 | not localised | True | 4 (4 material) | 49 |
 | runs/phase0/qwen27b-hinted-p50-strict2-s1 | main: Qwen3.5-27B, hinted | strict2 | True | 7.4 | — | 220/0/1 | True | 0 | 1 | 0.000 | localised, edit failed | False | 2 (0 material) | 368 |
+| runs/phase0/qwen27b-hinted-p50-strict2-s2 | main: Qwen3.5-27B, hinted | strict2 | True | 6.4 | — | 155/0/0 | True | 0 | 0 | 0.000 | — | — | — | 292 |
 | runs/phase0/qwen27b-unhinted-p50-strict2-s1 | main: Qwen3.5-27B, unhinted | strict2 | True | 9.6 | — | 135/0/0 | True | 0 | 0 | 0.003 | localised, edit failed | True | 6 (3 material) | 258 |
 | runs/phase0/qwen27b-unhinted-p50-strict2-s2 | main: Qwen3.5-27B, unhinted | strict2 | True | 12.4 | — | 130/0/0 | True | 1 | 0 | 0.012 | localised, edit failed | True | 7 (4 material) | 251 |
 | runs/phase0/qwen9b-hinted-p50-strict2-s1 | main: Qwen3.5-9B, hinted | strict2 | True | 8.2 | — | 182/0/0 | True | 0 | 0 | 0.590 | not localised | True | 2 (0 material) | 360 |
 | runs/phase0/qwen9b-unhinted-p50-strict2-s1 | main: Qwen3.5-9B, unhinted | strict2 | True | 6.6 | — | 151/0/2 | True | 0 | 2 | 0.137 | not localised | False | 0 (0 material) | 274 |
 | runs/phase0/qwen9b-unhinted-p50-strict2-s2 | main: Qwen3.5-9B, unhinted | strict2 | True | 7.8 | — | 17/0/0 | True | 0 | 0 | 0.000 | not localised | True | 5 (5 material) | 35 |
-| runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 | main: deepseek-flash, hinted | strict2 | — | 51.8 | — | 291/0/15 | False | 6 | 0 | 0.488 | success | False | 7 (2 material) | 420 |
+| runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 | main: deepseek-flash, hinted | strict2 | — | 51.8 | 39.6 / 22.9 / 45.9 | 291/0/15 | False | 6 | 0 | 0.488 | success | False | 7 (2 material) | 420 |
 | runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1 | main: deepseek-flash, unhinted | strict2 | — | 6.8 | — | 292/0/8 | False | 0 | 0 | 1.881 | localised, edit failed | False | 8 (2 material) | 461 |
 | runs_laptop/phase0/opus55-hinted-p50-s3 | aborted | simulation allowed | False | — | — | — | — | — | 0 | — | — | — | — | 71 |
 | runs_laptop/phase0/opus55-hinted-p50-strict-s3 | reference: Opus 5.5, strict | strict (rules v1) | True | 40.6 | 44.7 / 30.1 / 60.8 | 298/0/0 | True | 2 | 0 | 0.627 | success | False | 1 (1 material) | 357 |
