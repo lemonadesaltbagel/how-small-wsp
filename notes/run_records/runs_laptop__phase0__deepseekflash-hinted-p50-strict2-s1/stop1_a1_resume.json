@@ -1,0 +1,8 @@
+{
+ "at": "2026-11-10T15:50:44+11:00",
+ "stop1_turn": 122,
+ "stop1_passes_used": {
+  "forward": 11
+ },
+ "rule": "notes/analysis_plan.md amendment A1 (commit 854ce75)"
+}

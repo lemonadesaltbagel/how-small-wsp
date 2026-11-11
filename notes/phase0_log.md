@@ -698,3 +698,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   handoff 6 / resume). Post helpers restarted with NODE=laptop (alive=yes); auto-resume and the low-balance stop kept
   running throughout.
 - 07:10 Rescore pod lwin deleted (control and GSM8K done; idle since 05:28).
+- 07:20 **27B hinted s2 labels applied**: localised, edit failed at call 16 (both labellers); tool-use failure (forward
+  requests failed 51/88), early stop (final answer after 5 nudges); self-report 20/3/1, 0 material (577 vs "586" MATH
+  problems; "4 GSM8K tests, 640 problems" leaves out two neutral tests, +0.4 / 0.0, and keeps both negative ones).
+  **27B row complete: 7.4 / 6.4 (hinted), 9.6 / 12.4 (unhinted); all valid, none near 29 %.** Ledger, figure and paper
+  tables updated.

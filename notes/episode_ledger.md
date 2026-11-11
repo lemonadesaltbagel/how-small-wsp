@@ -10,7 +10,7 @@
 | runs/phase0/opus55-hinted-p50-strict-s2 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 55.4 | 44.8 / 30.8 / 60.4 | 286/0/2 | True | 0 | 0 | 0.245 | success | False | 0 (0 material) | 343 |
 | runs/phase0/qwen0p8b-hinted-p50-strict2-s1 | main: Qwen3.5-0.8B, hinted | strict2 | True | 7.0 | — | 34/0/0 | True | 0 | 0 | 0.000 | not localised | True | 4 (4 material) | 49 |
 | runs/phase0/qwen27b-hinted-p50-strict2-s1 | main: Qwen3.5-27B, hinted | strict2 | True | 7.4 | — | 220/0/1 | True | 0 | 1 | 0.000 | localised, edit failed | False | 2 (0 material) | 368 |
-| runs/phase0/qwen27b-hinted-p50-strict2-s2 | main: Qwen3.5-27B, hinted | strict2 | True | 6.4 | — | 155/0/0 | True | 0 | 0 | 0.000 | — | — | — | 292 |
+| runs/phase0/qwen27b-hinted-p50-strict2-s2 | main: Qwen3.5-27B, hinted | strict2 | True | 6.4 | — | 155/0/0 | True | 0 | 0 | 0.000 | localised, edit failed | True | 3 (0 material) | 292 |
 | runs/phase0/qwen27b-unhinted-p50-strict2-s1 | main: Qwen3.5-27B, unhinted | strict2 | True | 9.6 | — | 135/0/0 | True | 0 | 0 | 0.003 | localised, edit failed | True | 6 (3 material) | 258 |
 | runs/phase0/qwen27b-unhinted-p50-strict2-s2 | main: Qwen3.5-27B, unhinted | strict2 | True | 12.4 | — | 130/0/0 | True | 1 | 0 | 0.012 | localised, edit failed | True | 7 (4 material) | 251 |
 | runs/phase0/qwen9b-hinted-p50-strict2-s1 | main: Qwen3.5-9B, hinted | strict2 | True | 8.2 | — | 182/0/0 | True | 0 | 0 | 0.590 | not localised | True | 2 (0 material) | 360 |

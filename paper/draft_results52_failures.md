@@ -24,7 +24,7 @@ submitted: tensors in the final edit set.
 | Qwen3.5-9B | unhinted | 1 | 6.6 % | not localised | 274 | 153 | 18 | 21 / 2 | 151/0/2 | yes |
 | Qwen3.5-9B | unhinted | 2 | 7.8 % | not localised | 35 | 17 | 3 | 0 / 0 | 17/0/0 | yes |
 | Qwen3.5-27B | hinted | 1 | 7.4 % | localised, edit failed (105) | 368 | 221 | 50 | 41 / 0 | 220/0/1 | yes |
-| Qwen3.5-27B | hinted | 2 | [scoring] | | 292 | 155 | 37 | 28 / [n] | [audit] | |
+| Qwen3.5-27B | hinted | 2 | 6.4 % | localised, edit failed (16) | 292 | 155 | 37 | 28 / 1 | 155/0/0 | yes |
 | Qwen3.5-27B | unhinted | 1 | 9.6 % | localised, edit failed (48) | 258 | 135 | 29 | 14 / 1 | 135/0/0 | yes |
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
 | deepseek-flash | hinted | 1 | 51.8 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
@@ -37,8 +37,7 @@ about 2.3 standard errors of one sample), with ten MLP tensors edited. The one o
 deepseek-flash hinted s1 at 51.8 % (50.9 % over 4 samples; hold-out MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %
 against the base's 39.7 / 24.4 / 20.1 %), does not come from repairing the loop: the submitted edit makes the model close
 its thinking at once (below), which the task excludes, and its score is close to the unedited model's with thinking turned off (48.2 %), and its audit flags rule (b) violations [adjudication
-pending]. Under the rules no open-weight editor repairs the network so far [final sentence once 27B hinted s2 and
-the deepseek-flash s2 seeds finish].
+pending]. Under the rules no open-weight editor repairs the network so far [final sentence once the deepseek-flash s2 seeds finish].
 
 **Thinking-skip check.** For every scored run we count the MATH-500 generations that emit `</think>` within their
 first 120 characters. The base: 0 of 500 (455 never close within the 32,768-token limit). Every Qwen run, the
@@ -56,7 +55,7 @@ cut at the token limit [use where the paper cites the GSM8K base].
 
 The failure labels split at 27B. Every 0.8B and 9B episode is **not localised** (8 of 8): the editor never connected
 the failure to repetition inside the model's thinking. Every finished 27B and deepseek-flash episode is **localised**
-(5 of 5) [27B hinted s2 pending]: it read the cut-off generations, separated looping from finished text, and tied a
+(6 of 6): it read the cut-off generations, separated looping from finished text, and tied a
 component to the loop. Then its edit failed, or, once, it found a shortcut.
 
 **0.8B: no contact with the task.** The 0.8B editor ends its episodes within minutes (7–49 turns, 1–34 Python runs,
@@ -75,12 +74,14 @@ attention to early prompt tokens (unhinted s1). Edits built on these stories (a 
 V/Q-projection nudges) do not move the score. The fourth seed (unhinted s2) declared after 3 passes that its tools did
 not exist and stopped.
 
-**27B: the diagnosis without a working edit.** All three finished 27B episodes localise the failure, at calls 14, 48
+**27B: the diagnosis without a working edit.** All four 27B episodes localise the failure, at calls 14, 16, 48
 and 105. They print the tails of cut-off generations, count repeated lines, and contrast activations of looping
-cut-off generations with finished correct ones; all three land on layer-23 MLP neurons. Their edits are neuron-level
+cut-off generations with finished correct ones; all four land on layer 23 (MLP neurons, or a hidden-state direction traced back to
+layer-19 down_proj weights in hinted s2). Their edits are neuron-level
 suppressions and boosts on gate_proj and down_proj, at one layer or across layers 5–23, chosen by these activation
 differences and tested with paired passes. The paired gains are small and inconsistent (−2.1 to +2.7 points in
-unhinted s1; +2 to +16 points per comparison in s2), and the submitted edits score 7.4–12.4 %. Hinted s1 withdrew everything and
+unhinted s1; +2 to +16 points per comparison in unhinted s2; −4.7 to +7.8 in hinted s2), and the submitted edits
+score 6.4–12.4 %. Hinted s1 withdrew everything and
 submitted an empty edit set. The 27B editor does what the method asks — diagnose, localise, edit, validate — and the
 edit does not reach the mechanism.
 

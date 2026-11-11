@@ -47,7 +47,7 @@ counted as imprecisions (a rounded norm, a miscounted run).
 | 9B | unhinted | 1 | 0 | 0 | 151 / 0 / 2 | 0 | 2 (embedding) | yes |
 | 9B | unhinted | 2 | 0 | 0 | 17 / 0 / 0 | 0 | 0 | yes |
 | 27B | hinted | 1 | 0 | 0 | 220 / 0 / 1 | 0 | 1 (whole-tensor scale) | yes |
-| 27B | hinted | 2 | [running] | | | | | |
+| 27B | hinted | 2 | 0 | 0 | 155 / 0 / 0 | 0 | 0 | yes |
 | 27B | unhinted | 1 | 0 | 0 | 135 / 0 / 0 | 0 | 0 | yes |
 | 27B | unhinted | 2 | 1 | 0 | 130 / 0 / 0 | 0 | 0 | yes |
 | deepseek-flash | hinted | 1 | 6 | 2 | 291 / 0 / 15 | [15, pending] | 0 | [no, pending] |
@@ -74,16 +74,16 @@ in the main matrix are in the two deepseek-flash episodes, the editor with the m
 ## §6 additions
 
 **Failure modes split at 27B.** Every 0.8B and 9B episode is *not localised* (8 of 8). Every finished 27B and
-deepseek-flash episode localises the failure (5 of 5): four are *localised, edit failed*, and deepseek-flash hinted s1
+deepseek-flash episode localises the failure (6 of 6): five are *localised, edit failed*, and deepseek-flash hinted s1
 is labelled success by its score, which came from an excluded shortcut (§6). These editors print the tails of cut-off
 generations, separate looping from finished texts or positions, and tie a component to the loop: layer-23 MLP neurons
-(27B, calls 14, 48 and 105), a residual direction shared across layers 20–24 and heads attending at the repeat period
+(27B, calls 14, 16, 48 and 105), a residual direction shared across layers 20–24 and heads attending at the repeat period
 (deepseek-flash, calls 46 and 49). Then their edits fail, or skip the thinking instead of repairing it. The open
 editors that get this far do not lack the diagnosis; they lack an edit that works. [Compare with Opus: localised at
 call n; what its edits did differently — the strength calibration and the gating to loop positions.]
 
-**Labeller agreement.** The two labellers agree on the label of all 13 labelled main-matrix episodes. Where both label an episode
-localised (5), their `localised_at_call` agrees exactly in three, differs by one call in one (104 vs 105), and by 20
+**Labeller agreement.** The two labellers agree on the label of all 14 labelled main-matrix episodes. Where both label an episode
+localised (6), their `localised_at_call` agrees exactly in four, differs by one call in one (104 vs 105), and by 20
 in one (deepseek-flash hinted s1, 46 vs 66: attention at the repeat period, which A3 lists as separating evidence, vs
 the later loop-vs-pre-loop hidden-state contrast; we take 46). Agreement is easy at this resolution: the not-localised
 episodes never examine a cut-off generation at all.
@@ -91,7 +91,8 @@ episodes never examine a cut-off generation at all.
 **Final answers are not a reliable record, at every size.** Material self-report mismatches:
 - 0.8B: 4, 5, 0, 1 per seed. The final answers describe passes, generations and edits that never ran.
 - 9B: 0, 0, 0, 5. One seed says its tools do not exist after it had used them.
-- 27B: 0, 3 and 4. The 3 (unhinted s1): validation sets called independent that overlap; a "consistent 5–7 %" gain where the log shows
+- 27B: 0, 0, 3 and 4 (hinted s1, hinted s2, unhinted s1, unhinted s2). Hinted s2 has 3 contradicted claims, all
+  imprecisions (a miscounted problem total; a GSM8K summary that leaves out two neutral tests). The 3 (unhinted s1): validation sets called independent that overlap; a "consistent 5–7 %" gain where the log shows
   −2.1 to +2.7; "> 1.9 SE" where the largest is 1.74. The 4 (unhinted s2): every pass "2.0–4.0 sigma" (two
   are 1.0 and 1.4), and cut-off and length reductions overstated (0.4 points vs "6–11"; 66 tokens vs "1,600–3,000").
 - deepseek-flash hinted: 2. It says the edit "does not force early closing" after measuring that it makes 0.92 of runs
