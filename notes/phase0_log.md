@@ -674,3 +674,4 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   DS unhinted s2 waits for the second pod (5090 h5920phi, setting up). From now on no Claude labelling until both DS
   s2 episodes end.
 - 00:26 **DS unhinted s2 started** on the laptop (tmux dsux2, log dsu_strict2_s2), pool 5090 h5920phi ($0.69/h); helpers and low-balance stop attached.
+- 00:30 Full GSM8K base (1,319 x 2) queued on the rescore pod after the thinking-off control (scripts/chain_gsm8k_full.sh -> wsl tmux gsm8kfull, scripts/base_gsm8k_full.py); the 500-problem base (11.2 %) stays as is.
