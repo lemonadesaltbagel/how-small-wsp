@@ -59,3 +59,7 @@ plus the two editor pods); 25 more pods on the account in the same window ($74.6
 timelines (to do once the DS s2 seeds end). Lower bounds from each run's post-helper pods: DS hinted s1 $20.98,
 DS unhinted s1 $20.17, 27B hinted s2 $32.08 (with the editor's share not included), 27B unhinted s2 $26.62.
 DeepSeek API: ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) for DS hinted s1 + unhinted s1 (¥34.2 ≈ $4.7).
+- 2026-11-12 07:10: rescore pod lwin1r2rsgcp3k (5090, $0.69/h) deleted after ~7.9 h (11-11 23:14 → 07:10) ≈ $5.5:
+  DS hinted s1 4-sample rescore, the thinking-off control and the full GSM8K base; idle 05:28–07:10 (~$1.2), because
+  the GSM8K chain did not delete the pod on completion. Running: v0sy (3090, $0.22/h) and h592 (5090, $0.69/h) for
+  the DS s2 episodes.
