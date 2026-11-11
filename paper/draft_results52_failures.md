@@ -34,7 +34,8 @@ submitted: tensors in the final edit set.
 No Qwen episode comes near the repair threshold (29.0 %). Eleven of the twelve finished Qwen scores lie within
 sampling noise of the base (9.0 ± 1.3 %, one sample) or below it; the best, 27B unhinted s2, is 12.4 % (+3.4 points,
 about 2.3 standard errors of one sample), with ten MLP tensors edited. The one open-editor score above the threshold,
-deepseek-flash hinted s1 at 51.8 %, does not come from repairing the loop: the submitted edit makes the model close
+deepseek-flash hinted s1 at 51.8 % (50.9 % over 4 samples; hold-out MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %
+against the base's 39.7 / 24.4 / 20.1 %), does not come from repairing the loop: the submitted edit makes the model close
 its thinking at once (below), which the task excludes, and its audit flags rule (b) violations [adjudication
 pending]. Under the rules no open-weight editor repairs the network so far [final sentence once 27B hinted s2 and
 the deepseek-flash s2 seeds finish].
@@ -42,7 +43,7 @@ the deepseek-flash s2 seeds finish].
 **Thinking-skip check.** For every scored run we count the MATH-500 generations that emit `</think>` within their
 first 120 characters. The base: 0 of 500 (455 never close within the 32,768-token limit). Every Qwen run, the
 deepseek-flash unhinted run and all five Opus 5.5 runs, including the three strict repairs: 0 of 500. deepseek-flash
-hinted s1: 473 of 500, median position 0 — the reply starts with `</think>`. 243 of its 259 correct answers are among
+hinted s1: 473 of 500 (1,924 of 2,000 over the 4 samples), median position 0 — the reply starts with `</think>`. 243 of its 259 correct answers are among
 these 473. [Control, running: the unedited model with thinking turned off on the same items and seeds; if it scores
 near 51.8 %, the edit's score is the no-thinking score.]
 
