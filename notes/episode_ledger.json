@@ -266,7 +266,7 @@
   "counts": true,
   "math500": 0.074,
   "scoring_error": false,
-  "failure_label": null,
+  "failure_label": "localised, edit failed",
   "holdout": null,
   "audit": {
    "runs_reviewed": 221,
@@ -287,11 +287,19 @@
   "edit_changed": 0,
   "edit_frac": 0.0,
   "empty_edit": true,
-  "tool_use_failure": null,
+  "tool_use_failure": false,
   "early_stop": null,
-  "self_report_mismatches": null,
-  "self_report_material": null,
-  "label_second": null
+  "self_report_mismatches": 2,
+  "self_report_material": 0,
+  "label_second": {
+   "label": "localised, edit failed",
+   "loop_evidence_call": 37,
+   "locus_call": 104,
+   "localised_at_call": 104,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 37 printed generation text from the token-limited outputs reported in call 36, satisfying (i); call 58 additionally computed repeated token spans. Call 104 successfully compared component activations between finished generations and token-limit failures, satisfying (ii), with call 105 identifying layer 23 neuron 22 explicitly. Earlier correct-versus-failing trace comparisons and self-attention measurements did not establish that separation. Numerous edits failed validation; the final combination scored 0.078125 overall and 0.03125 on practice MATH in call 358, and its three tensors were dropped in call 362. No qualifying MATH-500 success or budget exhaustion is shown, and no visible editor statement claims its tools are unavailable or nonfunctional."
+  }
  },
  {
   "run": "runs/phase0/qwen27b-unhinted-p50-strict2-s1",
@@ -300,7 +308,7 @@
   "counts": true,
   "math500": 0.096,
   "scoring_error": false,
-  "failure_label": null,
+  "failure_label": "localised, edit failed",
   "holdout": null,
   "audit": {
    "runs_reviewed": 135,
@@ -321,11 +329,19 @@
   "edit_changed": 20480,
   "edit_frac": 2.721981643466168e-05,
   "empty_edit": false,
-  "tool_use_failure": null,
-  "early_stop": null,
-  "self_report_mismatches": null,
-  "self_report_material": null,
-  "label_second": null
+  "tool_use_failure": true,
+  "early_stop": "final answer after 5 nudges",
+  "self_report_mismatches": 6,
+  "self_report_material": 3,
+  "label_second": {
+   "label": "localised, edit failed",
+   "loop_evidence_call": 15,
+   "locus_call": 48,
+   "localised_at_call": 48,
+   "confidence": "high",
+   "labeller": "codex (default)",
+   "justification": "Call 15 prints generation text alongside finish='length', tokens=32768, and failure='cut_at_max_tokens', satisfying (i). Call 48 compares MLP neuron activations between explicitly selected cut-off and completed generations, satisfying (ii); earlier correct-versus-wrong comparisons do not establish a loop-specific locus. The final layer-23 gate edit is restored in call 161, but no MATH-500 score establishes success: call 218 reports only 8.59% on diverse practice MATH, while higher scores in calls 225 and 239 concern selected practice subsets. No calls show budget exhaustion or a claim that tools do not exist or work."
+  }
  },
  {
   "run": "runs/phase0/qwen9b-hinted-p50-strict2-s1",
@@ -451,6 +467,48 @@
    "confidence": "high",
    "labeller": "codex (default)",
    "justification": "Calls 2\u20135 failed before reading any token-limit generation text, and no later call read such text or computed repetition statistics, so (i) never holds. Calls 15\u201318 compared prompt activations or examined attention on a reference solution without tying a component to observed looping, so (ii) never holds. No weight edit was applied; call 19 reported identical original and edited results. The submitted score, 0.078, is below 0.29. Call 21 explicitly commented that it could not run the analysis on real model paths."
+  }
+ },
+ {
+  "run": "runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1",
+  "arm": "main: deepseek-flash, unhinted",
+  "access": "strict2",
+  "counts": null,
+  "math500": 0.068,
+  "scoring_error": false,
+  "failure_label": "localised, edit failed",
+  "holdout": null,
+  "audit": {
+   "runs_reviewed": 300,
+   "allowed": 292,
+   "suspicious": 0,
+   "violations": 8,
+   "valid": false
+  },
+  "adjudicated_valid": null,
+  "gate": {
+   "allow": 297,
+   "block": 0,
+   "unreviewed": 3
+  },
+  "turns": 461,
+  "editor_cost_usd": 0.0,
+  "forbidden_attempts_refused": 0,
+  "edit_changed": 14155175,
+  "edit_frac": 0.018813538334985946,
+  "empty_edit": false,
+  "tool_use_failure": false,
+  "early_stop": null,
+  "self_report_mismatches": 8,
+  "self_report_material": 2,
+  "label_second": {
+   "label": "localised, edit failed",
+   "loop_evidence_call": 12,
+   "locus_call": 49,
+   "localised_at_call": 49,
+   "confidence": "medium",
+   "labeller": "codex (default)",
+   "justification": "Call 12 explicitly examines text from token-limit generations, including text near a boxed answer. Call 49 first clearly ties model directions to repetition-defined loop versus non-loop positions, reporting layer-specific hidden-state differences; earlier correct-versus-wrong contrasts do not establish this. Edits were tested repeatedly (calls 81, 86, 207, 241, 319 and 334), but the submitted MATH-500 score was 0.068, below 0.29. Tool errors and memory failures do not establish budget exhaustion, and no visible statement claims the tools do not exist or work."
   }
  },
  {

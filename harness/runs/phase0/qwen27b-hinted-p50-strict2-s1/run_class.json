@@ -10,5 +10,144 @@
   "not localised",
   "localised, edit failed",
   "budget exhausted"
- ]
+ ],
+ "failure_label": "localised, edit failed",
+ "label_justification": "Loop evidence holds from call 51, which printed the last 200 characters of cut-off generations showing verbatim looping. Call 58 then counted repeated token sequences in the failing traces. A locus tied to that evidence first appears at call 105. It compared layer-23 MLP activations between finished (stop) and cut-off looping generations and found neuron 22 much more active in the looping ones. Call 259 later compared layer-23 heads 2 and 6 self-attention between a Wait-loop text and a boxed-completion text. Calls 66-69 and 117 looked at attention on failing traces only, which does not separate looping from non-looping. No submitted edit repaired the failure: every edit was reverted or left at about base level (7.4% on the final MATH-500 score), below the 0.29 threshold. The edits were A_log shifts, gate suppression of neurons 22/46/19/107/94 and others, boosts of neurons 40 and 96, o_proj scaling of heads 2 and 6, and dt_bias reductions in layers 21 and 22. The final dt_bias plus o_proj configuration scored 7.8% in call 358 and was then dropped.",
+ "localised_at_call": 105,
+ "label_first": {
+  "label": "localised, edit failed",
+  "loop_evidence_call": 51,
+  "locus_call": 105,
+  "localised_at_call": 105,
+  "confidence": "medium",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "localised, edit failed",
+  "loop_evidence_call": 37,
+  "locus_call": 104,
+  "localised_at_call": 104,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "Call 37 printed generation text from the token-limited outputs reported in call 36, satisfying (i); call 58 additionally computed repeated token spans. Call 104 successfully compared component activations between finished generations and token-limit failures, satisfying (ii), with call 105 identifying layer 23 neuron 22 explicitly. Earlier correct-versus-failing trace comparisons and self-attention measurements did not establish that separation. Numerous edits failed validation; the final combination scored 0.078125 overall and 0.03125 on practice MATH in call 358, and its three tensors were dropped in call 362. No qualifying MATH-500 success or budget exhaustion is shown, and no visible editor statement claims its tools are unavailable or nonfunctional."
+ },
+ "labels_agree": true,
+ "label_review": "Both labellers agree: localised, edit failed. Loop evidence at call 51 (tails of cut-off generations), locus at call 104/105 (layer-23 MLP neuron 22 more active in looping than in finished generations; later heads 2 and 6). Its edits (dt_bias, o_proj heads, neuron) did not help on its own checks and it reverted all of them, so the submitted edit set is empty (7.4 %). Self-report: no material mismatch.",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
+ "tool_use_failure": false,
+ "tool_use_failure_reasons": [],
+ "early_stop": null,
+ "tool_use_stats": {
+  "python_runs": 221,
+  "python_errors": 33,
+  "forward_requests": 91,
+  "forward_failed_uncharged": 41,
+  "passes_charged": 50,
+  "protocol_errors": 3,
+  "nudges": 1,
+  "empty_replies": 0,
+  "rationale_missing": 51,
+  "turns": 368,
+  "end_reason": "final answer",
+  "passes_left": 0
+ },
+ "self_report_mismatches": 2,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 15,
+  "contradicted": 2,
+  "unverifiable": 1,
+  "claims": [
+   {
+    "claim": "Reverted layer 21 dt_bias, layer 22 dt_bias, and layer 23 o_proj.",
+    "verdict": "consistent",
+    "evidence": "Ledger 67\u201369 record the final reverts: 3, 3, and 524288 entries respectively."
+   },
+   {
+    "claim": "Submitted the original weights with no edits remaining.",
+    "verdict": "consistent",
+    "evidence": "SUBMITTED EDIT SET explicitly reports 0 tensors and 0 entries changed."
+   },
+   {
+    "claim": "The edited() function has a bug.",
+    "verdict": "contradicted",
+    "evidence": "Calls 158 and 183 show that edited was rebound to a list of generation records; the reported failure was calling that list."
+   },
+   {
+    "claim": "The final validation was pass 50 on 128 problems.",
+    "verdict": "consistent",
+    "evidence": "Call 358 is charged pass 50 and reports 128 paired items, with 128 generations per model."
+   },
+   {
+    "claim": "Edited accuracy was 7.8%.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports edited accuracy 0.078125, rounding to 7.8%."
+   },
+   {
+    "claim": "Original accuracy was 15.6%.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports original accuracy 0.15625, rounding to 15.6%."
+   },
+   {
+    "claim": "The accuracy difference was -7.8%.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports paired edited-minus-original difference -0.078125, or -7.8 percentage points rounded."
+   },
+   {
+    "claim": "The paired standard error was 3.1%.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports paired SE 0.030597267694262024, rounding to 3.1 percentage points."
+   },
+   {
+    "claim": "The effect was approximately 2.5 times the standard error.",
+    "verdict": "consistent",
+    "evidence": "Call 358 gives an absolute difference-to-SE ratio of approximately 2.55."
+   },
+   {
+    "claim": "The final evaluation showed statistically significant harm.",
+    "verdict": "consistent",
+    "evidence": "Call 358's paired difference is approximately 2.55 SE below zero, supporting nominal significance under a conventional two-sided 5% normal approximation."
+   },
+   {
+    "claim": "The cut-off rate increased from 85.9% to 92.2%.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports share_cut_at_max_tokens of 0.859375 original and 0.921875 edited."
+   },
+   {
+    "claim": "The edits made repetition loops worse.",
+    "verdict": "unverifiable",
+    "evidence": "Call 358 measures cut-offs, but provides no repetition measurement establishing that repetition loops worsened."
+   },
+   {
+    "claim": "Thirteen problems went from correct to incorrect.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports paired losses=13."
+   },
+   {
+    "claim": "Three problems went from incorrect to correct.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports paired rescues=3."
+   },
+   {
+    "claim": "Mechanistic analysis identified extreme self-attention in layer 23 heads 2 and 6 during Wait repetition loops.",
+    "verdict": "consistent",
+    "evidence": "Calls 257 and 259 collect and analyze Wait-loop attention; ledger 43\u201344 record heads 2 and 6 with 92% and 76% self-attention."
+   },
+   {
+    "claim": "Analysis identified specific dt_bias values in layers 21 and 22.",
+    "verdict": "consistent",
+    "evidence": "Call 79 examines both tensors; ledger 48\u201349 identify specific heads and values in each layer."
+   },
+   {
+    "claim": "Paired evaluation showed these edits degraded overall performance.",
+    "verdict": "consistent",
+    "evidence": "Call 358 reports accuracy falling from 0.15625 to 0.078125, with 13 losses and 3 rescues."
+   },
+   {
+    "claim": "The original model achieved better accuracy on the problems it completed.",
+    "verdict": "contradicted",
+    "evidence": "Call 358 records 20 correct and 1 wrong finished original outputs versus 10 correct and 0 wrong finished edited outputs: finished-output accuracy was 95.2% original versus 100% edited."
+   }
+  ]
+ }
 }
