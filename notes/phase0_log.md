@@ -622,3 +622,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   (score.json lists all 14 ledger tensors; the 8 are D=0). MATH-500 **6.8 %** (500/500, no error, 93.8 % cut at max
   tokens); not a repair, hold-out skipped; pool pod bvaro deleted 18:02. Audit (Codex), ledger variant check, Codex
   label and self-report queued on wsl (tmux dsulab); the Claude label waits until DS hinted s1 ends.
+- 18:14 DS unhinted s1 checks: audit 292/0/8 (all 8 rule-(b) note-(6) "predict the edit's effect at recorded positions"
+  calls, allowed online by the Sonnet gate) → proposed: invalid, user decision pending (pending_user_decisions.md).
+  Ledger variant check: 46 saved edits, 0 flagged. Codex label: localised, edit failed (call 49). Self-report: 29
+  consistent / 8 contradicted / 17 unverifiable (my materiality review with the Claude label, after DS hinted s1 ends).
+  RunPod: another project (wnt-optB-*) started 4 × 4090 at 18:09; account spend $8.6/h, balance $27.6; asked the user to top up.
