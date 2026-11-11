@@ -36,7 +36,7 @@ sampling noise of the base (9.0 ± 1.3 %, one sample) or below it; the best, 27B
 about 2.3 standard errors of one sample), with ten MLP tensors edited. The one open-editor score above the threshold,
 deepseek-flash hinted s1 at 51.8 % (50.9 % over 4 samples; hold-out MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %
 against the base's 39.7 / 24.4 / 20.1 %), does not come from repairing the loop: the submitted edit makes the model close
-its thinking at once (below), which the task excludes, and its score equals the unedited model's with thinking turned off (48.2 %), and its audit flags rule (b) violations [adjudication
+its thinking at once (below), which the task excludes, and its score is close to the unedited model's with thinking turned off (48.2 %), and its audit flags rule (b) violations [adjudication
 pending]. Under the rules no open-weight editor repairs the network so far [final sentence once 27B hinted s2 and
 the deepseek-flash s2 seeds finish].
 
