@@ -45,3 +45,18 @@
   Table 4. Then the run is valid. Proposal: `harness/runs/phase0/qwen27b-hinted-p50-strict2-s1/audit_adjudication.proposed.json`.
 - Alternative: treat a deliberate forbidden attempt as invalidating (would also need re-checking 9B unhinted s1 for
   consistency, which A2 already declared valid).
+
+## 2026-11-11 18:40 — DS unhinted s1: 8 audit violations the online gate had allowed (rule (b), note (6))
+- Audit 292 allowed / 0 suspicious / 8 violations; all 8 calls had been reviewed and allowed before running by the
+  strict2 gate (Sonnet 5.5). Same class in all 8: an LS/LDA read vector w fitted on recorded layer-23 MLP activations
+  (allowed) is the input row of a rank-one close-direction edit beta*u*w^T; the editor evaluates w on recorded token
+  positions to predict the edit's write (224/225 also in nats) and sets beta or ranks candidate gates by it. Note (6)
+  names exactly this as not allowed. 308/309 failed (memory) before the projections ran.
+- The submitted edit does not use these gates (6 out-projection projections, strength from forward-pass dose-response);
+  MATH-500 6.8 %, not a repair.
+- Proposal A (recommended): uphold all 8 → run invalid, reported but not in the curve; DS unhinted needs one more valid
+  seed (the planned s2 plus one). Consistent with DS strict s1 243/244 (upheld, confirmed 2026-11-09).
+- Alternative B: overrule (w is an activation statistic; a projection on it uses no weight / norm / activation function,
+  the gate's reading) → valid, 6.8 % counts.
+- Either way: report the gate–audit disagreement (8 calls allowed online, violations post hoc) in Table 4.
+- Proposal: `harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1/audit_adjudication.proposed.json`.
