@@ -416,8 +416,10 @@ repair is feasible under audit; they do not isolate editor size as the cause of 
 as the shortcut does. The difference is the gate: in Opus's edits it opens only inside a loop (in seed 1 also only at line
 ends), so the thinking is kept. None of the 2,500 scored generations of the five Opus runs (the three strict repairs and the two first-round runs)
 closes `</think>` early, and they close within the limit far more often than the base: 24, 10 and 194 of 500 never
-close in the strict runs, 175 and 270 in the first-round runs, against the base's 455. [Opus `localised_at_call`
-under the same labelling procedure, against the open editors'.]
+close in the strict runs, 175 and 270 in the first-round runs, against the base's 455. Labelled with the same procedure, the strict
+Opus episodes localise at calls 20, 15 and 26, no earlier than the 27B editor (14, 16, 48, 105) or deepseek-flash (46,
+49). Within this budget the open editors that reach the diagnosis reach it about as early as the frontier editor; what
+they lack is an edit that works.
 
 **Labeller agreement.** The two labellers agree on the label of all 14 labelled main-matrix episodes. Where both label an
 episode localised (6), their `localised_at_call` agrees exactly in four, differs by one call in one (104 vs 105), and
