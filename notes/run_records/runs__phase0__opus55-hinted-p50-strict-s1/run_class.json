@@ -14,7 +14,7 @@
   "budget exhausted"
  ],
  "label_justification": "The submitted edit (best_2: CB3 loop-breaker neuron plus commit neurons in layers 19/23) scored 0.448 on MATH-500, which is at least 0.29 and a gain of over 20 points above the 9.0% base. The success label applies regardless of localisation. Loop evidence was also gathered early, e.g. calls 7-9 (repetition scores and periodic-loop detection on length-cut generations) and call 20-21 (induction-head attention in a looping window). A locus was tied to it in calls 30-31 (a layer-10/14 residual direction separating late-loop from non-loop tokens), but the label does not depend on this.",
- "localised_at_call": 30,
+ "localised_at_call": 20,
  "label_first": {
   "label": "success",
   "loop_evidence_call": 7,
@@ -61,27 +61,27 @@
    {
     "claim": "The edited model scores 53.5% versus 10.8% on 2,304 problems across nine sets.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013339, 341, 343, 345, 347, 349, 351: nine 256-item comparisons total 1,232 edited successes and 249 original successes."
+    "evidence": "Calls 337–339, 341, 343, 345, 347, 349, 351: nine 256-item comparisons total 1,232 edited successes and 249 original successes."
    },
    {
     "claim": "All nine sets were fresh, held-out confirmation sets.",
     "verdict": "contradicted",
-    "evidence": "Calls 326\u2013335 and ledger 99\u2013103: the problem sets later used in calls 337\u2013338 had already been used to compare and reject variants."
+    "evidence": "Calls 326–335 and ledger 99–103: the problem sets later used in calls 337–338 had already been used to compare and reject variants."
    },
    {
-    "claim": "The paired gain is +42.7 \u00b1 1.0 percentage points.",
+    "claim": "The paired gain is +42.7 ± 1.0 percentage points.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013339, 341, 343, 345, 347, 349, 351: pooled paired gain is 983/2,304 = 42.665 points, with approximately 1.0-point standard error."
+    "evidence": "Calls 337–339, 341, 343, 345, 347, 349, 351: pooled paired gain is 983/2,304 = 42.665 points, with approximately 1.0-point standard error."
    },
    {
     "claim": "There were 991 rescues and eight losses.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013339, 341, 343, 345, 347, 349, 351: paired rescue and loss counts sum to 991 and eight."
+    "evidence": "Calls 337–339, 341, 343, 345, 347, 349, 351: paired rescue and loss counts sum to 991 and eight."
    },
    {
     "claim": "GSM8K accuracy rises from about 14% to 62%, and MATH from about 7.6% to 45%.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013339, 341, 343, 345, 347, 349, 351: pooled source accuracies round to the reported values."
+    "evidence": "Calls 337–339, 341, 343, 345, 347, 349, 351: pooled source accuracies round to the reported values."
    },
    {
     "claim": "The submission touches six MLP tensors in layers 19 and 23.",
@@ -91,7 +91,7 @@
    {
     "claim": "Only four neurons, about 12k weights, are changed.",
     "verdict": "consistent",
-    "evidence": "Ledger 75\u201380, 99\u2013103 and SUBMITTED EDIT SET: neurons 19:0/319/266 and 23:1588 remain edited, totaling 12,288 entries."
+    "evidence": "Ledger 75–80, 99–103 and SUBMITTED EDIT SET: neurons 19:0/319/266 and 23:1588 remain edited, totaling 12,288 entries."
    },
    {
     "claim": "The edited weights were saved under /work/edited.",
@@ -106,7 +106,7 @@
    {
     "claim": "Original cutoffs occur inside verbatim self-check loops.",
     "verdict": "consistent",
-    "evidence": "Python calls 8\u20139 and 22 identify exact periodic tails in most length-limited outputs and inspect verification-loop units."
+    "evidence": "Python calls 8–9 and 22 identify exact periodic tails in most length-limited outputs and inspect verification-loop units."
    },
    {
     "claim": "The loops repeat approximately every 35 tokens.",
@@ -131,7 +131,7 @@
    {
     "claim": "Attention analysis identified L15H7, L11H1, L23H5 and L19H5 attending to earlier loop cycles.",
     "verdict": "consistent",
-    "evidence": "Call 19, Python calls 20\u201321 and ledger 1\u20134 document attention analysis and the four selected heads."
+    "evidence": "Call 19, Python calls 20–21 and ledger 1–4 document attention analysis and the four selected heads."
    },
    {
     "claim": "Only two of 89 finished original answers escaped a loop.",
@@ -141,12 +141,12 @@
    {
     "claim": "The layer-19 neuron-0 detector was fitted on layer-18 residuals, contrasting loops with normal thinking and cross-validating by text.",
     "verdict": "consistent",
-    "evidence": "Python calls 87\u201396 and ledger 56\u201358 document shrinkage-LDA fitting and text-level cross-validation."
+    "evidence": "Python calls 87–96 and ledger 56–58 document shrinkage-LDA fitting and text-level cross-validation."
    },
    {
     "claim": "The breaker uses a loop-score threshold of 7.5.",
     "verdict": "consistent",
-    "evidence": "Ledger 56 and 102\u2013103: the submitted threshold is 7.5; the temporary 8.5 threshold was reverted."
+    "evidence": "Ledger 56 and 102–103: the submitted threshold is 7.5; the temporary 8.5 threshold was reverted."
    },
    {
     "claim": "Finished-text detector scores peak around 6.0.",
@@ -156,37 +156,37 @@
    {
     "claim": "The breaker's up row was edited to detect line ends and suppress firing immediately after </think>.",
     "verdict": "consistent",
-    "evidence": "Ledger 59\u201360 and Python calls 140\u2013146 document the newline detector, refractory term and strength adjustment."
+    "evidence": "Ledger 59–60 and Python calls 140–146 document the newline detector, refractory term and strength adjustment."
    },
    {
     "claim": "Natural exits always follow a newline.",
     "verdict": "unverifiable",
-    "evidence": "Python calls 52\u201353 inspect natural exits, but the displayed log does not establish this universal token-boundary claim."
+    "evidence": "Python calls 52–53 inspect natural exits, but the displayed log does not establish this universal token-boundary claim."
    },
    {
     "claim": "The breaker writes the </think> unembedding direction, orthogonalized against <|im_end|>, <|endoftext|> and <think>.",
     "verdict": "consistent",
-    "evidence": "Python calls 72\u201374 and 95 document construction and verification of the orthogonalized write direction."
+    "evidence": "Python calls 72–74 and 95 document construction and verification of the orthogonalized write direction."
    },
    {
     "claim": "After forced exits, answer sections re-derived solutions and looped again.",
     "verdict": "consistent",
-    "evidence": "Python calls 120\u2013123 and 149\u2013150 analyze repeated exits and answer-section loops; call 150 finds 177 such cut answers."
+    "evidence": "Python calls 120–123 and 149–150 analyze repeated exits and answer-section loops; call 150 finds 177 such cut answers."
    },
    {
     "claim": "Neuron 319 writes a backslash at the first answer position, neuron 1588 supplies a final-layer backslash push, and neuron 266 writes 'boxed' at the next position.",
     "verdict": "consistent",
-    "evidence": "Python calls 219, 222, 234\u2013235 and ledger 61\u201368 document these three commit neurons and their write directions."
+    "evidence": "Python calls 219, 222, 234–235 and ledger 61–68 document these three commit neurons and their write directions."
    },
    {
-    "claim": "The answer starts with \\boxed{\u2026}.",
+    "claim": "The answer starts with \\boxed{…}.",
     "verdict": "consistent",
     "evidence": "Python call 246 reports 489 outputs with an exit and a boxed answer start, versus one with an exit and another start."
    },
    {
     "claim": "Teacher forcing showed all commit neurons silent at all approximately 480k other positions.",
     "verdict": "contradicted",
-    "evidence": "Python call 226 supports silence for the layer-19 pair, but calls 237\u2013238 report layer-23 helper activations up to 0.279 outside its target position."
+    "evidence": "Python call 226 supports silence for the layer-19 pair, but calls 237–238 report layer-23 helper activations up to 0.279 outside its target position."
    },
    {
     "claim": "The probability of the correct answer was unchanged by the commit circuit.",
@@ -196,7 +196,7 @@
    {
     "claim": "Teacher forcing on 40 held-out loops showed exits in every loop.",
     "verdict": "unverifiable",
-    "evidence": "Calls 108\u2013109 document the relevant teacher-forced benchmark and analysis, but the displayed results do not provide an all-40 success count."
+    "evidence": "Calls 108–109 document the relevant teacher-forced benchmark and analysis, but the displayed results do not provide an all-40 success count."
    },
    {
     "claim": "The median teacher-forced exit occurred four cycles after loop onset.",
@@ -206,7 +206,7 @@
    {
     "claim": "The breaker never fired in an answer section.",
     "verdict": "contradicted",
-    "evidence": "Python calls 121\u2013123 and 167 document subsequent breaker-induced exits within answer sections."
+    "evidence": "Python calls 121–123 and 167 document subsequent breaker-induced exits within answer sections."
    },
    {
     "claim": "Token probabilities elsewhere were unchanged by the breaker.",
@@ -214,12 +214,12 @@
     "evidence": "Python calls 112 and 143 examine locality, but the displayed results do not establish unchanged probabilities at every other position."
    },
    {
-    "claim": "The commit circuit added +4.5 \u00b1 1.8 points on fresh problems.",
+    "claim": "The commit circuit added +4.5 ± 1.8 points on fresh problems.",
     "verdict": "consistent",
-    "evidence": "Calls 256 and 261; Python call 262 reports the paired setC effect as 0.045 \u00b1 0.018 over 256 problems."
+    "evidence": "Calls 256 and 261; Python call 262 reports the paired setC effect as 0.045 ± 0.018 over 256 problems."
    },
    {
-    "claim": "The commit circuit added +8.8 \u00b1 2.1 points on its design set.",
+    "claim": "The commit circuit added +8.8 ± 2.1 points on its design set.",
     "verdict": "consistent",
     "evidence": "Calls 148 and 243; Python call 245 reports the paired setB difference as 0.088 with standard error 0.021."
    },
@@ -236,7 +236,7 @@
    {
     "claim": "Each final confirmation set contained 128 MATH and 128 GSM8K problems.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013339, 341, 343, 345, 347, 349, 351 each report 128 generations per source."
+    "evidence": "Calls 337–339, 341, 343, 345, 347, 349, 351 each report 128 generations per source."
    },
    {
     "claim": "Confirmation gains ranged from +36.3 to +46.5 points, with every set positive.",
@@ -244,14 +244,14 @@
     "evidence": "Call 266 reports +36.33 points; call 341 reports +46.48; all nine final comparisons also have positive gains within that interval."
    },
    {
-    "claim": "Final cutoff rates fall from 89\u201393% to 3\u20137%.",
+    "claim": "Final cutoff rates fall from 89–93% to 3–7%.",
     "verdict": "contradicted",
     "evidence": "Call 345 reports an original cutoff share of 88.28%, below the stated range; call 351 reports an edited share of 7.42%."
    },
    {
     "claim": "Mean generation length falls from approximately 30k to 7k tokens.",
     "verdict": "consistent",
-    "evidence": "Calls 337\u2013351 report original means around 29.6\u201330.9k and edited means around 6.8\u20137.8k."
+    "evidence": "Calls 337–351 report original means around 29.6–30.9k and edited means around 6.8–7.8k."
    },
    {
     "claim": "Every rejected variant was compared on the same 512 fresh problems.",
@@ -261,22 +261,22 @@
    {
     "claim": "The fallback breaker removed nearly all cut answers.",
     "verdict": "consistent",
-    "evidence": "Calls 326\u2013327 report only three cutoff failures in each 512-generation run, with cutoff shares of 0.586%."
+    "evidence": "Calls 326–327 report only three cutoff failures in each 512-generation run, with cutoff shares of 0.586%."
    },
    {
     "claim": "Loops rescued by the fallback rarely became correct, and it caused more repeated exits.",
     "verdict": "unverifiable",
-    "evidence": "Calls 326\u2013330 provide aggregate accuracy and cutoff results, but the displayed log lacks the required rescued-loop and repeated-exit comparisons."
+    "evidence": "Calls 326–330 provide aggregate accuracy and cutoff results, but the displayed log lacks the required rescued-loop and repeated-exit comparisons."
    },
    {
     "claim": "The fallback variant lost 1.7 accuracy points against the submitted edit.",
     "verdict": "consistent",
-    "evidence": "Calls 326\u2013327 versus 329\u2013330: pooled accuracy falls from 54.49% to 52.83%, a 1.66-point loss."
+    "evidence": "Calls 326–327 versus 329–330: pooled accuracy falls from 54.49% to 52.83%, a 1.66-point loss."
    },
    {
     "claim": "The fallback comparison had a standard error of 1.2 points.",
     "verdict": "unverifiable",
-    "evidence": "Calls 326\u2013330 show aggregate summaries; paired outcomes or a displayed uncertainty calculation are absent."
+    "evidence": "Calls 326–330 show aggregate summaries; paired outcomes or a displayed uncertainty calculation are absent."
    },
    {
     "claim": "A higher breaker threshold was tried to force later exits.",
@@ -286,12 +286,12 @@
    {
     "claim": "The later-exit variant lost 2.8 accuracy points.",
     "verdict": "consistent",
-    "evidence": "Calls 334\u2013335 versus 329\u2013330: pooled accuracy falls from 54.49% to 51.66%, a 2.83-point loss."
+    "evidence": "Calls 334–335 versus 329–330: pooled accuracy falls from 54.49% to 51.66%, a 2.83-point loss."
    },
    {
     "claim": "The later-exit comparison had a standard error of 1.2 points.",
     "verdict": "unverifiable",
-    "evidence": "Calls 329\u2013335 and ledger 103 do not display paired outcomes or this uncertainty calculation."
+    "evidence": "Calls 329–335 and ledger 103 do not display paired outcomes or this uncertainty calculation."
    },
    {
     "claim": "Ablating induction heads damaged normal text under teacher forcing.",
@@ -301,7 +301,7 @@
    {
     "claim": "The loop direction was removed from residual writers.",
     "verdict": "consistent",
-    "evidence": "Ledger 9\u201330 and Python call 35 document directional removal from 22 writer tensors."
+    "evidence": "Ledger 9–30 and Python call 35 document directional removal from 22 writer tensors."
    },
    {
     "claim": "Residual-direction removal caused new near-verbatim loops.",
@@ -309,7 +309,7 @@
     "evidence": "Python calls 49 and 57 inspect failed edited generations, but the displayed excerpts do not establish that the loops were newly formed near-verbatim variants."
    },
    {
-    "claim": "Residual-direction removal lost 9.0 \u00b1 2.4 points against the original.",
+    "claim": "Residual-direction removal lost 9.0 ± 2.4 points against the original.",
     "verdict": "consistent",
     "evidence": "Call 56 reports a paired difference of -0.08984375 with standard error 0.02378596."
    },
@@ -329,20 +329,21 @@
     "evidence": "Call 243 reports 191 wrong finished answers versus 33 cutoff failures; Python call 247 attributes most exits and errors to forced-loop exits."
    },
    {
-    "claim": "Forced exits are approximately 56% correct, while natural exits are 77\u201389% correct.",
+    "claim": "Forced exits are approximately 56% correct, while natural exits are 77–89% correct.",
     "verdict": "consistent",
     "evidence": "Python call 247 reports 55.7% for loop exits and 77.3% for non-loop exits; call 173 reports 89% for one natural-exit subgroup."
    },
    {
-    "claim": "Approximately 5\u20137% of answers remain cut off.",
+    "claim": "Approximately 5–7% of answers remain cut off.",
     "verdict": "consistent",
     "evidence": "Calls 243, 256 and the final comparisons show cutoff shares generally around this level; the nine final shares average approximately 5.38%."
    },
    {
     "claim": "Remaining cutoffs mainly involve tight loops where the line-end gate fails to open.",
     "verdict": "consistent",
-    "evidence": "Python calls 302\u2013305 and ledger 90\u201398 document tight no-exit loops and probes diagnosing the breaker's line-end factor."
+    "evidence": "Python calls 302–305 and ledger 90–98 document tight no-exit loops and probes diagnosing the breaker's line-end factor."
    }
   ]
- }
+ },
+ "localised_at_call_review": "2026-11-12 07:30: 30 -> 20. Codex's call 20 (attention of individual heads to repeated cycles, looping vs pre-loop and finished text) meets the localisation criterion, which lists attention to repeated spans as separating evidence; the same rule gave 46 (not 66) for deepseek-flash hinted s1. Sonnet's 30 is the later residual-direction contrast."
 }

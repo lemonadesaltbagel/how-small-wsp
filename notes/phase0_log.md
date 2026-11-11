@@ -707,3 +707,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   edit verification ok for all 14 scored main-protocol episodes, collision check: no collision
   (`notes/collision_check_2026-11-12.md`; shapor's thinking-off 45.2 % independently matches our control). Appendix B/C
   filled. Left for the user's review (pending entry 07:24).
+- 07:30 Opus strict s1 `localised_at_call` 30 -> 20 (Codex's call 20: attention of heads to repeated cycles, looping vs
+  pre-loop and finished text; the localisation criterion lists attention to repeated spans, as used for DS hinted s1).
+  Strict Opus localises at 20 / 15 / 26: no earlier than the 27B editor (14 / 16 / 48 / 105) or DS (46 / 49). In the
+  preprint (§5). `paper/draft_*.md` are superseded by `paper/preprint.md`.
