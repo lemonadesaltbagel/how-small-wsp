@@ -616,3 +616,9 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 00:45 27B unhinted s2 started on wsl (q27ux2) with pool xd0x only; tir1 was also on the bad host 80.15.7.37 and was
   deleted; a second pool pod is being acquired (to be added with swap_pool.sh).
 - 02:06 27B unhinted s2 pool: + c6mb (3090) via swap_pool.sh. 27B hinted s2: one split pass lost at turn 40 after 24 min (uzfo closed the connection; uncharged; retried at once).
+- 2026-11-11 17:06 DS unhinted s1 ended (final answer, 461 turns, 50/50 passes, 300/300 Python runs). Submitted 6
+  tensors (L16/18/20/22 linear_attn.out_proj, L23 o_proj, L23 down_proj), each left-multiplied by (I - lambda*u*u^T),
+  u = measured loop-minus-normal residual direction, lambda 0.26-0.30; 8 earlier-edited tensors restored to base
+  (score.json lists all 14 ledger tensors; the 8 are D=0). MATH-500 **6.8 %** (500/500, no error, 93.8 % cut at max
+  tokens); not a repair, hold-out skipped; pool pod bvaro deleted 18:02. Audit (Codex), ledger variant check, Codex
+  label and self-report queued on wsl (tmux dsulab); the Claude label waits until DS hinted s1 ends.
