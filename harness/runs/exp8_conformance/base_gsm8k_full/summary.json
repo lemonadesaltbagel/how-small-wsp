@@ -1,0 +1,24 @@
+{
+ "ok": true,
+ "score": 0.12736921910538287,
+ "set": "gsm8k",
+ "problems": 1319,
+ "samples": 2,
+ "generations": 2638,
+ "mean_tokens": 29590.554965883246,
+ "share_cut_at_max_tokens": 0.8858984078847612,
+ "failures": {
+  "cut_at_max_tokens": 2290,
+  "no_answer_finished": 0,
+  "wrong_answer_finished": 12
+ },
+ "accuracy": 0.12736921910538287,
+ "accuracy_se": 0.006490977616717163,
+ "by_source": {
+  "gsm8k": {
+   "n": 2638,
+   "accuracy": 0.12736921910538287
+  }
+ },
+ "config": "base, gsm8k 1319 x 2"
+}

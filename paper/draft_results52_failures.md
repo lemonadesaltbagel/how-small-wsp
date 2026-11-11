@@ -36,7 +36,7 @@ sampling noise of the base (9.0 ± 1.3 %, one sample) or below it; the best, 27B
 about 2.3 standard errors of one sample), with ten MLP tensors edited. The one open-editor score above the threshold,
 deepseek-flash hinted s1 at 51.8 % (50.9 % over 4 samples; hold-out MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %
 against the base's 39.7 / 24.4 / 20.1 %), does not come from repairing the loop: the submitted edit makes the model close
-its thinking at once (below), which the task excludes, and its audit flags rule (b) violations [adjudication
+its thinking at once (below), which the task excludes, and its score equals the unedited model's with thinking turned off (48.2 %), and its audit flags rule (b) violations [adjudication
 pending]. Under the rules no open-weight editor repairs the network so far [final sentence once 27B hinted s2 and
 the deepseek-flash s2 seeds finish].
 
@@ -44,8 +44,13 @@ the deepseek-flash s2 seeds finish].
 first 120 characters. The base: 0 of 500 (455 never close within the 32,768-token limit). Every Qwen run, the
 deepseek-flash unhinted run and all five Opus 5.5 runs, including the three strict repairs: 0 of 500. deepseek-flash
 hinted s1: 473 of 500 (1,924 of 2,000 over the 4 samples), median position 0 — the reply starts with `</think>`. 243 of its 259 correct answers are among
-these 473. [Control, running: the unedited model with thinking turned off on the same items and seeds; if it scores
-near 51.8 %, the edit's score is the no-thinking score.]
+these 473. A control settles where the score comes from: the unedited model with thinking turned off (the chat
+template's empty thinking block), on the same items with the same per-item seeds, sampling and grading, scores
+48.2 % (± 2.2). The edit's 51.8 % (50.9 % over 4 samples) is within about 1.5 standard errors of this no-thinking
+score; per item the two agree on 382 of 500. The edit buys the score by turning thinking off, not by repairing it.
+
+The base on the full GSM8K test set (1,319 problems x 2 samples) scores 12.7 % (± 0.6), with 88.6 % of generations
+cut at the token limit [use where the paper cites the GSM8K base].
 
 ## 6 Failure modes across scale
 

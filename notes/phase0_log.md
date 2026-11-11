@@ -682,3 +682,19 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   mean of the four new samples 49.85 %. Reproduction check: sample 0 re-run 47.6 % vs 51.8 % scored, same answer on
   415/500 items (vLLM batching changes the random stream; -4.2 points, ~1.9 SE). Thinking-skip on all 2,000:
   1,924 (96.2 %) close </think> within 120 characters. Thinking-off control starts on the same pod.
+- 01:02 **Thinking-off control** (unedited Qwen3.5-0.8B, `enable_thinking=False`, same 500 items, per-item seeds,
+  sampling and grading as the scored eval; scripts/nothink_control.py on 5090 lwin): **48.2 %** (± 2.2), 12.4 % cut,
+  median 1,924 tokens. The DS hinted s1 edit scored 51.8 % (sample 0) / 50.9 % (4 samples): within about 1-1.5 SE of
+  the no-thinking score. Per item vs the edit's scored sample: same correctness on 382/500 (edit-only correct 68,
+  control-only 50; McNemar p ≈ 0.10), against 415/500 between the edit and its own re-run. The edited model writes
+  longer answers after closing (median 6,923 tokens, 138 cut). Reading: the edit's score is the model's no-thinking
+  score, not a repair of the thinking. Records in notes/run_records/nothink_control/.
+- 05:28 **Full GSM8K base** (1,319 x 2 = 2,638 generations, empty edit set, lwin): **12.7 %** (± 0.65), 88.6 % cut at
+  32,768 tokens (500-problem base: 11.2 %). harness/runs/exp8_conformance/base_gsm8k_full/.
+- 07:03 The laptop's WSL rebooted (shutdown 07:02, cause unknown; up 1 min at 07:04). Both DS s2 episodes were cut:
+  hinted s2 at turn 234 (13/50 passes, last call 06:55), unhinted s2 at turn 278 (32/50, last activity ~06:43). Pods
+  v0sy/h592 untouched. After a test call to the laptop's Claude reviewer succeeded, both resumed at 07:06 with
+  `--resume` through launch_ds_episode.sh (host interruption, not an A1 empty-reply stop; kernel variables lost,
+  handoff 6 / resume). Post helpers restarted with NODE=laptop (alive=yes); auto-resume and the low-balance stop kept
+  running throughout.
+- 07:10 Rescore pod lwin deleted (control and GSM8K done; idle since 05:28).

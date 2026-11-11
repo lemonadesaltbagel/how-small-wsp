@@ -90,3 +90,5 @@
   regression, so by the plan's numbers alone it would be a repair. IFEval +25.8 fits the thinking skip.
 - 00:49 (11-12) 4-sample MATH-500 of DS hinted s1: 50.9 % (original + samples 1-3; re-run sample 0: 47.6 %);
   1,924 / 2,000 generations close thinking within 120 characters.
+- 01:02 (11-12) thinking-off control: the unedited model with thinking off scores 48.2 % on the same items and seeds,
+  so the edit's 51.8 / 50.9 % is the no-thinking score (within ~1-1.5 SE). Supports A.
