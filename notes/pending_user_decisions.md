@@ -64,7 +64,7 @@
   class (read vector evaluated on recorded positions); the decision here would then apply to it as well. The decision
   is about the class, so it should rest on the rule text and the DS unhinted calls, not on the repair.
 
-## 2026-11-11 23:55 — DS hinted s1 (51.8 %): 15 audit violations; the submitted edit skips thinking
+## 2026-11-11 23:20 — DS hinted s1 (51.8 %): 15 audit violations; the submitted edit skips thinking
 - Audit 291 allowed / 0 suspicious / 15 violations; all 15 had been allowed online by the strict2 gate (Sonnet 5.5).
   Three classes:
   - **logit lens (28, 31, 32; 81 borderline)**: recorded hidden states projected onto h_hedge / h_commit, built in
