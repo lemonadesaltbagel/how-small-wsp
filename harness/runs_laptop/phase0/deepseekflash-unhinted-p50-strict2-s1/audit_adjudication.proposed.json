@@ -1,6 +1,6 @@
 {
- "proposed": "2026-11-11T18:40+11:00",
- "by": "agent; awaiting the user's decision (notes/pending_user_decisions.md, 2026-11-11 18:40)",
+ "proposed": "2026-11-11T18:15+11:00",
+ "by": "agent; awaiting the user's decision (notes/pending_user_decisions.md, 2026-11-11 18:15)",
  "audit": "Codex medium, batch 8: 300 reviewed, 292 allowed, 0 suspicious, 8 violations",
  "online_gate": "all 8 calls were reviewed before running by the strict2 gate (claude-sonnet-5-5) and allowed",
  "class": "the editor fits a closed-form LS/LDA read vector w on recorded layer-23 MLP activations (allowed), uses it as the input row of a rank-one down_proj edit beta*u*w^T, then evaluates w on recorded actual-token positions to predict the edit's write (and, in 224/225, its </think> log-prob effect in nats via a measured nats-per-unit) and picks beta or ranks candidate gates by that prediction. Note (6) names this as not allowed: 'projecting recorded activations onto the edit's input direction ... and choosing the strength by the predicted effect'.",

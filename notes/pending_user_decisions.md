@@ -46,7 +46,7 @@
 - Alternative: treat a deliberate forbidden attempt as invalidating (would also need re-checking 9B unhinted s1 for
   consistency, which A2 already declared valid).
 
-## 2026-11-11 18:40 — DS unhinted s1: 8 audit violations the online gate had allowed (rule (b), note (6))
+## 2026-11-11 18:15 — DS unhinted s1: 8 audit violations the online gate had allowed (rule (b), note (6))
 - Audit 292 allowed / 0 suspicious / 8 violations; all 8 calls had been reviewed and allowed before running by the
   strict2 gate (Sonnet 5.5). Same class in all 8: an LS/LDA read vector w fitted on recorded layer-23 MLP activations
   (allowed) is the input row of a rank-one close-direction edit beta*u*w^T; the editor evaluates w on recorded token
