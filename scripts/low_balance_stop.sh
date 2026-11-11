@@ -11,6 +11,7 @@ KEEP=${KEEP:-}  # sessions left alone (e.g. one in its final scoring): their pos
 # node session run-dir(relative to harness/) pods episode-log
 RUNS=(
   "laptop dsx2h2 runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2 v0sybot950jx57 ds_strict2_s2"
+  "laptop dsux2 runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2 h5920phi2ty7jp dsu_strict2_s2"
 )
 say() { echo "$(date '+%m-%d %H:%M') $*"; }
 kept() { [ -n "$KEEP" ] && grep -qw -- "$1" <<< "$KEEP"; }
