@@ -677,3 +677,8 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 00:30 Full GSM8K base (1,319 x 2) queued on the rescore pod after the thinking-off control (scripts/chain_gsm8k_full.sh -> wsl tmux gsm8kfull, scripts/base_gsm8k_full.py); the 500-problem base (11.2 %) stays as is.
 - 00:29 Both DS s2 post helpers had been started without NODE=laptop, saw no session on the default node and exited with a false 'ended without a score' ALERT (00:22, 00:27); restarted with NODE=laptop, both alive=yes. Pods were kept, episodes unaffected.
 - 00:31 DS hinted s1 hold-out: MMLU-Pro-1k 39.6 % (base 39.7), GPQA 22.9 % (24.4), IFEval 45.9 % (20.1): no regression; IFEval +25.8 points, consistent with the edit skipping the thinking (the base loses IFEval mostly to cut-off thinking). Pods agvu, h2r5 deleted by the post helper.
+- 00:49 DS hinted s1 4-sample rescore (5090 lwin, same final net): samples 0/1/2/3 = 47.6 / 49.4 / 51.2 / 51.2 %.
+  Reported number per the plan (original first sample + samples 1-3): (51.8 + 49.4 + 51.2 + 51.2) / 4 = **50.9 %**;
+  mean of the four new samples 49.85 %. Reproduction check: sample 0 re-run 47.6 % vs 51.8 % scored, same answer on
+  415/500 items (vLLM batching changes the random stream; -4.2 points, ~1.9 SE). Thinking-skip on all 2,000:
+  1,924 (96.2 %) close </think> within 120 characters. Thinking-off control starts on the same pod.

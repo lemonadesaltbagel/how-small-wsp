@@ -88,3 +88,5 @@
 - Proposal: `harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1/audit_adjudication.proposed.json`.
 - 00:31 (11-12) hold-out of DS hinted s1: MMLU-Pro 39.6 / GPQA 22.9 / IFEval 45.9 % (base 39.7 / 24.4 / 20.1): no
   regression, so by the plan's numbers alone it would be a repair. IFEval +25.8 fits the thinking skip.
+- 00:49 (11-12) 4-sample MATH-500 of DS hinted s1: 50.9 % (original + samples 1-3; re-run sample 0: 47.6 %);
+  1,924 / 2,000 generations close thinking within 120 characters.
