@@ -632,3 +632,7 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
 - 20:42 DS hinted s1 ended (final answer, 420 turns). Scoring on agvu; idle h2r5 deleted. Balance $7.8 at $7.5/h
   (other project's 4090s ~$4.5/h): low_balance_stop restarted with KEEP="q27ux2 dsx2h1" (new option) so the two final
   scorings are not killed at $5; 27B hinted s2 (q27x2) and its pods + editor 5nx3 are stopped/deleted at $5.
+- 21:23 27B unhinted s2 scored **12.4 %** (500/500, no error; 87.6 % cut at max tokens): highest open-editor score so
+  far (+3.4 points, ~2.3 SE above the base), not a repair, hold-out skipped; pods xd0x, c6mb deleted. Audit, variant
+  check, both labellers and self-report queued on wsl (tmux q27us2lab; labels after the Claude backlog in claudelab).
+  The user topped up (balance $153 at 21:24); the low-balance stop did not fire.
