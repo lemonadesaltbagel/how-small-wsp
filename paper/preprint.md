@@ -8,7 +8,7 @@ deepseek-flash seed-2 episodes, a citation or the user's decision. Numbers come 
 
 A frontier model, GPT-6 Astra, recently repaired a small language model by editing its weights directly. It read
 Qwen3.5-0.8B's parameters in a Python sandbox, with 50 forward passes of feedback, changed about 0.017 % of them, and
-raised MATH-500 from 7.9 % to 48.1 % by removing reasoning loops [cite blog]. Is such weight-space programming a
+raised MATH-500 from 7.9 % to 48.1 % by removing reasoning loops [Takehi et al. 2026]. Is such weight-space programming a
 frontier-only capability, or can smaller open models do it? We repeat the experiment under the same budget with
 open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and, as a separate cross-family point, a sparse
 mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
@@ -26,7 +26,7 @@ edits are public.
 ## 1 Introduction
 
 A language model that can read and rewrite another network's weights is a new kind of tool, and a step toward models
-that improve models. The first demonstrations use a frontier editor [cite blog; Hu et al. 2026]. If the ability is
+that improve models. The first demonstrations use a frontier editor [Takehi et al. 2026; Hu et al. 2026]. If the ability is
 frontier-only, it is a capability to track at the frontier. If it appears gradually with scale, small open models can do
 it too, which matters for who can use the tool and for how safety discussions treat self-modification.
 
@@ -50,7 +50,7 @@ Contributions:
 
 ## 2 Background and related work
 
-**Weight-space programming.** *Sparks of Weight Space Programming* [cite] lets GPT-6 Astra read and write network
+**Weight-space programming.** *Sparks of Weight-Space Programming* [Takehi et al. 2026] lets GPT-6 Astra read and write network
 weights in eight experiments; experiment 8 is ours. Their logs are public, which lets us audit the run. Their own
 follow-up on Gemma 3 270M, a model that rarely loops (8.5 % of answers at the limit), found no edit that moved MATH-500
 by more than about a point: the gains come from removing a failure, not from adding mathematical skill.
@@ -58,18 +58,19 @@ by more than about a point: the gains come from removing a failure, not from add
 **Closest work.** Hu et al. (2026, arXiv 2611.09382) vary the *target* (Qwen3.5-0.8B and 9B, seven benchmark families)
 with a single editor (GPT-6 Astra) and report 8.35 → 37.80 % on MATH-500 for the 0.8B model. They do not vary the editor
 or audit tool calls; we vary the editor and audit. Community reproductions:
-- experiments 1–6 with Opus [cite EphraiemSarabamoun];
-- a scripted solver that re-derives the loop direction given the paper's localisation (KidIkaros) [cite];
+- experiments 1–6 with Opus [Sarabamoun 2026];
+- a scripted solver that re-derives the loop direction given the paper's localisation [KidIkaros 2026];
 - experiment 1 (which game a policy network plays) with a local Qwen3.8-27B (Q4_K_M) that reads the weights in its
   prompt, without tools or code, and identifies 3 of 4 games (Willison 2026,
   simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/). This is interpretation only, with no editing;
 - edited Qwen3.8-27B checkpoints [ReBatch; Teylersf], where the 27B model is the target, not the editor.
 - a reproduction with Astra, Opus and Fable on experiments 1–6, which also finds that with thinking turned off the
-  unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [cite shapor/weight-space-experiments];
+  unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [shapor 2026];
 - random-direction controls for the p50c edit (a random edit of the same 64 neurons per layer recovers about a fifth of
-  the gain) and a blind Claude attempt that found no fix [cite kyle-chalmers/weight-space-programming];
-- a framework report that a vLLM-served Qwen3.5-0.8B editor "couldn't do the job" [cite Ahmedn1/wsplab], the only
-  open-weight editor attempt we found, without a systematic comparison.
+  the gain) and a blind Claude attempt that found no fix [Chalmers 2026];
+- a framework report that a session with a vLLM-served Qwen3.5-0.8B "couldn't do the job" and that "a strong open
+  model" is needed [Ahmedn1 2026]; it is the only small open-model attempt we found, and it does not say whether the
+  small model was the editor or the target, or compare sizes.
 
 **Non-agent repairs.** Tree-Ising (Salloum and Ali 2026, arXiv 2611.14210) finds the repair without an LLM, as a
 discrete optimisation of bit-level sign and exponent edits over forward-pass statistics, and reports 54.6–55.1 % against
@@ -77,7 +78,7 @@ the agent edit's 51.7 % in its harness. It shows that once the objective is writ
 our question is whether a smaller agent can find the objective.
 
 **Model editing and steering.** Locate-and-edit methods (ROME, MEMIT) and direction-based interventions (activation
-addition, directional ablation) change behaviour with small, targeted weight or activation changes [cite]. Several of
+addition, directional ablation) change behaviour with small, targeted weight or activation changes [Meng et al. 2022; Meng et al. 2023; Turner et al. 2023; Arditi et al. 2024]. Several of
 the editors' fixes rediscover such rank-1, direction-based edits. Critics of the original post make the same point
 [R&D World coverage]. The difference is who finds the edit: here an agent finds it from the weights and a fixed feedback
 budget, without a recipe.
@@ -345,7 +346,7 @@ samples). The median position is 0: the reply starts with `</think>`. 243 of its
 473.
 
 A control corroborates this. It also shows that the repair threshold lies below what the base reaches without
-thinking, as an independent reproduction found (45.2 % with thinking off [cite shapor]); meeting the threshold
+thinking, as an independent reproduction found (45.2 % with thinking off [shapor 2026]); meeting the threshold
 therefore does not by itself show that the thinking was repaired, and the thinking-skip check is what separates the
 two. The unedited model with thinking turned off (the chat template's empty
 thinking block), on the same items with the same per-item seeds, sampling and grading, scores 48.2 % (± 2.2). The
@@ -589,3 +590,32 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 `notes/compute_log.md`.]
 
 **E. Adjudications.** [Each flagged call with its class and decision; the two deepseek-flash episodes pending.]
+
+## References
+
+[Check every entry before posting; the bracketed ones are still to be found.]
+
+- Ahmed, N. S. (2026). Can an LLM actually reason and program about neural network's weights or is it just memorization
+  on steroids? arXiv:2611.08070.
+- Ahmedn1 (2026). wsplab: weight-space programming, end to end. github.com/Ahmedn1/wsplab.
+- Arditi, A., et al. (2024). Refusal in language models is mediated by a single direction. NeurIPS 2024.
+- Chalmers, K. (2026). weight-space-programming: replication with random-direction controls and a blind Claude
+  attempt. github.com/kyle-chalmers/weight-space-programming.
+- Hu et al. (2026). Exploring weight-space programming: capabilities, generalization, and limitations.
+  arXiv:2611.09382. [full author list]
+- KidIkaros (2026). wsp-reproduction. github.com/KidIkaros/wsp-reproduction.
+- Meng, K., Bau, D., Andonian, A., Belinkov, Y. (2022). Locating and editing factual associations in GPT (ROME).
+  NeurIPS 2022.
+- Meng, K., Sharma, A. S., Andonian, A., Belinkov, Y., Bau, D. (2023). Mass-editing memory in a transformer (MEMIT).
+  ICLR 2023.
+- Salloum, H., Ali, A. (2026). Tree-Ising: repairing language models with bit-level Ising edits. arXiv:2611.14210.
+- Sarabamoun, E. (2026). weight-space-programming-opus. github.com/EphraiemSarabamoun/weight-space-programming-opus.
+- shapor (2026). weight-space-experiments. github.com/shapor/weight-space-experiments.
+- Takehi, R., Teoh, J., Zhang, A., Khattab, O. (2026). Sparks of weight-space programming: LLMs can natively read and
+  write neural network weights. MIT CSAIL blog, rikiyat.github.io/blog/weight-space-programming/.
+- Turner, A. M., et al. (2023). Steering language models with activation engineering (activation addition).
+  arXiv:2308.10248.
+- Willison, S. (2026). Qwen can interpret model weights. simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/.
+- [ReBatch; Teylersf: edited Qwen3.8-27B checkpoints, links]
+- [R&D World coverage of the original post, link]
+- [HyVE and agent-driven interpretability work]
