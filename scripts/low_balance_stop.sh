@@ -7,6 +7,7 @@
 set -u
 cd "$(dirname "$0")/.."
 TH=${1:-5}
+KEEP=${KEEP:-}  # sessions left alone (e.g. one in its final scoring): their post helper, episode and pods are kept
 # node session run-dir(relative to harness/) pods episode-log
 RUNS=(
   "mac q9bux2 runs/phase0/qwen9b-unhinted-p50-strict2-s2 8qekaexohjxc0r q9bu_strict2_s2"
@@ -24,7 +25,8 @@ RUNS=(
   "laptop q08ux2 runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2 38xdiaqdbpnic7,8qekaexohjxc0r q08bu_strict2_s2"
 )
 say() { echo "$(date '+%m-%d %H:%M') $*"; }
-all_pods() { for r in "${RUNS[@]}"; do set -- $r; echo "${4//,/ }"; done; }
+kept() { [ -n "$KEEP" ] && grep -qw -- "$1" <<< "$KEEP"; }
+all_pods() { for r in "${RUNS[@]}"; do set -- $r; kept "$2" || echo "${4//,/ }"; done; }
 listed() { runpodctl pod list 2>/dev/null | jq -er '.[].id // empty' || true; }
 listed_ok() { runpodctl pod list 2>/dev/null | jq -e 'type == "array"' >/dev/null; }  # an empty list is a valid answer
 
@@ -40,10 +42,13 @@ done
 
 say "ALERT balance \$$bal < \$$TH: stopping episodes and deleting pods"
 # 1. post-episode pipelines first, so none of them starts scoring or a hold-out on a pod about to go
-for p in $(pgrep -f "[p]ost_episode.sh"); do kill "$p"; done
+for p in $(pgrep -f "[p]ost_episode.sh"); do
+  s=$(ps -o command= -p "$p" | awk '{print $3}'); kept "$s" || kill "$p"
+done
 # 2. episodes (they resume from state.json); then flush the node's sync so the run dirs are complete here
 for r in "${RUNS[@]}"; do
   set -- $r
+  kept "$2" && { say "$2 on $1 kept (KEEP)"; continue; }
   if rx -n "$1" "tmux kill-session -t $2 2>/dev/null; echo stopped" 2>/dev/null | grep -q stopped; then
     say "$2 on $1 stopped"
   else
