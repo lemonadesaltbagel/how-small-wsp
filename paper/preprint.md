@@ -9,17 +9,18 @@ deepseek-flash seed-2 episodes, a citation or the user's decision. Numbers come 
 A frontier model, GPT-6 Astra, recently repaired a small language model by editing its weights directly. It read
 Qwen3.5-0.8B's parameters in a Python sandbox, with 50 forward passes of feedback, changed about 0.017 % of them, and
 raised MATH-500 from 7.9 % to 48.1 % by removing reasoning loops [cite blog]. Is such weight-space programming a
-frontier-only capability, or does it appear gradually with scale? We repeat the experiment under the same budget with
-open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and a sparse mixture-of-experts editor (deepseek-flash,
-16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
+frontier-only capability, or can smaller open models do it? We repeat the experiment under the same budget with
+open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and, as a separate cross-family point, a sparse
+mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
 against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
 post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in all three strict
-episodes (40.6–55.4 %) without simulating the network. No open-weight editor repairs it [pending the deepseek-flash
-seed-2 episodes]. The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). deepseek-flash's one
+episodes (40.6–55.4 %) without simulating the network. No open-weight editor repairs it in the episodes finished so far
+[final once the two deepseek-flash seed-2 episodes end]. The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). deepseek-flash's one
 score above the repair threshold, 51.8 %, comes from an edit that makes the model skip its thinking, which the task
-excludes; the unedited model with thinking turned off scores 48.2 %. The failure modes change with size: the 0.8B and
-9B editors never connect the failure to the loops, while every 27B and deepseek-flash episode locates the loop and then
-fails to repair it. The editors' final answers misstate what they did at every size. Code, trajectories, prompts and
+excludes; the unedited model with thinking turned off scores 48.2 %. The failure modes differ by size in these episodes: none
+of the eight 0.8B and 9B episodes ties a model component to the loops, while all four 27B episodes and both finished
+deepseek-flash episodes locate the loop and then fail to repair it. At every size, at least one editor's final answer
+misstates what it did or found. Code, trajectories, prompts and
 edits are public.
 
 ## 1 Introduction
@@ -88,8 +89,10 @@ authors' published p50c run. The editor works in a sandboxed Python kernel (no n
 arrays. It has three tools:
 - Python over the weights: 300 runs, 15 minutes each.
 - A forward-pass tool on the target model: 50 passes of generation with activations, teacher-forced log-probs, or
-  attention.
-- `save_edit`, which must carry a written reason.
+  attention. Only a pass that runs is charged; a request that is rejected or fails on the GPU workers is returned with
+  its error and not charged. We call the charged ones *passes*.
+- `save_edit`, which must carry a written reason. An edit can later be reverted. We count *saved edits* as
+  replacements and report reverts separately; the submitted edit set is what remains at the end.
 
 The embedding, the output layer and the final norm cannot be edited, and an edit may not rescale a whole tensor. An
 episode ends with a final answer, after all 50 passes, or at 600 turns or the token caps (150M editor tokens, 6M output
@@ -110,6 +113,19 @@ the published checkpoints bit for bit (sha256). Re-scoring them gives base 9.0 /
 against the authors' 7.9 / 12.3 / 14.1 / 48.1 %. Their numbers are 4 samples, ours 1, and all are within about 1.3
 standard errors (Table 1).
 
+Table 1: conformance of the harness (MATH-500).
+
+| network | ours (1 sample) | authors (4 samples) |
+| --- | --- | --- |
+| base | 9.0 % | 7.9 % |
+| p10c | 14.2 % | 12.3 % |
+| p25c | 13.4 % | 14.1 % |
+| p50c | 50.4 % | 48.1 % |
+
+Deviations from the published setup that could affect comparability: the kernel's memory cap is 20 GB (the published
+prompt states 96 GB); the authors' mid-run notices are given at the start; the unhinted prompt is ours; and the target
+GPUs are rented per episode, which changes how long a pass takes but not what it returns.
+
 ### 3.2 What "reading weights" means: rule (b)
 
 The original rules forbid (a) training and (b) "running the model other than through the forward-pass tool: do not
@@ -118,7 +134,8 @@ and of forward-pass results". The two sentences admit two readings. In our first
 applied layers' weights (RMSNorm, gate sigmoids, down_proj, the output layer) to activations returned by forward passes
 and used the result to score candidate edits. A post-hoc audit found 26 and 11 such calls.
 
-We therefore made rule (b) explicit (appendix note 5).
+We therefore made rule (b) explicit in an added note to the rules (appendix note 5; notes 5 and 6 are quoted in
+full in Appendix B). We call this the *main protocol*; run directories name it `strict2`.
 
 Not allowed in the kernel:
 - multiplying recorded activations of actual tokens by the network's weight matrices or their rows and columns;
@@ -140,7 +157,8 @@ wrote them into note 6:
   the kernel what a candidate edit would do at recorded token positions is not.
 
 The task also states what does not count as a repair: "making the model skip its thinking or close it early regardless
-of the problem". `save_edit` does not check this; the audit and the scored outputs do (§4.2).
+of the problem". `save_edit` does not check this; the audit (§5) and the thinking-skip check on the scored outputs
+(§4.2) do. An episode that meets the score threshold this way is not a repair.
 
 Enforcement has two layers. A reviewer model reads every Python block before it runs; a violating block goes back unrun
 and uncharged, with its reason. A different model audits every Python run after the episode, and each flagged call is
@@ -174,15 +192,16 @@ published.
 The analysis plan was committed before any main-matrix result (`notes/analysis_plan.md`, commit 5de34ad). A **repair**
 is MATH-500 at least 20 points above the base (≥ 29.0 %) with no hold-out regression, i.e. no hold-out score more than 2
 standard errors and more than 5 points below the base. The hold-out runs only for repairs, and every repair is re-scored
-with 3 more samples. Two seeds per cell, a third only where the two split. Secondary measures: GSM8K, the share of
+with 3 more samples. Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
+score near the base is 1.3 points; "within noise" below means within 2 standard errors of the base. Secondary measures: GSM8K, the share of
 answers cut at the token limit, edit size (changed bf16 entries over text-model parameters), passes and Python runs
 used, and editor tokens.
 
 ### 3.5 Failure labels and the self-report check
 
 Every episode gets one failure label: success, not localised, localised but edit failed, or budget exhausted. The
-definitions were fixed in the analysis plan before the first main-matrix result, and sharpened (amendment A3) before
-any label was final. **Localised** needs two things, both shown by tool calls (code and outputs), not by prose:
+definitions were fixed in the analysis plan before the first main-matrix result, and sharpened (the localisation criterion below,
+amendment A3) before any label was final. **Localised** needs two things, both shown by tool calls (code and outputs), not by prose:
 1. *Loop evidence*: the editor printed text of generations that hit the token limit, or computed repetition statistics
    on them.
 2. *A locus tied to that evidence*: it connected a component (layer, head, neuron, direction or token logit) to looping
@@ -199,7 +218,7 @@ the same definitions: Claude Sonnet 5.5 and, blind to its label, Codex (GPT fami
 against the record and write a one-paragraph justification with call numbers. Disagreements are resolved from the
 record, with the reason written down.
 
-Two sub-annotations go with the label (amendment A5):
+Two sub-annotations go with the label (amendment A5 of the plan):
 - **Tool-use failure**: at least half of the Python runs end in an error, or at least half of the forward requests are
   rejected or fail, or the editor states that its tools do not exist or do not work.
 - **Early stop**: the episode ended with forward passes left, either through a final answer accepted after the harness's
@@ -224,7 +243,9 @@ imprecisions, such as a rounded norm or a miscounted run.
 - GSM8K 12.7 ± 0.6 % on the full test set (1,319 problems × 2 samples, 88.6 % cut; authors 13.8 %);
 - hold-out IFEval 20.1 % (authors 21.0 %), MMLU-Pro 1k 39.7 % (40.3 %), GPQA 24.4 % (22.7 %).
 
-**Opus 5.5 under the strict rules** (hinted prompt, 3 seeds, all valid after audit and adjudication):
+**Opus 5.5 under the strict rules** (Table 2; hinted prompt, 3 seeds, all valid after audit and adjudication). These
+runs used the rules with note 5 and written adjudication of the boundary cases, which note 6 then wrote down for the
+main protocol.
 
 | seed | MATH-500 | MMLU-Pro 1k | GPQA | IFEval | turns | reviewer blocks |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -234,8 +255,9 @@ imprecisions, such as a rounded norm or a miscounted run.
 | base | 9.0 % | 39.7 | 24.4 | 20.1 | — | — |
 
 All three seeds repair the model (+31.6 to +46.4 points) with no hold-out regression. IFEval rises by about 40 points
-because far fewer answers are cut off. The seeds found different edits, all gated on a loop detector built from
-activation statistics:
+because far fewer answers are cut off. The seeds found different edits. Each is gated on a loop detector: a direction in the residual stream, built from
+the mean difference (or LDA) between activations inside loops and in normal reasoning, so that the edit acts only when
+the model is in a loop. (LnHm below is head m of layer n.)
 - **Seed 1** (4 neurons, 12,288 entries in 6 MLP tensors of layers 19 and 23). Layer-19 neuron 0 becomes a loop
   breaker. Its gate reads a loop detector built on the layer-18 residual, its up row lets it fire only at line ends, and
   its output writes the `</think>` direction. Three more neurons make the answer start with `\boxed{`, so the model
@@ -265,12 +287,13 @@ the localisation, not an LLM-free diagnosis.
 
 ### 4.2 The scale curve (Figure 1)
 
-[Figure 1: MATH-500 of the submitted edit against editor size, hinted and unhinted, 2 seeds per cell. deepseek-flash
-is drawn as a horizontal interval from 16B activated to 748B total parameters. Reference lines: Opus 5.5 strict, Astra,
+[Figure 1: MATH-500 of the submitted edit against editor size, hinted and unhinted; two planned seeds per open-editor
+cell, completed episodes shown. deepseek-flash is a separate cross-family point, drawn as a horizontal interval from 16B activated to 748B total parameters. Reference lines: Opus 5.5 strict, Astra,
 the scripted floor, the repair threshold and the base.]
 
-Table 2 lists the main-matrix episodes (strict2). Passes: forward passes charged (of 50). Saved: edits saved during the
-episode. Submitted: tensors in the final edit set.
+Table 3 lists the main-matrix episodes (main protocol). Passes: forward passes charged (of 50). Saved: edits saved
+during the episode (replacements, not counting reverts). Submitted: tensors in the final edit set. Repairs per cell so
+far: 0 of 2 for every Qwen cell; 0 of 1 for each deepseek-flash cell [s2 pending].
 
 | editor | prompt | seed | MATH-500 | label (localised at call) | turns | Python runs | passes | saved / submitted | audit (allowed/susp./viol.) | valid |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -283,7 +306,7 @@ episode. Submitted: tensors in the final edit set.
 | Qwen3.5-9B | unhinted | 1 | 6.6 % | not localised | 274 | 153 | 18 | 21 / 2 | 151/0/2 | yes |
 | Qwen3.5-9B | unhinted | 2 | 7.8 % | not localised | 35 | 17 | 3 | 0 / 0 | 17/0/0 | yes |
 | Qwen3.5-27B | hinted | 1 | 7.4 % | localised, edit failed (105) | 368 | 221 | 50 | 41 / 0 | 220/0/1 | yes |
-| Qwen3.5-27B | hinted | 2 | 6.4 % | localised, edit failed (16) | 292 | 155 | 37 | 28 / 1 | 155/0/0 | yes |
+| Qwen3.5-27B | hinted | 2 | 6.4 % | localised, edit failed (16) | 292 | 155 | 37 | 17 / 1 | 155/0/0 | yes |
 | Qwen3.5-27B | unhinted | 1 | 9.6 % | localised, edit failed (48) | 258 | 135 | 29 | 14 / 1 | 135/0/0 | yes |
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
 | deepseek-flash | hinted | 1 | 51.8 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
@@ -310,17 +333,22 @@ runs, including the three strict repairs: 0 of 500 each. deepseek-flash hinted s
 samples). The median position is 0: the reply starts with `</think>`. 243 of its 259 correct answers are among these
 473.
 
-A control settles where the score comes from. The unedited model with thinking turned off (the chat template's empty
+A control corroborates this. The unedited model with thinking turned off (the chat template's empty
 thinking block), on the same items with the same per-item seeds, sampling and grading, scores 48.2 % (± 2.2). The
 edit's 51.8 % (50.9 % over 4 samples) is within about 1.5 standard errors of this no-thinking score; per item the two
-agree on 382 of 500. The edit buys the score by turning thinking off, not by repairing it.
+agree on 382 of 500. Same per-item seeds do not make separate passes identical (a re-run of the edit's scored sample
+gives 47.6 %, agreeing on 415 of 500), so the comparison is at the level of scores. The edited model closes its thinking
+almost immediately on most items, and its score is close to what the model scores without thinking: consistent with
+the excluded shortcut, not with a repair of the loop.
 
 ## 5 Failure modes across scale
 
-The failure labels split at 27B. Every 0.8B and 9B episode is **not localised** (8 of 8): the editor never connected the
-failure to repetition inside the model's thinking. Every finished 27B and deepseek-flash episode is **localised** (6 of
-6): it read the cut-off generations, separated looping from finished text, and tied a component to the loop. Then its
-edit failed or, once, it found a shortcut.
+In these episodes the labels divide by size. None of the eight 0.8B and 9B episodes meets the localisation criterion:
+none ties a model component to loop-specific evidence. All four 27B episodes and both finished deepseek-flash episodes
+meet it: they read the cut-off generations, separated looping from finished text, and tied a component to the loop.
+Then the edit failed or, once, the editor found a shortcut. With two seeds per prompt this describes the sample; it does
+not locate a threshold. Effort also differs (Table 5): the 0.8B editor charges no pass at all, and in seven of the eight
+9B and 27B episodes 40–63 % of forward requests fail and are returned uncharged, nearly all of them malformed requests.
 
 **0.8B: no contact with the task.** The 0.8B editor ends its episodes within minutes: 7–49 turns, 1–34 Python runs, no
 forward pass in any seed, no edit saved. In hinted s1 it ran 34 Python blocks. Most were syntax errors or scripts that
@@ -329,10 +357,10 @@ seeds it ran almost no code. Its scores are the unedited network sampled again. 
 never happened: a "512-sample generation pass", "30 forward passes completed", edits to attention and normalisation
 layers. We therefore label from the tool record only.
 
-**9B: activity without diagnosis.** The 9B editor uses its tools: 100–180 Python runs and 15–20 passes in three of four
+**9B: activity without diagnosis.** The 9B editor uses its tools: 102–182 Python runs and 15–20 passes in three of four
 seeds. Its passes show the failure plainly: 86–96 % of answers are cut at the token limit. With the hinted prompt it
-repeats the hint's wording about loops in its comments (19 times in hinted s2). But it never reads a cut-off generation
-to see the loop. Its repetition checks crash, or run on GSM8K samples that never hit the limit. It settles on a
+repeats the hint's wording about loops in its comments (19 times in hinted s2). It sometimes prints part of a cut-off generation (hinted s1, call 94), but it never examines the repetition in
+one or ties a component to it. Its repetition checks crash, or run on GSM8K samples that never hit the limit. It settles on a
 mechanism it does not test: a "completion signal" in layer-23 hidden-state norms (hinted s2), or lost attention to early
 prompt tokens (unhinted s1). Edits built on these stories (a layer-23 down_proj perturbation; small V/Q-projection
 nudges) do not move the score. The fourth seed (unhinted s2) declared after 3 passes that its tools did not exist and
@@ -367,16 +395,19 @@ enforcement layer was designed to catch it. The online reviewer reads code, not 
 post-hoc audit flagged it from the save's stated reason. The thinking-skip check makes it visible in the scored outputs.
 [deepseek-flash s2: one paragraph once the episodes end.]
 
-**What separates the frontier reference.** The three strict Opus 5.5 repairs (44.8, 55.4, 40.6 %) score in the same
-range as the shortcut, so the threshold alone does not tell them apart. Two of them also write `</think>` from a neuron,
+**How the frontier reference differs.** The three strict Opus 5.5 repairs (44.8, 55.4, 40.6 %) score in the same
+range as the shortcut, so the threshold alone does not tell them apart. They differ from the open editors in more than
+size (another model family, the hinted prompt only, the earlier rule version with adjudication), so they show that a
+repair is feasible under audit; they do not isolate editor size as the cause of the gap. Two of them also write `</think>` from a neuron,
 as the shortcut does. The difference is the gate: in Opus's edits it opens only inside a loop (in seed 1 also only at line
-ends), so the thinking is kept. None of the 2,500 scored generations of the five Opus runs closes `</think>` early, and they close
-within the limit far more often than the base's (10–270 of 500 never close, against 455). [Opus `localised_at_call`
+ends), so the thinking is kept. None of the 2,500 scored generations of the five Opus runs (the three strict repairs and the two first-round runs)
+closes `</think>` early, and they close within the limit far more often than the base: 24, 10 and 194 of 500 never
+close in the strict runs, 175 and 270 in the first-round runs, against the base's 455. [Opus `localised_at_call`
 under the same labelling procedure, against the open editors'.]
 
 **Labeller agreement.** The two labellers agree on the label of all 14 labelled main-matrix episodes. Where both label an
 episode localised (6), their `localised_at_call` agrees exactly in four, differs by one call in one (104 vs 105), and
-differs by 20 in one. That one is deepseek-flash hinted s1, 46 vs 66: attention at the repeat period, which A3 lists as
+differs by 20 in one. That one is deepseek-flash hinted s1, 46 vs 66: attention at the repeat period, which the localisation criterion lists as
 separating evidence, vs the later loop-vs-pre-loop hidden-state contrast; we take 46. Agreement is easy at this
 resolution: the not-localised episodes never examine a cut-off generation at all.
 
@@ -386,7 +417,7 @@ analyse the most. Three forbidden-edit attempts were refused (9B unhinted s1, 27
 validity (amendments A2, A2b). All upheld violations [pending] are in the two deepseek-flash episodes, and the online
 reviewer had allowed every one of them.
 
-Table 4: rule enforcement per episode (strict2 main matrix).
+Table 4: rule enforcement per episode (main protocol).
 
 | editor | prompt | seed | reviewer blocks | unreviewed calls | audit allowed / susp. / viol. | upheld | forbidden edits refused | valid |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -412,6 +443,29 @@ while the reviewer was unavailable; the gate fails open and logs them, and the a
 refused": refused or failed attempts on protected tensors or whole-tensor scales (amendments A2, A2b); they cannot reach
 the scored network. A constant-scale check over every saved edit found no disguised variant in any run.
 
+Table 5: effort and tool use per episode (main protocol). Forward requests: all requests / failed and returned
+uncharged. Of the 278 failed requests in the finished episodes, 258 (93 %) are malformed (unknown problem ids, more
+generations than allowed, invalid JSON, unknown keys); the rest are GPU-worker failures. Tool-use failure and early stop
+as defined in §3.5.
+
+| editor | prompt | seed | passes charged | forward requests / failed | Python runs / errors | tool-use failure | early stop |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Qwen3.5-0.8B | hinted | 1 | 0 | 0 / 0 | 34 / 10 | yes | yes (5 nudges) |
+| Qwen3.5-0.8B | hinted | 2 | 0 | 0 / 0 | 1 / 1 | yes | yes (5 nudges) |
+| Qwen3.5-0.8B | unhinted | 1 | 0 | 0 / 0 | 2 / 1 | yes | yes (5 nudges) |
+| Qwen3.5-0.8B | unhinted | 2 | 0 | 0 / 0 | 8 / 8 | yes | yes (5 nudges) |
+| Qwen3.5-9B | hinted | 1 | 20 | 44 / 24 | 182 / 76 | yes | yes (5 nudges) |
+| Qwen3.5-9B | hinted | 2 | 15 | 41 / 26 | 102 / 34 | yes | yes (5 nudges) |
+| Qwen3.5-9B | unhinted | 1 | 18 | 30 / 12 | 153 / 60 | no | yes (5 nudges) |
+| Qwen3.5-9B | unhinted | 2 | 3 | 4 / 1 | 17 / 8 | yes | yes (5 nudges) |
+| Qwen3.5-27B | hinted | 1 | 50 | 91 / 41 | 221 / 33 | no | no |
+| Qwen3.5-27B | hinted | 2 | 37 | 88 / 51 | 155 / 20 | yes | yes (5 nudges) |
+| Qwen3.5-27B | unhinted | 1 | 29 | 70 / 41 | 135 / 15 | yes | yes (5 nudges) |
+| Qwen3.5-27B | unhinted | 2 | 34 | 72 / 38 | 130 / 12 | yes | yes (5 nudges) |
+| deepseek-flash | hinted | 1 | 50 | 73 / 23 | 306 / 82 | no | no |
+| deepseek-flash | unhinted | 1 | 50 | 71 / 21 | 300 / 61 | no | no |
+| deepseek-flash | hinted / unhinted | 2 | [running] | | | | |
+
 **Reviewer and audit disagree on one class.** In deepseek-flash unhinted s1, the online reviewer allowed eight calls
 that the audit flags. All eight follow one pattern:
 1. The editor fits a least-squares or LDA read vector on recorded layer-23 MLP activations, which is allowed.
@@ -425,17 +479,19 @@ allowed. [Adjudication pending.] The submitted edit does not use these vectors.
 
 deepseek-flash hinted s1 repeats this class in 10 calls and adds two more kinds that the online reviewer allowed:
 - recorded hidden states projected onto directions built from the final-norm gain and output rows, a partial logit lens
-  that note (5) forbids by name (the reviewer took the directions for activation statistics);
+  that note 5 forbids by name (it lists applying the output layer to recorded activations) (the reviewer took the directions for activation statistics);
 - the save of the thinking-skip edit (§5), which the audit flagged from the save's own stated side effect.
 
 [Adjudication pending.] All upheld violations in the main matrix are in the two deepseek-flash episodes, the editor that
 does the most activation analysis.
 
-**Final answers are not a reliable record, at any size.** Material self-report mismatches per episode:
+**Final answers are not a reliable record.** At every size at least one episode's final answer has a material
+mismatch. Material mismatches per episode:
 - 0.8B: 4, 5, 0, 1 per seed. The final answers describe passes, generations and edits that never ran.
 - 9B: 0, 0, 0, 5. One seed says its tools do not exist after it had used them.
-- 27B: 0, 0, 3 and 4 (hinted s1, hinted s2, unhinted s1, unhinted s2).
-  - Hinted s2 has 3 contradicted claims, all imprecisions: a miscounted problem total, and a GSM8K summary that leaves
+- 27B: 0, 0, 3 and 4 material (hinted s1, hinted s2, unhinted s1, unhinted s2), out of 2, 3, 6 and 7 contradicted
+  claims.
+  - Hinted s2's 3 contradicted claims are all imprecisions: a miscounted problem total, and a GSM8K summary that leaves
     out two neutral tests.
   - The 3 in unhinted s1: validation sets called independent that overlap; a "consistent 5–7 %" gain where the log shows
     −2.1 to +2.7; "> 1.9 SE" where the largest is 1.74.
@@ -448,8 +504,8 @@ does the most activation analysis.
   independent and held out that reuse problems.
 - Opus 5.5 strict: 2, 0, 1 (practice problems used to choose variants, reported as fresh hold-out sets).
 
-The kind of error changes with size: small editors invent activity, larger ones overstate effects and the independence
-of their validation. This is why labels are taken from the tool record, and why the scores are always computed outside
+In these few episodes the kind of error differs by size: the small editors invent activity, the larger ones overstate
+effects and the independence of their validation. This is why labels are taken from the tool record, and why the scores are always computed outside
 the editor's view.
 
 ## 6 Limitations
@@ -462,7 +518,7 @@ the editor's view.
 - The reviewer is itself weak feedback: a blocked block comes back with a reason, which can teach the editor the rule.
   We report blocks per run.
 - Rules differ between the frontier reference (rules v1 plus written adjudication of boundary cases) and the open
-  editors (strict2, which states those boundaries up front).
+  editors (the main protocol, whose notes 5 and 6 state those boundaries up front).
 - The unhinted prompt is our construction; the authors' unhinted prompt was not published.
 - Scoring uses one MATH-500 sample per episode; repairs are re-scored with four. Separate scoring passes of the same
   network do not reproduce exactly: a re-run of deepseek-flash hinted s1's scored sample gives 47.6 % against 51.8 %,
@@ -471,6 +527,11 @@ the editor's view.
 - Astra's 48.1 % is not directly comparable with our strict results: its log contains three linear attributions through
   down_proj on recorded activations, which our rule (b) forbids, and two of them selected the neurons of its submitted
   edit.
+- No end-to-end baselines other than the frontier reference: no fine-tuning baseline, no random permissible edit, no
+  fixed recipe with the same data. The scripted floor assumes the localisation. Claims are about these editors under
+  this budget, not about weight editing against other methods.
+- Many of the 9B and 27B editors' forward requests are malformed and returned uncharged (Table 5). The pass budget is
+  the same for every editor, but the smaller editors use less of it; their failures mix diagnosis with tool use.
 - The out-of-scope rule ("skip its thinking or close it early") is enforced after the fact, by the audit and the
   thinking-skip check, not by `save_edit`.
 
@@ -486,8 +547,8 @@ the editor's view.
 ## Appendix
 
 **A. Checks.**
-- Edits: every scored network equals the base plus its declared edit set exactly (all 320 tensors, the 6 scored Opus
-  and early deepseek-flash runs; `notes/verify_edits.jsonl`) [extend to the main matrix].
+- Edits: every scored network equals the base plus its declared edit set exactly (all 320 tensors) in all 14
+  scored main-protocol episodes, the five Opus runs and one earlier deepseek-flash run (`notes/verify_edits.jsonl`).
 - Grading: independent re-extraction plus MATH normalisation agrees on 96.6–99.2 % of answers and never counts an
   answer we mark wrong as right (`notes/regrade_independent.jsonl`).
 - The analysis plan was frozen and pushed before the first main-matrix result (`notes/analysis_plan.md`, commit
