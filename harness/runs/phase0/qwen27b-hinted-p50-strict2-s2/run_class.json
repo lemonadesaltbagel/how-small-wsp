@@ -1,0 +1,9 @@
+{
+ "run": "runs/phase0/qwen27b-hinted-p50-strict2-s2",
+ "arm": "main: Qwen3.5-27B, hinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.064,
+ "why": "audit 155/0/0, no reviewer blocks, no unreviewed calls; variant check: 17 saved edits, 0 flagged. Ended at turn 292 with a final answer, 37/50 passes, 155/300 Python runs. Submitted edit: one tensor, L19 mlp.down_proj, 60 entries (30 connections into residual dim 37 x0.5, 30 into dim 0 x1.5). 94.4 % cut at max tokens. Not a repair; hold-out skipped; pool pods deleted 00:04.",
+ "failure_labels_allowed": ["success", "not localised", "localised, edit failed", "budget exhausted"]
+}

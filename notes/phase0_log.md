@@ -663,3 +663,13 @@ p50c wall-clock was 20.3 h; the editor's own time was 1.8 h. Forward passes summ
   overstated effects). Ledger and figures regenerated.
 - 23:25 27B editor pod 5nx3 deleted (both 27B s2 episodes ended; scoring uses the pool only).
 - 23:27 4-sample MATH-500 rescore of DS hinted s1 started on wsl (tmux rescore-dsh1, pod 5090 lwin1r2r, $0.69/h); scripts/chain_rescore_control.sh then runs the thinking-off control on the same pod.
+
+## 2026-11-12
+- 00:04 **27B hinted s2 scored 6.4 %** (94.4 % cut), not a repair; pool sb6a/uzfo deleted. Audit 155/0/0, variant
+  check 17 saved edits 0 flagged, no reviewer blocks; both labellers: localised, edit failed at call 16 (L23 hidden
+  direction separating cut-off from finished generations). Submitted: L19 down_proj, 60 entries. Self-report check
+  queued (wsl q27hs2sr). (A first queue launch used a wrong run path and was relaunched.)
+- 00:21 **DS hinted s2 started** on the laptop (tmux dsx2h2, log ds_strict2_s2, Claude Sonnet 5.5 reviewer working),
+  pool: 3090 v0sybot9 ($0.22/h). Post helper, auto-resume and the low-balance stop (RUNS now this run only) attached.
+  DS unhinted s2 waits for the second pod (5090 h5920phi, setting up). From now on no Claude labelling until both DS
+  s2 episodes end.
