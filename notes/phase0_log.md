@@ -787,3 +787,25 @@ Heavy work stays on wsl, laptop and pods.
   (1,034,240 f32 → 32,604 bf16 entries). **DS unhinted s2: 1 declared tensor (layer-23 mlp.down_proj), 3,204,034 entries
   differ in bf16 bits (3,670,010 in float32) = 87.3 % of the tensor, 0.426 % of the network's 752,393,024 entries.**
   For scale: Astra p50c 130,188 (0.017 %), Opus strict s1 / s2 / s3 12,283 / 1,836,105 / 4,698,661.
+
+## 2026-11-13 09:30 — User decisions; thinking profile; controls and DS unhinted s3 queued
+- User (11-13): DS unhinted s2 counts as a valid repair for now, final call after the audit; judging criteria written
+  first (notes/pending_user_decisions.md, 03:40). DS unhinted s1 failed, so seed 3 runs. References: cite Honnibal's
+  own post, drop ReBatch / Teylersf, cite Willison's original.
+- Thinking profile (`scripts/thinking_profile.py`, `notes/thinking_profile.json`; sample 0, characters before `</think>`):
+  | run | closed | median think chars L1 / L3 / L5 | Spearman(level, length) | repeated-line share whole / last 3k / first 6k |
+  |---|---|---|---|---|
+  | base | 0.09 | 64.8k / 74.0k / 74.7k | 0.08 | 0.82 / 0.93 / 0.017 |
+  | Astra p50c | 0.80 | 19.4k / 49.8k / 56.8k | 0.34 | 0.24 / 0.21 / 0.013 |
+  | Opus strict s1 | 0.95 | 12.8k / 15.9k / 15.4k | 0.10 | 0.22 / 0.43 / 0.024 |
+  | Opus strict s2 | 0.98 | 22.1k / 30.1k / 30.4k | 0.16 | 0.20 / 0.25 / 0.022 |
+  | Opus strict s3 | 0.61 | 34.0k / 57.2k / 66.8k | 0.39 | 0.37 / 0.29 / 0.022 |
+  | DS unhinted s2 | 1.00 | 6.9k / 10.0k / 11.8k | 0.17 | 0.07 / 0.07 / 0.019 |
+  DS unhinted s2 thinks the shortest of all edits (median 3,683 tokens vs Opus s1 5,443, s2 10,687, p50c 15,779,
+  s3 17,474), its length still rises with level (C3 holds at the Opus s1 / s2 level, below p50c / Opus s3), and its
+  thinking repeats least (C4). Repetition in the first 6,000 characters is ~0.02 everywhere: loops start later, so
+  the whole-thinking share partly measures how long a run thinks.
+- Queued: `scripts/chain_truncation_control.sh` (one community pod: T1 matched / T2 fixed truncation for the five
+  edits, then the 4-sample thinking-off control on DS unhinted s2's rescore items; deletes the pod), then
+  `scripts/start_dsu3.sh` (one pod; DS unhinted s3 on the laptop, tmux dsux3, with post / auto-resume / low-balance
+  helpers). DeepSeek balance ¥85.23 (one DS episode ≈ ¥8–17); RunPod $93.6.
