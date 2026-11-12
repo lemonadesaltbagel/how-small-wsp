@@ -744,3 +744,8 @@ Heavy work stays on wsl, laptop and pods.
 - Still to do: the audit and the Claude labeller wait until DS hinted s2 ends (shared Claude account); the Codex
   labeller can run now that the score exists. Validity (a gated close-at-loop edit vs "close early regardless of
   the problem") goes to the user with the evidence above.
+- 19:15 Checked "disjoint, never-used" against the request problem ids. Every variant comparison (strengths 0.3 / 0.5,
+  second rank-one terms, the \boxed and newline pushes) ran on one reused 256-problem set (first used in pass 22).
+  The nine fresh 256-problem sets (passes 35, 41–43, 46–50) were each used once, and each one measured the #49
+  configuration that was finally submitted. No edit followed passes 46–50. The claim is consistent: material
+  self-report mismatches = 0 (2 imprecisions).
