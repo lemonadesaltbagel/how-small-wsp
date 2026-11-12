@@ -165,3 +165,18 @@
   MATH-500 now (one pod, < $1), so the number is there whichever you choose;** it changes nothing until you decide.
 - Either way: Table 4 reports the gate–audit disagreement (14 allowed online, violations post hoc).
 - Proposal: `harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2/audit_adjudication.proposed.json`.
+
+## 2026-11-13 11:40 — DS hinted s2: audit 294 / 0 / 9 (same class); proposal after its re-score
+- Codex audit: 303 reviewed, 294 allowed, 0 suspicious, **9 violations** (calls 205, 207, 213, 252, 255, 270, 279,
+  285, 287), all allowed online by the Sonnet gate; all the predicted-effect class (note (6)).
+- Submitted edit (ledger id 70, call 335): layer-23 down_proj = W0 + 1.4 * delta5, delta5 = beta5 * ut * gate^T
+  (call 213, a violation): gate = 100 doubt-enriched layer-23 MLP neurons (a statistic, allowed), ut = commit
+  direction / final-norm weight (allowed), and beta5 = 5 / fD, fD = mean gate projection at recorded doubt positions:
+  the unit is set by a predicted firing. The **dose** (1.4, "7 units") was chosen by forward passes at the real budget
+  (10 / 8 / 7 units: 48.4 / 52.3 / 56.3 % on the same 64 problems x 2). So the submitted strength is measured; only
+  its unit came from the prediction (any unit would have led to the same measured dose series up to a rescaling).
+- Consistency point for both DS s2 runs: in unhinted s2 the gate g was scaled the same way (mean 1 at recorded loop
+  close positions, call 127) and the audit allowed that call; here the same normalisation was flagged. I propose to
+  treat "a normalisation followed by a measured dose" alike in both runs (it does not by itself make the submitted
+  strength a prediction). This does not touch unhinted s2's lam = 0.12, which was never measured against lam = 0.
+- The score is not known yet (the first scoring hit the dead-GPU pod; re-score queued). Proposal follows the score.
