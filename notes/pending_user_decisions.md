@@ -112,3 +112,8 @@
   The decision should wait for the audit's violation list.
 - Proposal (after the audit, if it finds nothing that decides validity alone): **count it as a valid repair**, the first
   by an open editor, and report the mechanism plainly in §5.
+- 03:10 (11-13) references: Hu et al. authors (arXiv 2611.09382) and HyVE (Khan et al., arXiv 2606.24026, Findings EMNLP
+  2026) verified and filled. R&D World: URL rdworldonline.com/?p=83957 found, page 403 to the fetcher, so its headline
+  and whether it makes the "rank-1 direction edit" criticism are unchecked. ReBatch / Teylersf: not found by search.
+  If you have the links, send them. A findable edited Qwen3.8-27B checkpoint is huggingface.co/redashes/Qwen3.8-27B-BF16-SSMFIX
+  (conv1d rescale, card says it targets repetition loops); I have not read its card.
