@@ -759,3 +759,13 @@ Heavy work stays on wsl, laptop and pods.
   MATH-500 8.05 % over 2,000 generations, consistent with the 1-sample 9.0 %.
 - 23:30 Retry: copied the ledger into the rescore dir (wsl sees 19 edited tensors, the same as the original score),
   then scripts/chain_rescore_dsu2_retry.sh rents one pod, reruns the rescore and deletes the pod.
+
+## 2026-11-13 02:48 — DS unhinted s2 4-sample rescore: 54.7 % ± 1.1
+
+- Retry chain: the first acquisition was a 4090 with no ssh (deleted 00:37), the second a 5090 iep51js2cc1q4o (ready
+  01:18). Rescore 01:18–02:48 with the ledger staged: **edited_tensors = 19** (matches score.json).
+- MATH-500, 4 samples × 500 = 2,000 generations: **54.7 % ± 1.1** (1-sample 53.0 %). Cut at max tokens 20.9 %,
+  no answer after finishing 216, wrong 273; mean 14,686 tokens. Base over the same protocol: 8.05 % ± 0.6.
+  The repair holds; the gain is ~46.6 points over the 4-sample base. Pod deleted 02:48.
+- Still open (user decision): is this a gated close-at-loop repair or the excluded "close early regardless of the
+  problem"? Evidence so far (problem-dependent close position, no thinking skip, hold-out clean) leans to repair.

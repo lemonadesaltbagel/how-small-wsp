@@ -69,3 +69,6 @@ DeepSeek API: ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) for DS hinted s1
 Episode pool from 2026-11-11 13:11, then the hold-out (18:57–19:50) and a 4-sample rescore (19:50–23:20) that scored
 the base by mistake (no ledger staged): ~3.5 h ≈ $2.4 of the pod's time went to an unneeded base measurement.
 Deleted 23:20. Retry on a new pod (chain_rescore_dsu2_retry.sh).
+- 2026-11-13: rescore retry for DS unhinted s2. p3u5odb36il2sq (4090, community) 00:20–00:37, no ssh, ≈ $0.3;
+  iep51js2cc1q4o (5090, community) 01:06–02:48 ≈ 1.7 h ≈ $1.2–3.0 (check the billing page for the community price).
+  Both deleted. Running: v0sy (3090, $0.22/h) for DS hinted s2.
