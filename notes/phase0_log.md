@@ -719,3 +719,28 @@ The user asked that the Mac run light work only (analysis, LaTeX, compiling). Th
 stale pod tunnels to deleted pods. Removed the container and the `mac` cnode entry (backup in
 ~/.config/compute-node/backup-20261112-remove-mac), dropped it from scripts/acquire_pods.sh, quit Docker Desktop.
 Heavy work stays on wsl, laptop and pods.
+
+## 2026-11-12 19:05 — DS unhinted s2 ended: MATH-500 53.0 %, a candidate repair
+
+- Episode ended 18:00 with a final answer at turn 385 (python 295/300, forward 50/50, 60 ledger entries, 39
+  replacements). Submitted edit: rank-one layer-23 down_proj, W0 + 0.4 u2 g^T, u2 = the `</think>` read-out direction
+  orthogonalised against the end-of-turn rows, g = an LDA loop detector on layer-23 MLP inputs minus 0.12 d-hat.
+  The same family as DS hinted s1, but gated differently.
+- MATH-500 (1 sample): 53.0 % (± 2.2); cut at the limit 21.6 %, no-answer 48, wrong 79. Above the threshold,
+  so the hold-out started 18:57 on the 5090 (h5920).
+- **Thinking-skip check: 0 of 500 close `</think>` within 120 chars (DS hinted s1: 473); 0 of 500 never close.**
+  Close-position quantiles (chars) 5/25/50/75/95 = 1822 / 5687 / 10293 / 17388 / 28964; 7 close within 1,000 and
+  61 within 3,000. The close position varies with the problem (Spearman with Opus strict s1/s2 close positions on the
+  same items: 0.20 / 0.27).
+- Repetition in the 3,000 chars before the close is lower than for Opus's strict repairs: median repeated-line share
+  0.05 vs 0.38 / 0.22. Spot checks (5 random samples): two close inside a real loop, one closes naturally after the
+  answer, one closes during planning after solving, and one emits a stray `</think>` inside an expression.
+- Per item it agrees with the thinking-off control on 356 of 500 (DS hinted s1: 382); the control scores 48.2 %.
+- Self-report (Codex): 33 consistent, 8 unverifiable, 2 contradicted. Both contradicted claims are imprecisions:
+  8 vs 7 paired runs, and "45–52 wrong per 256" vs 43–61. "Disjoint, never-used problem sets" is unverifiable
+  from the digest; I will check it against the request problem ids.
+- Replaced the tail of post_episode.sh dsux2 with scripts/chain_holdout_rescore_dsu2.sh. It keeps the pod after
+  the hold-out, runs the 4-sample MATH-500 rescore on it from wsl, then deletes it.
+- Still to do: the audit and the Claude labeller wait until DS hinted s2 ends (shared Claude account); the Codex
+  labeller can run now that the score exists. Validity (a gated close-at-loop edit vs "close early regardless of
+  the problem") goes to the user with the evidence above.

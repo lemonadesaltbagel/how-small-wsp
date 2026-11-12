@@ -18,3 +18,4 @@
 {"run": "harness/runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1", "n": 500, "early": 0, "no_close": 457, "median_close_chars": 14376}
 {"run": "harness/runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2", "n": 500, "early": 0, "no_close": 457, "median_close_chars": 15523}
 {"run": "harness/runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2", "n": 500, "early": 0, "no_close": 470, "median_close_chars": 12766.5}
+{"run": "harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2", "n": 500, "early": 0, "no_close": 0, "median_close_chars": 10301.5}
