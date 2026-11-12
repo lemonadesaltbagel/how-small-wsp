@@ -818,3 +818,7 @@ Heavy work stays on wsl, laptop and pods.
   only v0sy, so the new pod would not have been deleted), kill the hung worker (the pass fails; failed passes are not
   charged, run.rs:1106) and delete the old pod; host recorded in logs/bad_hosts.txt. Then it runs start_dsu3.sh (stopped
   and re-queued behind it so the two acquisitions do not race on pool_hosts.jsonl).
+- 10:22: pass 48 failed by itself after 30 min (vLLM: "Device string must not be empty"); the editor resends the same
+  request each turn (turns 387-389 failed in ~1 min each; uncharged, but turns go: 389/600 used, 3 passes left).
+  So s2 goes first: the truncation chain (between acquisition attempts, no pod held) was stopped and re-queued after the
+  rescue and the s3 launch (order now: s2 replacement pod -> s3 pod -> truncation pod).
