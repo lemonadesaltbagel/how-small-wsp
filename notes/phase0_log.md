@@ -749,3 +749,5 @@ Heavy work stays on wsl, laptop and pods.
   The nine fresh 256-problem sets (passes 35, 41–43, 46–50) were each used once, and each one measured the #49
   configuration that was finally submitted. No edit followed passes 46–50. The claim is consistent: material
   self-report mismatches = 0 (2 imprecisions).
+- 19:50 DS unhinted s2 hold-out (MMLU-Pro 1k / GPQA / IFEval): 40.7 / 27.0 / 54.8 % against the base's
+  39.7 / 24.4 / 20.1 %. No regression. 4-sample MATH-500 rescore started on the same 5090 (wsl tmux rescore-dsu2).
