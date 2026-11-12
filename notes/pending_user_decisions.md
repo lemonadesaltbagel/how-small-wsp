@@ -97,3 +97,18 @@
 - `paper/preprint.md`: all sections merged; one review round done (Codex, `notes/preprint_review_codex_r1.md`), changes
   in `notes/preprint_review_r1_response.md`. Collision check: no collision (`notes/collision_check_2026-11-12.md`).
 - Still open: DS s2 rows (running), the two DS adjudications (yours), citations, Opus localised_at_call (after DS s2).
+
+## 2026-11-13 02:55 — DS unhinted s2 (53.0 %, 4-sample 54.7 % ± 1.1): repair, or excluded "close early"?
+- The edit: rank-one on layer-23 down_proj, W0 + 0.4·u2·gᵀ. u2 = the `</think>` read-out row orthogonalised against
+  im_end / endoftext; g = an LDA direction separating looping from progressing states, minus 0.12·d̂. It makes the
+  model close its thinking when it reads as looping.
+- For "repair": no thinking skip (0 / 500 close within 120 chars, base 0); every generation closes; the close position
+  depends on the problem (quantiles 1.8k / 5.7k / 10.3k / 17.4k / 29.0k tokens; Spearman 0.20 / 0.27 with Opus s1 / s2);
+  pre-close repeated-line share 0.05 (Opus 0.38 / 0.22); hold-out 40.7 / 27.0 / 54.8 % vs base 39.7 / 24.4 / 20.1 %;
+  4-sample rescore holds; self-report: no material mismatch (Codex 33 / 8 / 2).
+- Against: the mechanism is "close thinking earlier"; the rules exclude closing early *regardless of the problem*.
+  The gate on a loop direction and the problem-dependent close position argue it is not regardless of the problem.
+- Not done yet: the Claude labeller and the audit (they need the shared Claude account, which DS hinted s2 is using).
+  The decision should wait for the audit's violation list.
+- Proposal (after the audit, if it finds nothing that decides validity alone): **count it as a valid repair**, the first
+  by an open editor, and report the mechanism plainly in §5.
