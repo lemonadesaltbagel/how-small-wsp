@@ -83,7 +83,10 @@ the editors' fixes rediscover such rank-1, direction-based edits. Critics of the
 [R&D World coverage]. The difference is who finds the edit: here an agent finds it from the weights and a fixed feedback
 budget, without a recipe.
 
-**Agentic interpretability.** [HyVE and related agent-driven interpretability work; cite]
+**Agentic interpretability.** HyVE (Khan et al. 2026) gives an LM agent circuits that are already localised and has it
+explain each component through cycles of observation, hypothesis and causal validation (ablation, patching). Its
+agents form grounded hypotheses but fail more often at validation. Our editors face the step before and after that:
+they must localise the fault themselves, and their validation is a scored edit on a fixed forward-pass budget.
 
 **Why Qwen3.5 for the ladder.** Qwen3.5 has 0.8B, 9B and 27B models of one family; the newer Qwen3.8 starts at 27B.
 
@@ -601,8 +604,8 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 - Arditi, A., et al. (2024). Refusal in language models is mediated by a single direction. NeurIPS 2024.
 - Chalmers, K. (2026). weight-space-programming: replication with random-direction controls and a blind Claude
   attempt. github.com/kyle-chalmers/weight-space-programming.
-- Hu et al. (2026). Exploring weight-space programming: capabilities, generalization, and limitations.
-  arXiv:2611.09382. [full author list]
+- Hu, J., Tang, C., Li, W., Zhu, H., Feng, C.-M., Zhang, Q., Chen, Y., Hu, M. (2026). Exploring weight-space
+  programming: capabilities, generalization, and limitations. arXiv:2611.09382.
 - KidIkaros (2026). wsp-reproduction. github.com/KidIkaros/wsp-reproduction.
 - Meng, K., Bau, D., Andonian, A., Belinkov, Y. (2022). Locating and editing factual associations in GPT (ROME).
   NeurIPS 2022.
@@ -617,5 +620,7 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
   arXiv:2308.10248.
 - Willison, S. (2026). Qwen can interpret model weights. simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/.
 - [ReBatch; Teylersf: edited Qwen3.8-27B checkpoints, links]
-- [R&D World coverage of the original post, link]
-- [HyVE and agent-driven interpretability work]
+- R&D World (2026). Coverage of the original post. rdworldonline.com/?p=83957. [headline, date and the critics' point
+  to be checked: the page returned 403 to the fetcher]
+- Khan, A. A., Kohli, H., Yao, Y., Sun, H., Yao, Z. (2026). Can language model agents be helpful circuit explainers in
+  mechanistic interpretability? Findings of EMNLP 2026. arXiv:2606.24026.
