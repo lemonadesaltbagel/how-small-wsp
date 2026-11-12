@@ -822,3 +822,10 @@ Heavy work stays on wsl, laptop and pods.
   request each turn (turns 387-389 failed in ~1 min each; uncharged, but turns go: 389/600 used, 3 passes left).
   So s2 goes first: the truncation chain (between acquisition attempts, no pod held) was stopped and re-queued after the
   rescue and the s3 launch (order now: s2 replacement pod -> s3 pod -> truncation pod).
+- 10:31 **DS hinted s2 ended** (final answer, turn 400, 47/50 passes; the pass-48 retries all failed uncharged). Its
+  MATH-500 scoring ran on the dead-GPU pod: score 0.0 with math500.error, not a result. scripts/rescore_dsh2.sh moves
+  eval/ to eval_failed_deadgpu/ once the rescue has swapped the pool, re-scores with `openwish score` on the laptop,
+  then runs post_episode.sh (hold-out on a repair; deletes the pod). 4-sample rescore + controls follow if a repair.
+- 10:36 No DS episode running (s3 not started yet), so the Claude labeller ran now: DS unhinted s2 Claude label
+  **success** (agrees with Codex). Codex audits of both DS s2 runs + ledger variant checks queued on wsl (tmux dslab2).
+  DS hinted s2 labels + self-report wait for its re-score.
