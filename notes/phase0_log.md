@@ -769,3 +769,21 @@ Heavy work stays on wsl, laptop and pods.
   The repair holds; the gain is ~46.6 points over the 4-sample base. Pod deleted 02:48.
 - Still open (user decision): is this a gated close-at-loop repair or the excluded "close early regardless of the
   problem"? Evidence so far (problem-dependent close position, no thinking skip, hold-out clean) leans to repair.
+
+## 2026-11-13 03:50 — Scored-weights check: every counted scoring loaded base + the declared edit (all pass)
+- `scripts/verify_scored_weights.py` (numpy, wsl; `notes/verify_scored_weights.jsonl`). The scorer stages the tensors
+  named in the run's ledger from final/net and the worker casts them to the stored dtype over the base safetensors;
+  the checkpoint is not kept, so the check rebuilds it from each scoring record's `edited_tensors` and compares it
+  bit for bit (sha256 over all 320 tensors) with base + final/editset cast the same way. Also: base safetensors sha256
+  68194c7b… (pinned), base_net == its float32 upcast, final/net == base_net + edit set over all tensors.
+- Result: **19 runs + Astra p50c, every record ok** (12 Qwen strict2, Opus strict s1–s3, DS hinted s1, DS unhinted
+  s1, DS unhinted s2; records: score, hold-out where it lists tensors, the Qwen re-scores, both 4-sample rescores).
+  Staged sets are often larger than the edit (reverted tensors stay in the ledger; staged from final/net they equal
+  the base), e.g. Opus s1 32 staged / 6 declared, 27B hinted s1 11 / 0; the hashes still match.
+- No tensor list in the Qwen hold-out records (holdout_summary.json without edited_tensors): not checkable from the
+  record; they run with the same ledger as the score. Astra p50c: the conformance score staged the two published
+  files (config p50c), so loaded == declared by construction; the check records its counts.
+- bf16 vs float32 change counts: the cast drops sub-ulp changes. 9B unhinted s1's v_proj change vanishes entirely
+  (1,034,240 f32 → 32,604 bf16 entries). **DS unhinted s2: 1 declared tensor (layer-23 mlp.down_proj), 3,204,034 entries
+  differ in bf16 bits (3,670,010 in float32) = 87.3 % of the tensor, 0.426 % of the network's 752,393,024 entries.**
+  For scale: Astra p50c 130,188 (0.017 %), Opus strict s1 / s2 / s3 12,283 / 1,836,105 / 4,698,661.
