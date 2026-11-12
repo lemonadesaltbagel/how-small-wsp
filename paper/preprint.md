@@ -63,7 +63,6 @@ or audit tool calls; we vary the editor and audit. Community reproductions:
 - experiment 1 (which game a policy network plays) with a local Qwen3.8-27B (Q4_K_M) that reads the weights in its
   prompt, without tools or code, and identifies 3 of 4 games (Willison 2026,
   simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/). This is interpretation only, with no editing;
-- edited Qwen3.8-27B checkpoints [ReBatch; Teylersf], where the 27B model is the target, not the editor.
 - a reproduction with Astra, Opus and Fable on experiments 1–6, which also finds that with thinking turned off the
   unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [shapor 2026];
 - random-direction controls for the p50c edit (a random edit of the same 64 neurons per layer recovers about a fifth of
@@ -79,9 +78,11 @@ our question is whether a smaller agent can find the objective.
 
 **Model editing and steering.** Locate-and-edit methods (ROME, MEMIT) and direction-based interventions (activation
 addition, directional ablation) change behaviour with small, targeted weight or activation changes [Meng et al. 2022; Meng et al. 2023; Turner et al. 2023; Arditi et al. 2024]. Several of
-the editors' fixes rediscover such rank-1, direction-based edits. Critics of the original post make the same point
-[R&D World coverage]. The difference is who finds the edit: here an agent finds it from the weights and a fixed feedback
-budget, without a recipe.
+the editors' fixes rediscover such rank-1, direction-based edits. The difference is who finds the edit: here an agent
+finds it from the weights and a fixed feedback budget, without a recipe. Honnibal (2026) objects that the original
+post's Qwen result is not weight reading: the editor writes Python and runs the network on practice problems, which is
+work a human ML engineer could do, and the post's experiments do not form one technique. Our protocol states this
+access explicitly (§3) and audits it.
 
 **Agentic interpretability.** HyVE (Khan et al. 2026) gives an LM agent circuits that are already localised and has it
 explain each component through cycles of observation, hypothesis and causal validation (ablation, patching). Its
@@ -596,7 +597,7 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 
 ## References
 
-[Check every entry before posting; the bracketed ones are still to be found.]
+[Every entry checked against its source on 2026-11-13; check again before posting.]
 
 - Ahmed, N. S. (2026). Can an LLM actually reason and program about neural network's weights or is it just memorization
   on steroids? arXiv:2611.08070.
@@ -604,8 +605,12 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 - Arditi, A., et al. (2024). Refusal in language models is mediated by a single direction. NeurIPS 2024.
 - Chalmers, K. (2026). weight-space-programming: replication with random-direction controls and a blind Claude
   attempt. github.com/kyle-chalmers/weight-space-programming.
+- Honnibal, M. (2026, 3 November). The "Astra can read and write weights to improve Qwen" post is misleading.
+  honnibal.dev/blog/astra-read-write-misleading.
 - Hu, J., Tang, C., Li, W., Zhu, H., Feng, C.-M., Zhang, Q., Chen, Y., Hu, M. (2026). Exploring weight-space
   programming: capabilities, generalization, and limitations. arXiv:2611.09382.
+- Khan, A. A., Kohli, H., Yao, Y., Sun, H., Yao, Z. (2026). Can language model agents be helpful circuit explainers in
+  mechanistic interpretability? Findings of EMNLP 2026. arXiv:2606.24026.
 - KidIkaros (2026). wsp-reproduction. github.com/KidIkaros/wsp-reproduction.
 - Meng, K., Bau, D., Andonian, A., Belinkov, Y. (2022). Locating and editing factual associations in GPT (ROME).
   NeurIPS 2022.
@@ -618,9 +623,5 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
   write neural network weights. MIT CSAIL blog, rikiyat.github.io/blog/weight-space-programming/.
 - Turner, A. M., et al. (2023). Steering language models with activation engineering (activation addition).
   arXiv:2308.10248.
-- Willison, S. (2026). Qwen can interpret model weights. simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/.
-- [ReBatch; Teylersf: edited Qwen3.8-27B checkpoints, links]
-- R&D World (2026). Coverage of the original post. rdworldonline.com/?p=83957. [headline, date and the critics' point
-  to be checked: the page returned 403 to the fetcher]
-- Khan, A. A., Kohli, H., Yao, Y., Sun, H., Yao, Z. (2026). Can language model agents be helpful circuit explainers in
-  mechanistic interpretability? Findings of EMNLP 2026. arXiv:2606.24026.
+- Willison, S. (2026, 3 November). Qwen 3.8 27B on my laptop can interpret model weights, too.
+  simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/.
