@@ -2,7 +2,7 @@
 # Mac side: get up to <count> cheap target GPUs (secure cloud; CLOUD=COMMUNITY for community cloud, approved for target
 # pools 2026-11-09), retrying every 3 min until <minutes> pass. A pod whose setup fails is deleted. Each pod is
 # set up (pod_target_setup.sh + hold-out deps), checked against the model hash, authorized for every node's key
-# (desktop, laptop, mac: a pod can serve any of them), and appended as a host line to logs/pool_hosts.jsonl:
+# (desktop, laptop: a pod can serve either; the mac node was removed 2026-11-12), and appended as a host line to logs/pool_hosts.jsonl:
 #   {"pod": id, "gpu": ..., "host": "root@ip", "port": p, "key": "~/.ssh/id_ed25519_pods", "root": "/root/openwish",
 #    "python": "/root/vllm-env/bin/python", "gpu_util": 0.85, "weight": <memory bandwidth TB/s>, "price": $/h}
 #   acquire_pods.sh <count> [minutes=120]
@@ -15,8 +15,7 @@ GPUS=("NVIDIA RTX A5000:0.77" "NVIDIA GeForce RTX 3090:0.94")
 [ -n "${GPU_LIST:-}" ] && IFS=';' read -ra GPUS <<< "$GPU_LIST"
 MODEL_SHA=68194c7beef8da37beaddb33b02a3b076f0930d81b55808be59998ba10cfc9fb
 keys="$(cat scripts/wsl_pod_key.pub)
-$(ssh cn-laptop 'cat ~/.ssh/id_ed25519_pods.pub' < /dev/null)
-$(ssh cn-mac 'cat ~/.ssh/id_ed25519_pods.pub' < /dev/null)"
+$(ssh cn-laptop 'cat ~/.ssh/id_ed25519_pods.pub' < /dev/null)"
 say() { echo "$(date +%H:%M) acquire $*"; }
 setup() {  # setup <id> <gpu> <weight>
   local id=$1 gpu=$2 w=$3 ip port sha
