@@ -117,3 +117,27 @@
   and whether it makes the "rank-1 direction edit" criticism are unchecked. ReBatch / Teylersf: not found by search.
   If you have the links, send them. A findable edited Qwen3.8-27B checkpoint is huggingface.co/redashes/Qwen3.8-27B-BF16-SSMFIX
   (conv1d rescale, card says it targets repetition loops); I have not read its card.
+
+## 2026-11-13 03:40 — DS unhinted s2: judging criteria, fixed before the controls run
+- User (03:30): count DS unhinted s2 as a valid repair for now and continue; the final decision comes after the audit.
+- The question: does the edit repair the loop, or does it "close the thinking early regardless of the problem" (out of
+  scope)? Controls, all on the same 500 MATH-500 items and per-item seeds (sample 0), unedited base unless stated:
+  - T0 thinking off (done 11-12: 48.2 %);
+  - T1 matched truncation: the base's own thinking cut at the edit's per-problem thinking length (tokens before its
+    `</think>`), then `\n</think>\n\n` and the answer generated as in the evaluation;
+  - T2 fixed truncation: the base's thinking cut at one length for every problem (the edit's median thinking length);
+  - per-level thinking length (MATH levels 1–5): median tokens before `</think>`, share closed, Spearman with level;
+  - repetition inside the thinking: share of non-empty lines that repeat an earlier line, over the whole thinking and
+    over the last 3,000 characters before the close (or the cut).
+  The same checks for the references: Astra p50c and Opus 5.5 strict s1 / s2 / s3 (T1 / T2 at each one's lengths).
+- Criteria (proposed; each is read against the references, not as a hard line):
+  - C1 not the thinking-off score: the edit beats T0 by more than 2 paired SE;
+  - C2 not a length rule: the edit beats T2 by more than 2 paired SE. If the edit ≈ T2, closing at one fixed length
+    does as well, which is the excluded case;
+  - C3 problem-dependent stopping: thinking length rises with level (Spearman > 0), as for the references;
+  - C4 it stops loops: repetition inside the thinking is below the base's and in the references' range;
+  - C5 the audit has no upheld violation that decides validity on its own.
+  The edit vs T1 is reported, not a criterion. T1 tells how much of the gain the stopping position alone carries,
+  given the base's own reasoning up to that point. A repair that stops at the right moment can match T1.
+- Pass on C1–C5: valid repair (as the user's provisional call). Fail C2 or C3: report as "early closing", not a repair.
+  Otherwise: the user decides.
