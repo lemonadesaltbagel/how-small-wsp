@@ -597,7 +597,7 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 
 ## References
 
-[Every entry checked against its source on 2026-11-13; check again before posting.]
+[Honnibal, Hu et al., Khan et al. and Willison checked against their sources on 2026-11-13; check the rest before posting.]
 
 - Ahmed, N. S. (2026). Can an LLM actually reason and program about neural network's weights or is it just memorization
   on steroids? arXiv:2611.08070.
