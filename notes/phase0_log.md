@@ -809,3 +809,12 @@ Heavy work stays on wsl, laptop and pods.
   edits, then the 4-sample thinking-off control on DS unhinted s2's rescore items; deletes the pod), then
   `scripts/start_dsu3.sh` (one pod; DS unhinted s3 on the laptop, tmux dsux3, with post / auto-resume / low-balance
   helpers). DeepSeek balance ¥85.23 (one DS episode ≈ ¥8–17); RunPod $93.6.
+
+## 2026-11-13 10:40 — DS hinted s2: target pod lost its GPU during pass 48
+- Pod v0sybot950jx57 (community 3090, 64.119.209.250) reports "Failed to initialize NVML"; the worker for forward pass 48
+  (started 09:51) hangs in vLLM. Episode at turn 385, forward 47/50 done, 70 edits.
+- scripts/rescue_dsh2.sh (log logs/rescue_dsh2.log): after the truncation chain has its pod, rent a replacement, swap the
+  pool (swap_pool.sh), re-attach post_episode / auto-resume / low-balance stop with the new pod id (the old helpers listed
+  only v0sy, so the new pod would not have been deleted), kill the hung worker (the pass fails; failed passes are not
+  charged, run.rs:1106) and delete the old pod; host recorded in logs/bad_hosts.txt. Then it runs start_dsu3.sh (stopped
+  and re-queued behind it so the two acquisitions do not race on pool_hosts.jsonl).
