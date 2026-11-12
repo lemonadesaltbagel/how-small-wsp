@@ -751,3 +751,11 @@ Heavy work stays on wsl, laptop and pods.
   self-report mismatches = 0 (2 imprecisions).
 - 19:50 DS unhinted s2 hold-out (MMLU-Pro 1k / GPQA / IFEval): 40.7 / 27.0 / 54.8 % against the base's
   39.7 / 24.4 / 20.1 %. No regression. 4-sample MATH-500 rescore started on the same 5090 (wsl tmux rescore-dsu2).
+- 23:20 **The first 4-sample rescore of DS unhinted s2 scored the base model, not the edit** (8.05 % ± 0.6, 92.5 % cut,
+  edited_tensors = []). Cause (my error): qwen_pass.py stages the tensors named in `<OPENWISH_RUN>/edits/ledger.jsonl`.
+  The new `-rescore4` run dir had no ledger, so nothing was staged. For DS hinted s1 I had copied the ledger in by
+  hand; chain_holdout_rescore_dsu2.sh did not. The pod was deleted at 23:20. The output is kept as a 4-sample base
+  measurement (harness/runs_laptop/phase0/base-math500-rescore4-20261112, logs/rescore_base4_20261112.log): base
+  MATH-500 8.05 % over 2,000 generations, consistent with the 1-sample 9.0 %.
+- 23:30 Retry: copied the ledger into the rescore dir (wsl sees 19 edited tensors, the same as the original score),
+  then scripts/chain_rescore_dsu2_retry.sh rents one pod, reruns the rescore and deletes the pod.

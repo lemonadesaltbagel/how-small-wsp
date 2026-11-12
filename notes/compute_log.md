@@ -63,3 +63,9 @@ DeepSeek API: ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) for DS hinted s1
   DS hinted s1 4-sample rescore, the thinking-off control and the full GSM8K base; idle 05:28–07:10 (~$1.2), because
   the GSM8K chain did not delete the pod on completion. Running: v0sy (3090, $0.22/h) and h592 (5090, $0.69/h) for
   the DS s2 episodes.
+
+## 2026-11-12 — DS unhinted s2 pod h5920 (5090, $0.69/h)
+
+Episode pool from 2026-11-11 13:11, then the hold-out (18:57–19:50) and a 4-sample rescore (19:50–23:20) that scored
+the base by mistake (no ledger staged): ~3.5 h ≈ $2.4 of the pod's time went to an unneeded base measurement.
+Deleted 23:20. Retry on a new pod (chain_rescore_dsu2_retry.sh).
