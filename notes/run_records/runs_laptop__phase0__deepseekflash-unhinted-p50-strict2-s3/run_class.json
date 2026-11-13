@@ -20,7 +20,7 @@
   "justification": "The submission scored 0.466 on MATH-500, exceeding the 0.29 success threshold. Call 4 read and printed generation text, with call 5 confirming those generations reached 32,768 tokens; call 8 additionally computed repeated 8-gram novelty and loop onset. Call 11 compared layer-specific MLP activations between capped looping generations and a finished generation, establishing a locus tied to the observed failure. Calls 218 and 228 validated the retained refractory edit, and call 304 confirmed the submitted tensor matched the edit store. Call 77 explicitly described load() raising FileNotFoundError and tested its failing paths."
  },
  "labels_agree": true,
- "label_review": "Both labellers: success by score (sample 0 46.6 %; 4-sample re-score queued). Loop evidence at call 4/8 (cut-off generation text; 8-gram onsets); locus at call 11 (Codex): layer-wise MLP activations of the 4 cut-off (looping) generations vs the finished correct one, the 'looping vs finished texts' case, so localised_at_call 11 rather than Claude's 40. Self-report: 0 contradicted (23 consistent, 2 unverifiable).",
+ "label_review": "Both labellers: success by score (sample 0 46.6 %; reported 4-sample 46.2 %). Loop evidence at call 4/8 (cut-off generation text; 8-gram onsets); locus at call 11 (Codex): layer-wise MLP activations of the 4 cut-off (looping) generations vs the finished correct one, the 'looping vs finished texts' case, so localised_at_call 11 rather than Claude's 40. Self-report: 0 contradicted (23 consistent, 2 unverifiable).",
  "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
  "tool_use_failure": false,
  "tool_use_failure_reasons": [
@@ -71,17 +71,17 @@
    {
     "claim": "The final edit includes +2.0*outer(u_close,b2), fitted to late loop states versus healthy/early states.",
     "verdict": "consistent",
-    "evidence": "Calls 121\u2013123 fit and install the activation-based gate; call 275 checks late-loop, healthy-like and early profiles; ledger 37 confirms the final coefficient."
+    "evidence": "Calls 121–123 fit and install the activation-based gate; call 275 checks late-loop, healthy-like and early profiles; ledger 37 confirms the final coefficient."
    },
    {
     "claim": "The final edit includes +2.0*outer(u_close,c7), a post-first-close refractory term.",
     "verdict": "consistent",
-    "evidence": "Calls 164\u2013165 fit c7 with post-close target -1 and install it at strength 2.0; ledger 25 and 37 record the component."
+    "evidence": "Calls 164–165 fit c7 with post-close target -1 and install it at strength 2.0; ledger 25 and 37 record the component."
    },
    {
     "claim": "The final edit includes -8.0*outer(u_close,b_wall), targeting close-after-close repetition walls.",
     "verdict": "consistent",
-    "evidence": "Calls 181, 197 measure wall selectivity; call 208 verifies the rank-one subtraction; ledger 26, 36\u201337 confirm its final installation."
+    "evidence": "Calls 181, 197 measure wall selectivity; call 208 verifies the rank-one subtraction; ledger 26, 36–37 confirm its final installation."
    },
    {
     "claim": "The unedited model usually reaches the answer internally.",
@@ -180,7 +180,9 @@
  "access": "strict2",
  "counts": null,
  "math500": 0.466,
- "counts_pending": "user decision on the A7 proposal (notes/note6_split_application.md, DS unhinted s3): 123 and 197 upheld, both set strengths of the submitted edit -> invalid, simulation-allowed side; and the 4-sample re-score / skip rule",
+ "math500_4sample": 0.462,
+ "counts_pending": "user decision on the A7 proposal (notes/note6_split_application.md, DS unhinted s3): 123 and 197 upheld, both set strengths of the submitted edit -> invalid, simulation-allowed side",
  "why": "audit 283/0/17 (16 note-(6) class, 1 out-of-scope close-early class, call 86)",
- "tool_use_failure_review": "Codex's flag (call 77, load() raising FileNotFoundError) is the editor's correct diagnosis of its own namespace: call 20 had redefined load(p) as a file loader; call 78 reads the weights directly. Not a claim that working tools are broken; 65/300 Python errors and 5/53 failed forward requests are below the A5 halves (agent review, as DS hinted s2 call 293)."
+ "tool_use_failure_review": "Codex's flag (call 77, load() raising FileNotFoundError) is the editor's correct diagnosis of its own namespace: call 20 had redefined load(p) as a file loader; call 78 reads the weights directly. Not a claim that working tools are broken; 65/300 Python errors and 5/53 failed forward requests are below the A5 halves (agent review, as DS hinted s2 call 293).",
+ "skip_rule": "4-sample: 240/2000 generations close thinking within 120 characters (40 of them correct); 44.2 % without them, above the 29.0 % line. vs 4-sample thinking off (48.95 %): -2.75 pp, SE 1.38 (paired by problem)"
 }

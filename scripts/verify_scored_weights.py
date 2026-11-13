@@ -33,6 +33,7 @@ LOG_RECORDS = [
     ("runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2", "4-sample rescore", "logs/rescore_dsu2.log"),
     ("runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2", "4-sample rescore", "logs/rescore_dsh2_4s.log"),
     ("runs/phase0/opus55-hinted-p50-strict-s1", "4-sample rescore", "logs/rescore4_opus_s1.log"),
+    ("runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s3", "4-sample rescore", "logs/rescore4_dsu_s3.log"),
 ]
 EXTRA_RUNS = ["runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2",  # counted, not yet in the ledger
               "runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2",

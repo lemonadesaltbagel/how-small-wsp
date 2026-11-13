@@ -934,3 +934,9 @@ Heavy work stays on wsl, laptop and pods.
   gzdnbo2qqamsax, 55svglzhxvytoz).
 - 08:05 DS unhinted s3 work/ (412 files, 23.3 GB, identical on Mac and laptop) moved on the Mac to the archive; the
   deletion reached the laptop. Low-balance helper for dsux3 stopped.
+- 10:13 **DS unhinted s3 4-sample 46.2 % ± 1.1** (secure 4090 55sv, deleted); skips 240 / 2000, 44.2 % without
+  their correct answers; vs 4-sample T0 −2.75 pp (SE 1.38). verify_scored_weights ok (3 records, sha fdb8dff7).
+  Thinking profile: Spearman(level, length) −0.08 (C3 fail), repetition 0.018; skips problem-dependent (40 items
+  skip in all 4 samples), 26 % at level 5. Entry in pending_user_decisions 10:30.
+- 10:20 truncation controls T1 / T2 for DS unhinted s3: bundle_dsu3.json.xz (median thinking 1,863 tokens, 500 of 500
+  closed), `scripts/chain_trunc_dsu3.sh` (secure pod; log chain_trunc_dsu3.log).

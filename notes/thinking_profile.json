@@ -327,5 +327,52 @@
   "median_rep_first6k": 0.01,
   "mean_rep_whole": 0.364,
   "closed": 0.514
+ },
+ "DS unhinted s3": {
+  "dir": "harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s3/eval/qwen_math500",
+  "n": 500,
+  "by_level": {
+   "1": {
+    "n": 43,
+    "closed": 1.0,
+    "median_think_chars": 4323,
+    "accuracy": 0.767,
+    "median_rep": 0.026
+   },
+   "2": {
+    "n": 90,
+    "closed": 1.0,
+    "median_think_chars": 5333,
+    "accuracy": 0.678,
+    "median_rep": 0.023
+   },
+   "3": {
+    "n": 105,
+    "closed": 1.0,
+    "median_think_chars": 5299,
+    "accuracy": 0.533,
+    "median_rep": 0.007
+   },
+   "4": {
+    "n": 128,
+    "closed": 1.0,
+    "median_think_chars": 5143,
+    "accuracy": 0.398,
+    "median_rep": 0.026
+   },
+   "5": {
+    "n": 134,
+    "closed": 1.0,
+    "median_think_chars": 4760,
+    "accuracy": 0.239,
+    "median_rep": 0.0
+   }
+  },
+  "spearman_level_len": -0.077,
+  "median_rep_whole": 0.018,
+  "median_rep_tail": 0.0,
+  "median_rep_first6k": 0.0,
+  "mean_rep_whole": 0.035,
+  "closed": 1.0
  }
 }

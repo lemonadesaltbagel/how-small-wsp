@@ -27,8 +27,10 @@ THINK_OFF = 0.4895           # unedited base with thinking turned off, 4 samples
 SIZES = {"qwen0p8b": 0.8, "qwen9b": 9.0, "qwen27b": 27.0}
 DS_INTERVAL = (16.0, 748.0)  # deepseek-flash: activated (decode) .. total (backbone + Engram), model card
 # deepseek-flash main-matrix episodes: (prompt, reported score = 4-sample mean for runs above the line, valid)
-# (notes/pending_user_decisions.md 2026-11-14 03:10; drawn from this list, not the ledger: no size on the Qwen axis)
-DS = [("hinted", 0.4985, False), ("unhinted", 0.068, False), ("hinted", 0.3665, True), ("unhinted", 0.547, False)]
+# (notes/pending_user_decisions.md 2026-11-14 03:10; drawn from this list, not the ledger: no size on the Qwen axis).
+# Unhinted s3 (0.462): early closing, and invalid if the A7 proposal of 2026-11-14 07:30 is accepted
+DS = [("hinted", 0.4985, False), ("unhinted", 0.068, False), ("hinted", 0.3665, True), ("unhinted", 0.547, False),
+      ("unhinted", 0.462, False)]
 
 # Categorical slots 1-2 of the reference palette, validated (scripts/validate_palette.js, light: all checks pass)
 COLOR = {"hinted": "#2a78d6", "unhinted": "#eb6834"}
@@ -107,7 +109,7 @@ def main():
             ax.plot(DS_INTERVAL, (y, y), "D" if valid else "X", color=c, markersize=5 if valid else 6, zorder=3,
                     markeredgecolor="white", markeredgewidth=1.0 if valid else 0.6, linestyle="none")
     ax.plot([], [], "D-", color=MUTED, markersize=5, linewidth=2, label="deepseek-flash (activated → total)")
-    ax.plot([], [], "X:", color=MUTED, markersize=6, linewidth=1.2, label="invalid under the strict rules (reported)")
+    ax.plot([], [], "X:", color=MUTED, markersize=6, linewidth=1.2, label="invalid or early closing (reported)")
     ax.plot([], [], "o", color=MUTED, markersize=5, markerfacecolor="white", linestyle="none", label="empty edit set (unedited model re-sampled)")
     series = [h for h in ax.get_lines() if h not in handles and not h.get_label().startswith("_")]
     leg = ax.legend(handles=series, loc="lower right", bbox_to_anchor=(1.0, 0.19), fontsize=7, frameon=False)

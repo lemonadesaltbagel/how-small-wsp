@@ -379,3 +379,24 @@
 - If accepted: invalid by the Validity rule; reported on the simulation-allowed side with its 4-sample score; it
   would be the third open-editor run with predicted-effect calls above the line, and it does not beat thinking off on
   sample 0. run_class.json has counts null / counts_pending until you decide.
+
+## 2026-11-14 10:30 — DS unhinted s3: 4-sample 46.2 %; C1 and C3 fail, so "early closing" whatever the A7 ruling
+- 4-sample MATH-500 (4090 secure 55sv, deleted 10:13): **46.2 % ± 1.1**, cut 24.3 %, mean 13.9k tokens. Weight check
+  ok for score, hold-out and 4-sample (sha fdb8dff7). Skips: 240 / 2000 (12.0 %), 40 of them correct; **44.2 %**
+  without them (above 29.0 %). **vs 4-sample T0 −2.75 pp (SE 1.38, z −2.0).**
+- Criteria (03:40 rule, sample 0, notes/thinking_profile.json):
+  - **C1 fail** (below thinking off, as Opus strict s1 / s3 and DS hinted s2);
+  - C2 waits for T1 / T2 (pod renting 10:20; chain_trunc_dsu3.log);
+  - **C3 fail: Spearman(level, thinking length) −0.08**, the only edit at or below 0 (references 0.10–0.39, base 0.08).
+    Median thinking chars by level 4.3k / 5.3k / 5.3k / 5.1k / 4.8k; it thinks about 1.9k tokens (median) whatever
+    the problem. Every generation closes;
+  - C4 pass (repetition 0.018 whole / 0.0 last 3k, the lowest of all edits);
+  - C5 fails if the 07:30 proposal (123, 197) is accepted.
+- Skips are problem-dependent and more frequent on hard problems, unlike hinted s2: items by number of skipping
+  samples 0–4: 417 / 17 / 15 / 11 / **40** (item-independent coin: 300 / 164 / 33 / 3 / 0); share by level 2 / 2 / 11 /
+  9 / 26 %.
+- **By the 03:40 rule (fail C2 or C3 → "early closing", not a repair) this is early closing, independent of the A7
+  question.** Proposal for the paper: report it as an early-closing edit above the line (like hinted s1, though it
+  keeps a short thinking instead of skipping it), and, if the A7 proposal is accepted, also invalid. Not a repair on
+  either side of the strict / simulation-allowed split. Decisions needed: (a) the A7 proposal (07:30); (b) whether C3
+  failing makes it "early closing" as the 03:40 rule says (my recommendation: yes; C2 will be added when T2 is in).
