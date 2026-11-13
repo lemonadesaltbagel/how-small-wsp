@@ -1,5 +1,6 @@
 """Bundle for the truncation controls (scripts/truncation_control.py). Run on a node with the qwen venv (tokenizer only):
-  harness/assets/venvs/qwen/bin/python -I scripts/truncation_prep.py notes/run_records/truncation_control/bundle.json.xz
+  harness/assets/venvs/qwen/bin/python -I scripts/truncation_prep.py notes/run_records/truncation_control/bundle.json.xz [name...]
+(names: a subset of EDITS; default all but "DS hinted s2", which was added later with its own bundle)
 Per scored run (sample 0 of each MATH-500 item): the number of tokens before its first </think> (None = never closes),
 plus the unedited base's items and full generations, which the control cuts."""
 import json
@@ -15,6 +16,7 @@ EDITS = {
     "Opus strict s1": "harness/runs/phase0/opus55-hinted-p50-strict-s1/eval/qwen_math500",
     "Opus strict s2": "harness/runs/phase0/opus55-hinted-p50-strict-s2/eval/qwen_math500",
     "Opus strict s3": "harness/runs_laptop/phase0/opus55-hinted-p50-strict-s3/eval/qwen_math500",
+    "DS hinted s2": "harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2/eval/qwen_math500",
 }
 
 
@@ -30,7 +32,8 @@ def main():
     tok = AutoTokenizer.from_pretrained(os.path.join(ROOT, "harness/assets/exp8/qwen35-text"))
     base = load(BASE)
     lengths = {}
-    for name, d in EDITS.items():
+    names = sys.argv[2:] or [n for n in EDITS if n != "DS hinted s2"]
+    for name, d in ((n, EDITS[n]) for n in names):
         L = {}
         for it, r in load(d):
             p = r["text"].find("</think>")
