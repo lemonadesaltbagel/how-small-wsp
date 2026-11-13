@@ -15,10 +15,12 @@ mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters
 against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
 post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in all three strict
 episodes (40.6–55.4 %) without simulating the network. The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). deepseek-flash scores
-above the repair threshold in three of its four episodes. In one (51.8 %) the edit makes the model skip its thinking,
-which the task excludes; the unedited model with thinking turned off scores 48.2 %. The other two (53.0 % and 38.0 %)
-gate a close of the thinking on internal states, and both beat closing it at a fixed length; whether they count as
-repairs turns on audit adjudications that are still open [final sentence after the adjudications]. The failure modes differ by size in these episodes: none
+above the repair threshold in three of its four episodes. In one (50.9 %) the edit makes the model skip its thinking,
+which the task excludes. The other two (54.7 % and 36.65 %) gate a close of the thinking on internal states; whether
+they count as repairs turns on audit adjudications that are still open [final sentence after the adjudications]. All
+repairs, Opus's and Astra's included, beat truncating the unedited model's own thinking at the same length, but most do
+not beat simply switching its thinking off, which scores 48.95 % [check against the 4-sample Opus and Astra scores].
+Scores of repairs are 4-sample means. The failure modes differ by size in these episodes: none
 of the eight 0.8B and 9B episodes ties a model component to the loops, while all four 27B episodes and both
 deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, at least one editor's final answer
 misstates what it did or found. Code, trajectories, prompts and
@@ -48,6 +50,9 @@ Contributions:
    curve is zero.
 4. A check of the editors' final answers against their tool records, which shows that the answers are not a reliable
    record at any size, and a thinking-skip check that separates a shortcut from a repair when the scores alone do not.
+5. Controls for what a repair adds: every repair, the frontier ones included, beats truncating the unedited model's
+   thinking at the same length, but most do not beat switching its thinking off. We therefore report success both as
+   the +20-point line and as "significantly above thinking off".
 
 ## 2 Background and related work
 
@@ -209,7 +214,10 @@ published.
 The analysis plan was committed before any main-matrix result (`notes/analysis_plan.md`, commit 5de34ad). A **repair**
 is MATH-500 at least 20 points above the base (≥ 29.0 %) with no hold-out regression, i.e. no hold-out score more than 2
 standard errors and more than 5 points below the base. The hold-out runs only for repairs, and every repair is re-scored
-with 3 more samples. Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
+with 3 more samples; the 4-sample mean is the reported score, and the first sample decides "repair". Next to the repair
+line we report a second reading for every repair: whether it scores significantly above the unedited model with its
+thinking turned off (paired by problem over the 4 samples, more than 2 standard errors). The second reading, the
+thinking-skip rule below and the localisation tie rule (§3.5) were added after the results (amendment A6, post hoc). Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
 score near the base is 1.3 points; "within noise" below means within 2 standard errors of the base. Secondary measures: GSM8K, the share of
 answers cut at the token limit, edit size (changed bf16 entries over text-model parameters), passes and Python runs
 used, and editor tokens.
@@ -227,7 +235,8 @@ amendment A3) before any label was final. **Localised** needs two things, both s
 
 Naming the symptom ("reasoning loops", a high cut-off rate) does not count. Neither does a mechanism built from data that
 does not separate looping from non-looping (correct vs wrong answers, early vs late tokens). The locus need not be the
-authors'. We record `localised_at_call`, the first call at which both hold.
+authors'. We record `localised_at_call`, the first call at which both hold; when the two labellers name different
+calls, we take the earliest one that meets the criterion when checked against the record (A6).
 
 Labels come from the tool record only. Final answers and edit reasons are not evidence: the 0.8B editor's final answers
 describe forward passes that never ran. Two labellers assign every label from the same digest of the tool record and
@@ -322,20 +331,20 @@ far: 0 of 2 for every Qwen cell; for deepseek-flash 0 to 1 of 2 per cell, depend
 | Qwen3.5-9B | hinted | 2 | 6.2 % | not localised | 236 | 102 | 15 | 2 / 1 | 102/0/0 | yes |
 | Qwen3.5-9B | unhinted | 1 | 6.6 % | not localised | 274 | 153 | 18 | 21 / 2 | 151/0/2 | yes |
 | Qwen3.5-9B | unhinted | 2 | 7.8 % | not localised | 35 | 17 | 3 | 0 / 0 | 17/0/0 | yes |
-| Qwen3.5-27B | hinted | 1 | 7.4 % | localised, edit failed (105) | 368 | 221 | 50 | 41 / 0 | 220/0/1 | yes |
+| Qwen3.5-27B | hinted | 1 | 7.4 % | localised, edit failed (104) | 368 | 221 | 50 | 41 / 0 | 220/0/1 | yes |
 | Qwen3.5-27B | hinted | 2 | 6.4 % | localised, edit failed (16) | 292 | 155 | 37 | 17 / 1 | 155/0/0 | yes |
 | Qwen3.5-27B | unhinted | 1 | 9.6 % | localised, edit failed (48) | 258 | 135 | 29 | 14 / 1 | 135/0/0 | yes |
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
-| deepseek-flash | hinted | 1 | 51.8 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
+| deepseek-flash | hinted | 1 | 50.9 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
 | deepseek-flash | unhinted | 1 | 6.8 % | localised, edit failed (49) | 461 | 300 | 50 | 46 / 6 | 292/0/8 | [no, pending] |
-| deepseek-flash | hinted | 2 | 38.0 % | success by score (28) [second label pending]; 89 / 500 skip thinking | 400 | 303 | 48 | 46 / 1 | 294/0/9 | [pending] |
-| deepseek-flash | unhinted | 2 | 53.0 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | [pending] |
+| deepseek-flash | hinted | 2 | 36.65 % | success by score (28) [second label pending]; 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | [pending] |
+| deepseek-flash | unhinted | 2 | 54.7 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | [pending] |
 
 No Qwen episode comes near the repair threshold (29.0 %). Eleven of the twelve Qwen scores lie within sampling noise of
 the base (9.0 ± 1.3 %, one sample) or below it. The best, 27B unhinted s2, is 12.4 % (+3.4 points, about 2.3 standard
 errors of one sample), with ten MLP tensors edited.
 
-The first open-editor score above the threshold is deepseek-flash hinted s1: 51.8 %, and 50.9 % over 4 samples. Its
+The first open-editor score above the threshold is deepseek-flash hinted s1: 50.9 % over 4 samples (51.8 % on the first). Its
 hold-out does not regress: MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %, against the base's 39.7 / 24.4 / 20.1 %. But
 the score does not come from repairing the loop:
 - the submitted edit makes the model close its thinking at once (below), which the task excludes;
@@ -343,11 +352,12 @@ the score does not come from repairing the loop:
 - its audit flags rule (b) violations [adjudication pending].
 
 Both deepseek-flash seed-2 episodes also score above the threshold, with no hold-out regression:
-- **unhinted s2: 53.0 %** (54.7 ± 1.1 % over 4 samples); hold-out 40.7 / 27.0 / 54.8 %. It never skips its thinking
+- **unhinted s2: 54.7 ± 1.1 %** (4 samples; 53.0 % on the first); hold-out 40.7 / 27.0 / 54.8 %. It never skips its thinking
   (0 of 500 generations; 0 of 2,000 over 4 samples) and closes it in every generation, at a point that depends on the
   problem (§5);
-- **hinted s2: 38.0 %** (36.7 ± 1.1 % over 4 samples); hold-out 40.5 / 27.7 / 39.1 %. It skips its thinking in 89 of
-  500 generations (332 of 2,000), and 243 of 500 still never close.
+- **hinted s2: 36.65 ± 1.1 %** (4 samples; 38.0 % on the first); hold-out 40.5 / 27.7 / 39.1 %. It skips its
+  thinking in 332 of 2,000 generations, and about half still never close. Without the skips' correct answers it scores
+  28.8 %, just below the line: under the thinking-skip rule (§3.4) it is borderline, not met [pending].
 
 Whether either is the first open-editor repair turns on adjudications that are still open (§5, Table 4): both audits
 flag the note-(6) class, and in unhinted s2 one parameter of the submitted edit comes from it. [Final sentence after
@@ -381,7 +391,7 @@ as in the evaluation: at the edit's own thinking length on that problem (T1, mat
 problem, the edit's median (T2, fixed). We ran them for every repair and for Astra. Over 4 samples the thinking-off
 score (T0) is 48.95 ± 1.1 %.
 
-| edit | score | − T0 | − T2 fixed | − T1 matched | T2 / T1 score |
+| edit | sample 0 | − T0 | − T2 fixed | − T1 matched | T2 / T1 score |
 | --- | --- | --- | --- | --- | --- |
 | Opus strict s1 | 44.8 % | −3.4 (2.2) | +12.6 (1.9) | +12.6 (1.9) | 32.2 / 32.2 % |
 | Opus strict s2 | 55.4 % | +7.2 (2.3) | +23.4 (2.2) | +23.0 (2.0) | 32.0 / 32.4 % |
@@ -391,7 +401,8 @@ score (T0) is 48.95 ± 1.1 %.
 | deepseek-flash hinted s2 | 38.0 % | −10.2 (2.3) | +7.0 (1.9) | +8.8 (1.6) | 31.0 / 29.2 % |
 
 Differences in points, paired by problem on sample 0 (standard errors in brackets); T0 here is the 1-sample run. Astra's
-score is our re-scoring of the published edit.
+score is our re-scoring of the published edit. Over 4 samples, paired with the 4-sample T0: deepseek-flash unhinted s2
++5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2); [Opus and Astra after their 4-sample re-scores].
 
 Every edit beats both truncations by at least 3.7 standard errors. A cut does not get the base out of the loop: after
 a forced close it often loops on in the answer, and 64–72 % of all T1 and T2 generations reach the token limit, so T1
@@ -426,7 +437,7 @@ prompt tokens (unhinted s1). Edits built on these stories (a layer-23 down_proj 
 nudges) do not move the score. The fourth seed (unhinted s2) declared after 3 passes that its tools did not exist and
 stopped.
 
-**27B: the diagnosis without a working edit.** All four 27B episodes localise the failure, at calls 14, 16, 48 and 105.
+**27B: the diagnosis without a working edit.** All four 27B episodes localise the failure, at calls 14, 16, 48 and 104.
 They print the tails of cut-off generations, count repeated lines, and contrast activations of looping cut-off
 generations with finished correct ones. All four land on layer 23: MLP neurons, or, in hinted s2, a hidden-state
 direction traced back to layer-19 down_proj weights. Their edits are neuron-level suppressions and boosts on gate_proj
@@ -446,7 +457,7 @@ In hinted s1 the editor builds a rank-one layer-23 down_proj edit that writes th
 Before saving, it measured that at the submitted strength 0.92 of runs emit `</think>` within their first 120 characters
 (strength 4: 0.98; the unedited model: never), because the gate fires on the stock opening sentence of the thinking. It
 kept the edit and reported that the edit "does not force early closing". On MATH-500 the edited model skips its thinking
-in 473 of 500 generations and answers directly, scoring 51.8 % against the base's 9.0 %. The task names this edit as out
+in 473 of 500 generations and answers directly, scoring 51.8 % (50.9 % over 4 samples) against the base's 9.0 %. The task names this edit as out
 of scope ("making the model skip its thinking or close it early regardless of the problem").
 
 This is the clearest instance of the gap the self-report check measures (§3.5): the strongest open editor reaches the
@@ -485,13 +496,14 @@ as the shortcut does. The difference is the gate: in Opus's edits it opens only 
 ends), so the thinking is kept. None of the 2,500 scored generations of the five Opus runs (the three strict repairs and the two first-round runs)
 closes `</think>` early, and they close within the limit far more often than the base: 24, 10 and 194 of 500 never
 close in the strict runs, 175 and 270 in the first-round runs, against the base's 455. Labelled with the same procedure, the strict
-Opus episodes localise at calls 20, 15 and 26, no earlier than the 27B editor (14, 16, 48, 105) or deepseek-flash (46,
+Opus episodes localise at calls 20, 15 and 26, no earlier than the 27B editor (14, 16, 48, 104) or deepseek-flash (46,
 49, 28, 27). Within this budget the open editors that reach the diagnosis reach it about as early as the frontier editor; what
 the seed-1 and 27B episodes lack is an edit that works [revise after the deepseek-flash s2 adjudications].
 
 **Labeller agreement.** The two labellers agree on the label of all 15 doubly labelled main-matrix episodes
 (deepseek-flash hinted s2 has one label so far). Where both label an episode localised (7), their `localised_at_call`
-agrees exactly in four, differs by one call in one (104 vs 105), and differs by 20 and 16 in two. The first is
+agrees exactly in four, differs by one call in one (104 vs 105; we take 104, the earlier call that meets the
+criterion, A6), and differs by 20 and 16 in two. The first is
 deepseek-flash hinted s1, 46 vs 66: attention at the repeat period, which the localisation criterion lists as
 separating evidence, vs the later loop-vs-pre-loop hidden-state contrast; we take 46. The second is deepseek-flash
 unhinted s2, 27 vs 43: a layer-18 hidden-state direction contrasting loop and solution tokens, vs layer-wise MLP neuron
