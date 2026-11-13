@@ -18,6 +18,7 @@ RUNS = {
     "Opus strict s2": "harness/runs/phase0/opus55-hinted-p50-strict-s2/eval/qwen_math500",
     "Opus strict s3": "harness/runs_laptop/phase0/opus55-hinted-p50-strict-s3/eval/qwen_math500",
     "DS unhinted s2": "harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2/eval/qwen_math500",
+    "DS hinted s2": "harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2/eval/qwen_math500",
 }
 TAIL = 3000
 HEAD = 6000

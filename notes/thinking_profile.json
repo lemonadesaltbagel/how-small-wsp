@@ -280,5 +280,52 @@
   "median_rep_first6k": 0.019,
   "mean_rep_whole": 0.094,
   "closed": 1.0
+ },
+ "DS hinted s2": {
+  "dir": "harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2/eval/qwen_math500",
+  "n": 500,
+  "by_level": {
+   "1": {
+    "n": 43,
+    "closed": 0.767,
+    "median_think_chars": 8711,
+    "accuracy": 0.698,
+    "median_rep": 0.032
+   },
+   "2": {
+    "n": 90,
+    "closed": 0.644,
+    "median_think_chars": 18437,
+    "accuracy": 0.589,
+    "median_rep": 0.064
+   },
+   "3": {
+    "n": 105,
+    "closed": 0.524,
+    "median_think_chars": 29872,
+    "accuracy": 0.419,
+    "median_rep": 0.102
+   },
+   "4": {
+    "n": 128,
+    "closed": 0.461,
+    "median_think_chars": 53541,
+    "accuracy": 0.312,
+    "median_rep": 0.194
+   },
+   "5": {
+    "n": 134,
+    "closed": 0.388,
+    "median_think_chars": 68293,
+    "accuracy": 0.172,
+    "median_rep": 0.575
+   }
+  },
+  "spearman_level_len": 0.23,
+  "median_rep_whole": 0.131,
+  "median_rep_tail": 0.062,
+  "median_rep_first6k": 0.01,
+  "mean_rep_whole": 0.364,
+  "closed": 0.514
  }
 }

@@ -180,3 +180,41 @@
   treat "a normalisation followed by a measured dose" alike in both runs (it does not by itself make the submitted
   strength a prediction). This does not touch unhinted s2's lam = 0.12, which was never measured against lam = 0.
 - The score is not known yet (the first scoring hit the dead-GPU pod; re-score queued). Proposal follows the score.
+
+## 2026-11-13 13:25 — DS hinted s2 scored 38.0 % (a repair by the line); part of it skips thinking
+- Re-score on the new pod (laptop, `openwish score`): **MATH-500 38.0 % ± 2.2** (base 9.8 %), 58.6 % cut, 22 tensors
+  staged; scored-weights check ok (loaded = base + declared edit; 1 declared tensor, layer-23 down_proj, 90,958 entries
+  differ in bf16 bits = 0.012 % of the network). Hold-out running (laptop tmux ho-dsx2h2); 4-sample rescore queued
+  (A5000 pod).
+- Sample 0 splits three ways (positions of `</think>` in the scored outputs):
+  | group | n | correct | acc | thinking-off control (T0) on the same items |
+  |---|---|---|---|---|
+  | skips thinking (`</think>` at position 0) | 89 | 42 | 47 % | 52 % (agree on 63 / 89) |
+  | closes after thinking (> 120 chars) | 168 | 147 | 88 % | |
+  | never closes | 243 | 1 | 0 % | |
+  Skip share by level 1–5: 33 / 16 / 16 / 18 / 16 % (roughly flat). Base: 0 / 500 skips; DS hinted s1: 473 / 500.
+  Without the skips' correct answers: 148 / 500 = 29.6 % (still at the 29.0 % line).
+- Against the 03:40 criteria (written for unhinted s2; applied as far as they fit):
+  - C1 (beats T0 by > 2 SE): **fails as written**: 38.0 % < T0 48.2 %. But the score is not the no-thinking score:
+    half the generations still loop, and those that close after thinking are mostly correct.
+  - C2 (beats fixed truncation T2): not run for this edit (the running bundle has the five earlier edits). I can add
+    T1 / T2 at this edit's lengths on the next pod (< $1) if you want it for the call.
+  - C3: thinking length rises steeply with level (median chars 8.7k / 18.4k / 29.9k / 53.5k / 68.3k; Spearman 0.23,
+    the references 0.10–0.39). C4: repeated-line share 0.13 whole / 0.06 last 3k (base 0.82 / 0.93; references
+    0.20–0.37 / 0.21–0.43). Both hold.
+  - C5: 9 audit violations, the predicted-effect class (11:40 entry: the unit came from a predicted firing, the dose was
+    measured). My proposal there: treat "normalisation + measured dose" alike in both DS s2 runs.
+- Self-report (Codex, 35 consistent / 3 contradicted / 15 unverifiable; I checked the 3): "the 20-unit version was
+  ungated" (it had a 100-neuron gate), "truncation stays ~37 % at all doses" (28.9 / 35.9 / 37.5 %), and "the 6-unit
+  comparison could not be measured (worker down)": the 6-unit edit (ledger 69, turn 355) was replaced by the 7-unit one
+  at turn 364 before any pass, and the next 20 passes (turns 365–385) ran fine; the worker failed only from turn 386.
+  None of the three overstates the submitted edit's effect; the third misstates why a test was not run (minor).
+- Labels: Codex success, localised at call 28 (loop evidence call 14). Claude label waits until no DS episode runs (s3).
+- Open question for you: does a 17.8 % share of thinking skips, flat across levels, make the run "close early
+  regardless of the problem" in part? Options:
+  - A: valid repair, 38.0 % counted, the skip share reported beside it;
+  - B: valid only if the score without the skips' contribution stays ≥ 29.0 % (29.6 % on sample 0; the 4-sample
+    rescore will give a firmer number);
+  - C: not a repair (the excluded behaviour is present, whatever its share).
+  No recommendation yet: I would wait for the 4-sample rescore (does the same item skip in every sample, i.e. is the
+  skip problem-dependent?) and, if you want it, T1 / T2 at this edit's lengths.
