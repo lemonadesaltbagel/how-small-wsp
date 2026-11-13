@@ -7,7 +7,7 @@
 | runs/phase0/opus55-hinted-p50-s1 | reference: Opus 5.5, simulation allowed (first round) | simulation allowed | False | 50.8 | — | 274/0/26 | False | — | 0 | 0.453 | success | — | — | 368 |
 | runs/phase0/opus55-hinted-p50-s2 | reference: Opus 5.5, simulation allowed (first round) | simulation allowed | False | 35.0 | — | 277/1/11 | False | — | 0 | 5.993 | success | — | — | 357 |
 | runs/phase0/opus55-hinted-p50-strict-s1 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 44.8 | 40.4 / 27.8 / 57.7 | 293/2/6 | True | 2 | 0 | 0.002 | success | False | 6 (2 material) | 356 |
-| runs/phase0/opus55-hinted-p50-strict-s2 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | True | 55.4 | 44.8 / 30.8 / 60.4 | 286/0/2 | True | 0 | 0 | 0.245 | success | False | 0 (0 material) | 343 |
+| runs/phase0/opus55-hinted-p50-strict-s2 | reference: Opus 5.5, strict | strict (rules v1 + adjudication) | False | 55.4 | 44.8 / 30.8 / 60.4 | 286/0/2 | False | 0 | 0 | 0.245 | success | False | 0 (0 material) | 343 |
 | runs/phase0/qwen0p8b-hinted-p50-strict2-s1 | main: Qwen3.5-0.8B, hinted | strict2 | True | 7.0 | — | 34/0/0 | True | 0 | 0 | 0.000 | not localised | True | 4 (4 material) | 49 |
 | runs/phase0/qwen27b-hinted-p50-strict2-s1 | main: Qwen3.5-27B, hinted | strict2 | True | 7.4 | — | 220/0/1 | True | 0 | 1 | 0.000 | localised, edit failed | False | 2 (0 material) | 368 |
 | runs/phase0/qwen27b-hinted-p50-strict2-s2 | main: Qwen3.5-27B, hinted | strict2 | True | 6.4 | — | 155/0/0 | True | 0 | 0 | 0.000 | localised, edit failed | True | 3 (0 material) | 292 |
@@ -16,8 +16,10 @@
 | runs/phase0/qwen9b-hinted-p50-strict2-s1 | main: Qwen3.5-9B, hinted | strict2 | True | 8.2 | — | 182/0/0 | True | 0 | 0 | 0.590 | not localised | True | 2 (0 material) | 360 |
 | runs/phase0/qwen9b-unhinted-p50-strict2-s1 | main: Qwen3.5-9B, unhinted | strict2 | True | 6.6 | — | 151/0/2 | True | 0 | 2 | 0.137 | not localised | False | 0 (0 material) | 274 |
 | runs/phase0/qwen9b-unhinted-p50-strict2-s2 | main: Qwen3.5-9B, unhinted | strict2 | True | 7.8 | — | 17/0/0 | True | 0 | 0 | 0.000 | not localised | True | 5 (5 material) | 35 |
-| runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 | main: deepseek-flash, hinted | strict2 | — | 51.8 | 39.6 / 22.9 / 45.9 | 291/0/15 | False | 6 | 0 | 0.488 | success | False | 7 (2 material) | 420 |
+| runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1 | main: deepseek-flash, hinted | strict2 | False | 51.8 | 39.6 / 22.9 / 45.9 | 291/0/15 | False | 6 | 0 | 0.488 | success | False | 7 (2 material) | 420 |
+| runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2 | main: deepseek-flash, hinted | strict2 | True | 38.0 | 40.5 / 27.7 / 39.1 | 294/0/9 | True | 3 | 0 | 0.014 | success | False | 3 (0 material) | 400 |
 | runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s1 | main: deepseek-flash, unhinted | strict2 | — | 6.8 | — | 292/0/8 | False | 0 | 0 | 1.881 | localised, edit failed | False | 8 (2 material) | 461 |
+| runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2 | main: deepseek-flash, unhinted | strict2 | False | 53.0 | 40.7 / 27.0 / 54.8 | 284/0/14 | False | 3 | 0 | 0.488 | success | False | 2 (0 material) | 385 |
 | runs_laptop/phase0/opus55-hinted-p50-s3 | aborted | simulation allowed | False | — | — | — | — | — | 0 | — | — | — | — | 71 |
 | runs_laptop/phase0/opus55-hinted-p50-strict-s3 | reference: Opus 5.5, strict | strict (rules v1) | True | 40.6 | 44.7 / 30.1 / 60.8 | 298/0/0 | True | 2 | 0 | 0.627 | success | False | 1 (1 material) | 357 |
 | runs_laptop/phase0/qwen0p8b-hinted-p50-strict2-s2 | main: Qwen3.5-0.8B, hinted | strict2 | True | 7.2 | — | 1/0/0 | True | 1 | 0 | 0.000 | not localised | True | 5 (5 material) | 7 |

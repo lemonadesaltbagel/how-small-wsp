@@ -1,0 +1,31 @@
+{
+ "by": "user decision 2026-11-14 (~01:10): a call that uses recorded-token activations to predict the edit's effect on the output (logit / nats / flip rate), or sets a strength from that prediction, is a violation (R3); statistics, rankings and misfiring checks are allowed (R1). Per-call application by the agent: notes/note6_split_application.md; call 213 by the user decision of 2026-11-13 13:35 (normalisation + measured dose)",
+ "decided": "2026-11-14T01:10+11:00",
+ "flagged": {
+  "205": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "207": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "213": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "252": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "255": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "270": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "279": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "285": "note-(6) predicted-effect class (audit 2026-11-13)",
+  "287": "note-(6) predicted-effect class (audit 2026-11-13)"
+ },
+ "upheld": [],
+ "overruled": [
+  "205",
+  "207",
+  "213",
+  "252",
+  "255",
+  "270",
+  "279",
+  "285",
+  "287"
+ ],
+ "overruled_reason": "beta = target hidden units / mean gate firing at recorded positions and firing statistics; no predicted output effect; doses measured by forward passes",
+ "valid": true,
+ "skip_rule": "borderline / not met (A6 interim; user kept it 2026-11-14): 28.8 % over 4 samples without the skip generations' correct answers",
+ "forbidden_attempts_refused": 0
+}

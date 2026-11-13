@@ -914,3 +914,12 @@ Heavy work stays on wsl, laptop and pods.
   that beat thinking off, limitations) and Figure 1 (DS episodes drawn: valid diamond, invalid crosses) updated.
 - 03:00 opus_s2 rescore pod: 3 failed acquisitions (no ssh ×2, a known bad host), the 4th (community 3090 uve7) slow
   to set up (vLLM install > 1 h on that host); left running.
+- 07:08 **DS unhinted s3 ended** (final answer, turn 403, 48/50 passes, 37 edits; submitted: one layer-23 down_proj
+  tensor, a `</think>` column write plus three rank-one gates). MATH-500 scoring running in the episode's session;
+  post_episode.sh waits for it. No DS episode runs now, so the Claude labeller is free again.
+- 07:12 DS hinted s2 Claude label: success (agrees with Codex). Labels applied to both DS s2 runs (run_class.json
+  created; counts true for hinted s2, valid with the skip rule borderline / not met; counts false for unhinted s2,
+  simulation-allowed tier) and DS hinted s1 set to counts false (call 81). Localised at 28 (hinted s2, Codex; Claude 29)
+  and 27 (unhinted s2). Codex's tool flag on hinted s2 call 293 ("load broken") overruled as in DS hinted s1 call 7: the
+  editor had shadowed load() itself and found the real loader (calls 294, 334). Self-report: 3 and 2 contradicted, 0
+  material each. Preprint: Table 3 and Table 5 cells and the labeller-agreement paragraph filled.

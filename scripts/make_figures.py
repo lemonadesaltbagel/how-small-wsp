@@ -27,7 +27,7 @@ THINK_OFF = 0.4895           # unedited base with thinking turned off, 4 samples
 SIZES = {"qwen0p8b": 0.8, "qwen9b": 9.0, "qwen27b": 27.0}
 DS_INTERVAL = (16.0, 748.0)  # deepseek-flash: activated (decode) .. total (backbone + Engram), model card
 # deepseek-flash main-matrix episodes: (prompt, reported score = 4-sample mean for runs above the line, valid)
-# (notes/pending_user_decisions.md 2026-11-14 03:10; s2 runs have no run_class.json yet)
+# (notes/pending_user_decisions.md 2026-11-14 03:10; drawn from this list, not the ledger: no size on the Qwen axis)
 DS = [("hinted", 0.4985, False), ("unhinted", 0.068, False), ("hinted", 0.3665, True), ("unhinted", 0.547, False)]
 
 # Categorical slots 1-2 of the reference palette, validated (scripts/validate_palette.js, light: all checks pass)

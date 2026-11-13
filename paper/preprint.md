@@ -354,7 +354,7 @@ cell: 0 of 2 in every cell; deepseek-flash hinted s2 is borderline (below).
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
 | deepseek-flash | hinted | 1 | 49.85 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | no |
 | deepseek-flash | unhinted | 1 | 6.8 % | localised, edit failed (49) | 461 | 300 | 50 | 46 / 6 | 292/0/8 | no |
-| deepseek-flash | hinted | 2 | 36.65 % | success by score (28) [second label pending]; 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | audit: yes; skip rule: borderline / not met |
+| deepseek-flash | hinted | 2 | 36.65 % | success by score (28; both labellers); 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | audit: yes; skip rule: borderline / not met |
 | deepseek-flash | unhinted | 2 | 54.7 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | no (simulation allowed) |
 
 No Qwen episode comes near the repair threshold (29.0 %). Eleven of the twelve Qwen scores lie within sampling noise of
@@ -533,10 +533,10 @@ are invalid for them. In neither does such a call feed the submitted edit: Opus 
 and deepseek-flash overwrote the edit. With two runs, and the violating calls outside both final edits, this is a
 correlation; we do not read it causally.
 
-**Labeller agreement.** The two labellers agree on the label of all 15 doubly labelled main-matrix episodes
-(deepseek-flash hinted s2 has one label so far). Where both label an episode localised (7), their `localised_at_call`
-agrees exactly in four, differs by one call in one (104 vs 105; we take 104, the earlier call that meets the
-criterion, A6), and differs by 20 and 16 in two. The first is
+**Labeller agreement.** The two labellers agree on the label of all 16 main-matrix episodes.
+Where both label an episode localised (8), their `localised_at_call` agrees exactly in four, differs by one call in two
+(104 vs 105, and deepseek-flash hinted s2 28 vs 29: loop vs non-loop MLP activation contrasts; we take the earlier call
+that meets the criterion, A6), and differs by 20 and 16 in two. The first is
 deepseek-flash hinted s1, 46 vs 66: attention at the repeat period, which the localisation criterion lists as
 separating evidence, vs the later loop-vs-pre-loop hidden-state contrast; we take 46. The second is deepseek-flash
 unhinted s2, 27 vs 43: a layer-18 hidden-state direction contrasting loop and solution tokens, vs layer-wise MLP neuron
@@ -597,7 +597,7 @@ as defined in §3.5.
 | Qwen3.5-27B | unhinted | 2 | 34 | 72 / 38 | 130 / 12 | yes | yes (5 nudges) |
 | deepseek-flash | hinted | 1 | 50 | 73 / 23 | 306 / 82 | no | no |
 | deepseek-flash | unhinted | 1 | 50 | 71 / 21 | 300 / 61 | no | no |
-| deepseek-flash | hinted | 2 | 48 | 63 / 15 | 303 / 64 | [after the second label] | yes (5 nudges) |
+| deepseek-flash | hinted | 2 | 48 | 63 / 15 | 303 / 64 | no | yes (5 nudges) |
 | deepseek-flash | unhinted | 2 | 50 | 55 / 5 | 298 / 54 | no | no |
 
 **Reviewer and audit disagree on one class.** In deepseek-flash unhinted s1, the online reviewer allowed eight calls

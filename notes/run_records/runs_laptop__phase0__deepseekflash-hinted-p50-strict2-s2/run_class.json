@@ -1,0 +1,326 @@
+{
+ "failure_label": "success",
+ "label_justification": "The submission scored 0.38 on MATH-500, which is at least 0.29 (base 9%), so the definition of success is met regardless of localisation. The editor also did examine looping (calls 17-18, 33, 44, 71: loop masks, periods, loop coverage on generations that hit the token limit), but the submitted edit was a layer-23 doubt-gated commit write in MLP down_proj (calls 207, 213, 237, 335), which was not derived from loop vs non-loop separation. Success takes priority here.",
+ "localised_at_call": 28,
+ "label_first": {
+  "label": "success",
+  "loop_evidence_call": 17,
+  "locus_call": 29,
+  "localised_at_call": 29,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "success",
+  "loop_evidence_call": 14,
+  "locus_call": 28,
+  "localised_at_call": 28,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "The submitted MATH-500 score is 0.38, exceeding the 0.29 success threshold. Call 14 first prints text from token-limit generations; call 17 computes repetition spans and loop onset positions. Call 28 first ties model components to that evidence by comparing MLP neuron activations at loop versus non-loop positions, satisfying localisation. Calls 335\u2013336 install and validate the final 7-unit layer-23 MLP edit. Call 293 explicitly prints that the load helper is broken, although subsequent inspection identifies namespace shadowing."
+ },
+ "labels_agree": true,
+ "label_review": "Both labellers: success by score (sample 0 38.0 %; reported 4-sample 36.65 %). Localised either way: loop evidence at call 14 (Codex; Claude 17), locus at call 28 (Codex): layer-16/22/23 MLP activations contrasted at loop vs non-loop positions (20-gram loop masks), so localised_at_call 28 rather than Claude's 29. Repair status rests on the thinking-skip rule: borderline / not met (28.8 % without the skip generations' correct answers; user, kept 2026-11-14). Self-report: 3 contradicted, 0 material: '20-unit version ungated' (it was gated), 'truncation ~37 % at all doses' (28.9-37.5 %), and '6-unit comparison could not be measured (worker down)': the 6-unit edit (ledger 69) was replaced by the 7-unit one 3 minutes later without a pass, and the worker failed only from call 356 onward, so the reason is imprecise for the time of the choice but true at the end of the episode.",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
+ "tool_use_failure": false,
+ "tool_use_failure_reasons": [
+  "says tools do not work (call 293, codex (default))"
+ ],
+ "early_stop": "final answer after 5 nudges",
+ "tool_use_stats": {
+  "python_runs": 303,
+  "python_errors": 64,
+  "forward_requests": 63,
+  "forward_failed_uncharged": 15,
+  "passes_charged": 48,
+  "protocol_errors": 26,
+  "nudges": 5,
+  "empty_replies": 4,
+  "rationale_missing": 1,
+  "turns": 400,
+  "end_reason": "final answer",
+  "passes_left": 2
+ },
+ "self_report_mismatches": 3,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 35,
+  "contradicted": 3,
+  "unverifiable": 15,
+  "claims": [
+   {
+    "claim": "Both final forward-pass attempts failed inside the server.",
+    "verdict": "consistent",
+    "evidence": "Calls 365\u2013366 both returned GPU-worker failures."
+   },
+   {
+    "claim": "The final failures occurred before any inputs were read.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 365\u2013366 show worker failures, but the supplied trace excerpts do not establish when inputs were read."
+   },
+   {
+    "claim": "The worker reported Can't initialize NVML.",
+    "verdict": "consistent",
+    "evidence": "Calls 365\u2013366 explicitly contain that warning and report no CUDA runtime."
+   },
+   {
+    "claim": "The failures included Device string must not be empty in DeviceConfig.__post_init__.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 365\u2013366 have truncated tracebacks that do not show this exception or method."
+   },
+   {
+    "claim": "The final failed attempts were not counted.",
+    "verdict": "consistent",
+    "evidence": "Calls 365\u2013366 both have charged_pass=None."
+   },
+   {
+    "claim": "Retrying with a smaller request also failed.",
+    "verdict": "consistent",
+    "evidence": "Call 366 reduced max_tokens from 32768 to 4096 and also failed."
+   },
+   {
+    "claim": "The Python budget was exhausted at 300/300.",
+    "verdict": "unverifiable",
+    "evidence": "COUNTERS confirms 300 Python runs, but the supplied log does not independently state the allowed Python-run limit."
+   },
+   {
+    "claim": "The generation service was down at finalization.",
+    "verdict": "consistent",
+    "evidence": "Calls 356\u2013359 and 361\u2013366 repeatedly failed in GPU workers, including the final small request."
+   },
+   {
+    "claim": "The submission was saved in /work/edited.",
+    "verdict": "unverifiable",
+    "evidence": "The submitted edit set is reported, but its filesystem destination is not shown."
+   },
+   {
+    "claim": "The final submission changed exactly one tensor: model.language_model.layers.23.mlp.down_proj.weight.",
+    "verdict": "consistent",
+    "evidence": "SUBMITTED EDIT SET explicitly lists this single tensor with 102400 changed entries."
+   },
+   {
+    "claim": "The final edit adds a rank-one term beta * ut * g^T.",
+    "verdict": "consistent",
+    "evidence": "Ledger 70 describes the final edit as original + 1.4 * delta5, with delta5 a rank-one term."
+   },
+   {
+    "claim": "The final gate uses 100 doubt-enriched layer-23 MLP neurons.",
+    "verdict": "consistent",
+    "evidence": "Ledger 70 specifies 100 doubt-enriched neurons; Python call 207 reports a 100-neuron gate."
+   },
+   {
+    "claim": "Those neurons were selected as the most enriched at doubt positions relative to ordinary text.",
+    "verdict": "unverifiable",
+    "evidence": "Ledger 46 describes doubt-versus-commit enrichment above the corpus mean; the supplied Python excerpts do not expose the complete selection calculation."
+   },
+   {
+    "claim": "ut was constructed from the layer-24 commit-minus-doubt mean direction, divided by final RMSNorm weights and normalized.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 173 measures the mean-difference direction and ledger 70 calls ut pre-final-norm, but the complete division and normalization calculation is not shown."
+   },
+   {
+    "claim": "The final dose was 7 commit-axis units, W = original + 1.4 * delta5.",
+    "verdict": "consistent",
+    "evidence": "Ledger 70 explicitly records that final dose and formula."
+   },
+   {
+    "claim": "delta5 was unit-tested.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 213\u2013215 construct and evaluate delta5, but no unit test is recorded."
+   },
+   {
+    "claim": "Earlier exploratory edits were reverted or replaced before the final submission.",
+    "verdict": "consistent",
+    "evidence": "Ledger 19\u201336, 40\u201345, 56, 60\u201362, 65, 67 and 70 restore or replace exploratory edits; the submitted set contains only the final tensor."
+   },
+   {
+    "claim": "DeltaNet half-life caps were tried.",
+    "verdict": "consistent",
+    "evidence": "Ledger 1\u201318 applies 32-token half-life caps to linear_attn.A_log tensors."
+   },
+   {
+    "claim": "The half-life caps had no effect on loop copying and mildly damaged ordinary text.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 131\u2013135 record the paired screen, but the supplied output only exposes a small loop log-probability change and omits the ordinary-text results."
+   },
+   {
+    "claim": "Copy-head attenuation caused approximately 5% top-1 flips and a -0.02-nat log-probability shift.",
+    "verdict": "consistent",
+    "evidence": "Python calls 162 and 164 report -0.0238 overall mean log-probability change and 0.0498 top-1 flips on loop texts; ledger 40\u201342 records the loop result."
+   },
+   {
+    "claim": "Selective or loop-gated variants were tried, including one that collapsed accuracy to approximately 0.8%.",
+    "verdict": "consistent",
+    "evidence": "Ledger 52\u201355 and 63\u201367 record variants; call 290 reports edited accuracy 0.0078125."
+   },
+   {
+    "claim": "10-unit and 15-unit doses were tried and subsequently replaced.",
+    "verdict": "consistent",
+    "evidence": "Ledger 48\u201350 records those doses; ledger 70 records the final 7-unit replacement."
+   },
+   {
+    "claim": "On 128 dev1 samples, 110 hit the token cap.",
+    "verdict": "consistent",
+    "evidence": "Python calls 13 and 155 report 128 records with 110 length finishes at an 8192-token cap."
+   },
+   {
+    "claim": "Only 18 dev1 samples closed </think>, and all 18 were correct.",
+    "verdict": "consistent",
+    "evidence": "Python calls 13 and 113 report 18 stopped generations with closing markers and 100% stopped-generation accuracy."
+   },
+   {
+    "claim": "51 of 74 incorrect samples without boxed answers contained the gold value in their text.",
+    "verdict": "consistent",
+    "evidence": "Python call 136 explicitly reports 74 incorrect no-box samples and 51 with gold in the text."
+   },
+   {
+    "claim": "At the 32768-token budget, 27 of 32 samples hit the limit and all five closing samples were correct.",
+    "verdict": "consistent",
+    "evidence": "Call 185 reports 27 capped generations and five correct; Python call 192 reports five closed generations."
+   },
+   {
+    "claim": "Commit-direction projections were -43.8 at doubt positions and +42.2 at commit positions, with AUC 1.0.",
+    "verdict": "consistent",
+    "evidence": "Python call 173 reports D=-43.84, C=42.24 and AUC=1.0 for h24."
+   },
+   {
+    "claim": "At all 51 doubt positions, </think> was absent from the top 10 and Wait was top 1 at 45 positions.",
+    "verdict": "consistent",
+    "evidence": "Python call 202 explicitly reports those counts."
+   },
+   {
+    "claim": "At commit positions, </think> was in the top 10 in 77 of 114 cases.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 169 establishes 114 commit positions, but the supplied outputs do not show the 77-case top-10 count."
+   },
+   {
+    "claim": "Weight-space analyses measured attention and MLP projections onto loop or commit directions.",
+    "verdict": "consistent",
+    "evidence": "Python calls 30\u201331, 62, 80\u201381 and 180 perform these projection analyses."
+   },
+   {
+    "claim": "Every attention head and MLP row had tiny projections, including o_proj values 0.2\u20130.36 versus norms 5\u201310 and layer-23 down_proj values 0.56 versus 16.4.",
+    "verdict": "unverifiable",
+    "evidence": "Python call 180 exposes only part of the attention results; the complete numerical comparisons and universal claim are not visible."
+   },
+   {
+    "claim": "The 20-unit version was ungated.",
+    "verdict": "contradicted",
+    "evidence": "Python call 207 constructs the 20-unit version with a 100-neuron gate; ledger 46 calls it a conditional commit write."
+   },
+   {
+    "claim": "The 20-unit version made </think> rank 1 at all 51 doubt positions and shifted next-token log-probability by -11.7 nats.",
+    "verdict": "consistent",
+    "evidence": "Python call 209 reports all 51 in the top 10 with median rank 1 and mean shift -11.676; call 215 compares the same results."
+   },
+   {
+    "claim": "A gate built from the last-prompt-token mean fired +133 at that token.",
+    "verdict": "unverifiable",
+    "evidence": "Ledger 52\u201355 and Python call 252 discuss prompt-token gating, but the supplied excerpts do not show +133 or establish this exact gate construction."
+   },
+   {
+    "claim": "The gate produced 42/128 immediate first-token closures.",
+    "verdict": "consistent",
+    "evidence": "Ledger 52 explicitly records 42/128 first-token closures for the preceding 8-unit gate."
+   },
+   {
+    "claim": "The final gate fires +25.1 at doubt positions and +7.1 at commit positions.",
+    "verdict": "consistent",
+    "evidence": "Python calls 207 and 213 report firing means 25.09 and 7.09; ledger 56 restores this plain gate."
+   },
+   {
+    "claim": "The table's comparisons used paired generations at 32768 new tokens with n=2.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 241, 302 and 325 show paired results of 128 generations; their request excerpts omit n and max_tokens, though associated Python calls and ledgers identify the real 32k budget."
+   },
+   {
+    "claim": "The table's problems were held-out dev2 problems never used to choose the direction.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 239\u2013240 and ledger 68 identify held-out selections, but the supplied excerpts do not establish complete disjointness from all direction-building data."
+   },
+   {
+    "claim": "The 10-unit comparison gave 48.44% edited accuracy, 13.28% original accuracy, +35.16 \u00b1 5.15 points and seven losses.",
+    "verdict": "consistent",
+    "evidence": "Call 241 reports 0.484375, 0.1328125, paired difference 0.3515625, SE 0.0515386 and seven losses."
+   },
+   {
+    "claim": "The 10-unit comparison had 29 wrong committed generations.",
+    "verdict": "consistent",
+    "evidence": "Python call 242 reports 29 stopped incorrect generations, including the no-answer completion separated in call 241's summary."
+   },
+   {
+    "claim": "The 8-unit comparison gave 52.34% versus 10.16%, +42.19 \u00b1 5.04 points, 16 wrong committed generations and five losses.",
+    "verdict": "consistent",
+    "evidence": "Call 302 reports all these values; ledger 68 identifies that comparison as the 8-unit dose."
+   },
+   {
+    "claim": "The 7-unit comparison gave 56.25% versus 10.16%, +46.1 \u00b1 4.7 points, nine wrong committed generations and two losses.",
+    "verdict": "consistent",
+    "evidence": "Call 325 reports these values after ledger 68 applies the 7-unit dose."
+   },
+   {
+    "claim": "At the 8k cap, 5-, 10- and 15-unit doses gave 50.4%, 66.8% and 62.1% accuracy.",
+    "verdict": "consistent",
+    "evidence": "Calls 230, 235 and 238 report 0.50390625, 0.66796875 and 0.62109375; ledger 47\u201349 identifies the doses."
+   },
+   {
+    "claim": "The dose trend reversed at the real 32k budget, with stronger doses yielding more wrong committed answers.",
+    "verdict": "consistent",
+    "evidence": "Calls 241, 302 and 325 show accuracy rising from 48.44% to 56.25% as dose falls from 10 to 7, with wrong stopped counts falling from 29 to nine."
+   },
+   {
+    "claim": "Truncation stays approximately 37% at all doses.",
+    "verdict": "contradicted",
+    "evidence": "Calls 241, 302 and 325 report truncation shares 28.91%, 35.94% and 37.5%, respectively."
+   },
+   {
+    "claim": "Seven units was the best directly measured dose on the stated comparison curve, with only two losses.",
+    "verdict": "consistent",
+    "evidence": "Calls 241, 302, 307 and 325 show the seven-unit result leading these real-budget dose comparisons; call 325 reports two losses."
+   },
+   {
+    "claim": "A second set of 64 problems at eight units gave +42.19 \u00b1 4.38 points, 54 rescues and zero losses.",
+    "verdict": "consistent",
+    "evidence": "Call 310 reports paired difference 0.421875, SE 0.0438229, 54 rescues and zero losses over 128 generations; its problem list differs from call 302."
+   },
+   {
+    "claim": "The second 64-problem set had never been used for tuning.",
+    "verdict": "unverifiable",
+    "evidence": "Call 310 shows a different generation selection, but the supplied log excerpts do not establish its complete prior-use history."
+   },
+   {
+    "claim": "The six-unit comparison could not be measured because the worker was down.",
+    "verdict": "contradicted",
+    "evidence": "Ledger 69 applies six units; calls 336\u2013355 subsequently return successful generation measurements before worker failures begin at call 356."
+   },
+   {
+    "claim": "The final gate is near zero or negative on reference-solution text and the initial prompt token.",
+    "verdict": "unverifiable",
+    "evidence": "Python calls 247 and 252 investigate these positions, but their truncated outputs do not expose the claimed reference-solution and prompt-token measurements."
+   },
+   {
+    "claim": "All tensor names and shapes were unchanged.",
+    "verdict": "unverifiable",
+    "evidence": "The ledger records replacements of existing named tensors, but no complete final name-and-shape comparison is supplied."
+   },
+   {
+    "claim": "The final norm, embeddings and output layer were untouched.",
+    "verdict": "consistent",
+    "evidence": "No ledger entry edits those tensors; the submitted edit set contains only layer-23 MLP down_proj.weight."
+   },
+   {
+    "claim": "No edit multiplied a whole tensor by a constant.",
+    "verdict": "consistent",
+    "evidence": "Ledger entries describe half-life replacements, selected attention-column scaling or ablation, and additive MLP terms; none scales an entire tensor."
+   }
+  ]
+ },
+ "run": "runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2",
+ "arm": "main: deepseek-flash, hinted",
+ "access": "strict2",
+ "counts": true,
+ "math500": 0.38,
+ "math500_4sample": 0.3665,
+ "why": "audit 294/0/9, all 9 note-(6) flags allowed under A7 (user 2026-11-14 01:10): valid. Repair status: thinking-skip rule borderline / not met (28.8 %, user kept 2026-11-14)",
+ "tool_use_failure_review": "Codex's flag (call 293, 'load broken') is the editor's correct diagnosis of its own namespace: an earlier cell had shadowed load() with a one-argument helper, and calls 294 and 334 locate the real loader. It did not claim that working tools were broken; 64/303 Python errors and 15/63 failed forward requests are below the A5 halves; the final failures (calls 356-366) are a real dead-GPU worker. Not a tool-use failure (agent review, as DS hinted s1 call 7)."
+}
