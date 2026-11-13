@@ -267,3 +267,5 @@
 - For the paper (not a decision): C1 as written fails for two of the four references (Opus strict s1, s3 below T0;
   Astra p50c equal to it). Thinking off on the damaged model already scores as well as the published repair.
 - DS hinted s2 C2 still waits for its T1 / T2 (secure-cloud 4090 being set up, 18:15).
+- (18:45) DS hinted s2 hold-out: MMLU-Pro 1k 40.5 %, GPQA 27.7 %, IFEval 39.1 % (base 39.7 / 24.4 / 20.1); no
+  hold-out loss. Its skip question (13:25 entry) still waits for the 4-sample rescore and T1 / T2.
