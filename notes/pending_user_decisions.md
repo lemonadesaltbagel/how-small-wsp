@@ -363,3 +363,19 @@
   simulation-allowed side; the two runs that beat thinking off both contain predicted-effect calls (correlational, n = 2,
   none in the final edit, no causal reading); contribution 2 rewritten.
 - Records: audit_adjudication.json for Opus s1 / s2 / s3, DS unhinted s2, DS hinted s1; Opus s2 run_class counts false.
+
+## 2026-11-14 07:45 — DS unhinted s3 (46.6 %): audit 283 / 0 / 17; proposal: invalid by calls 123 and 197
+- Episode ended 07:08 (final answer, 403 turns, 48/50 passes). MATH-500 sample 0: **46.6 %**; thinking skips 59/500
+  (11.8 %), 43.8 % without their correct answers (above the 29.0 % line); vs thinking off −3.8 pp (SE 2.3, 1 sample).
+  4-sample re-score queued (secure pod, after Astra's). Hold-out running on its pool pod.
+- Labels: both success; localised at call 11 (Codex; Claude 40). Self-report 0 contradicted. Codex's tool flag
+  (call 77) overruled: the editor's own load() from call 20.
+- **Proposal under A7** (per-call table in notes/note6_split_application.md): upheld **123** (gamma = 2.0 for the b2
+  gate, justified as "about 3.9 nats of close-logit boost in the loop state" from b2·h on recorded positions; example 1)
+  and **197** (gamma = 8 for the wall gate, computed as 12 nats / (nats-per-unit × mean b_wall at recorded walls);
+  example 1, as Opus s2 237). Both strengths are in the submitted edit. Attempts 183 / 184 crashed before any output and
+  270 is prose-only on an unsubmitted edit: not needed. Call 86 (the c = 0.4 column write) belongs to the close-early
+  class and is left to the skip rule (11.8 %, met on sample 0). The other 11 allowed (firing statistics, hidden units).
+- If accepted: invalid by the Validity rule; reported on the simulation-allowed side with its 4-sample score; it
+  would be the third open-editor run with predicted-effect calls above the line, and it does not beat thinking off on
+  sample 0. run_class.json has counts null / counts_pending until you decide.

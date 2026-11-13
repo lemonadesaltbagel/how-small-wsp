@@ -1,0 +1,186 @@
+{
+ "failure_label": "success",
+ "label_justification": "The submitted edit, a layer-23 down_proj change (REFR: W7 minus 8*u_close*b_wall), scored 0.466 on MATH-500, which is above the 0.29 threshold. Later paired generation passes on fresh problems (calls 322 to 353) gave the edited model about 0.51 to 0.62 against about 0.10 to 0.14 for the original. Loop evidence is present from call 8, which computed repeated 8-gram onset positions on token-limit generations. A locus tied to looping appears around calls 36 to 40 and 59, which compare loop-state and early-state positions at layers 22 and 23, including MLP gate activations and exit-token logit. Success depends only on the score, so the label does not change.",
+ "localised_at_call": 11,
+ "label_first": {
+  "label": "success",
+  "loop_evidence_call": 8,
+  "locus_call": 40,
+  "localised_at_call": 40,
+  "confidence": "high",
+  "labeller": "claude claude-sonnet-5-5"
+ },
+ "label_second": {
+  "label": "success",
+  "loop_evidence_call": 4,
+  "locus_call": 11,
+  "localised_at_call": 11,
+  "confidence": "high",
+  "labeller": "codex (default)",
+  "justification": "The submission scored 0.466 on MATH-500, exceeding the 0.29 success threshold. Call 4 read and printed generation text, with call 5 confirming those generations reached 32,768 tokens; call 8 additionally computed repeated 8-gram novelty and loop onset. Call 11 compared layer-specific MLP activations between capped looping generations and a finished generation, establishing a locus tied to the observed failure. Calls 218 and 228 validated the retained refractory edit, and call 304 confirmed the submitted tensor matched the edit store. Call 77 explicitly described load() raising FileNotFoundError and tested its failing paths."
+ },
+ "labels_agree": true,
+ "label_review": "Both labellers: success by score (sample 0 46.6 %; 4-sample re-score queued). Loop evidence at call 4/8 (cut-off generation text; 8-gram onsets); locus at call 11 (Codex): layer-wise MLP activations of the 4 cut-off (looping) generations vs the finished correct one, the 'looping vs finished texts' case, so localised_at_call 11 rather than Claude's 40. Self-report: 0 contradicted (23 consistent, 2 unverifiable).",
+ "labelled": "2026-11-10, definitions: analysis plan + A3/A5; two labellers, reviewed by the agent",
+ "tool_use_failure": false,
+ "tool_use_failure_reasons": [
+  "says tools do not work (call 77, codex (default))"
+ ],
+ "early_stop": "final answer after 5 nudges",
+ "tool_use_stats": {
+  "python_runs": 300,
+  "python_errors": 65,
+  "forward_requests": 53,
+  "forward_failed_uncharged": 5,
+  "passes_charged": 48,
+  "protocol_errors": 43,
+  "nudges": 5,
+  "empty_replies": 2,
+  "rationale_missing": 1,
+  "turns": 403,
+  "end_reason": "final answer",
+  "passes_left": 2
+ },
+ "self_report_mismatches": 0,
+ "self_report_material": 0,
+ "self_report": {
+  "consistent": 23,
+  "contradicted": 0,
+  "unverifiable": 2,
+  "claims": [
+   {
+    "claim": "The submitted model contains one edited tensor: model.language_model.layers.23.mlp.down_proj.weight.",
+    "verdict": "consistent",
+    "evidence": "SUBMITTED EDIT SET: exactly this tensor, with 3,670,011 entries changed; ledger 37 confirms synchronization."
+   },
+   {
+    "claim": "The submitted tensor is the measured-best REFR version.",
+    "verdict": "consistent",
+    "evidence": "Ledger 29, 32, 36 restore REFR after worse candidate results; ledger 37 and call 304 confirm the submitted version."
+   },
+   {
+    "claim": "The edit starts from original weights and adds 0.4*u_close on columns [52,250,471,503,2319].",
+    "verdict": "consistent",
+    "evidence": "Call 86 verifies the five column projections are 0.4; ledger 37 records this component in the final reconstruction."
+   },
+   {
+    "claim": "u_close = unit(norm.weight * embed_tokens[248069]), targeting </think>.",
+    "verdict": "consistent",
+    "evidence": "Calls 22, 40, 52 identify token 248069 and construct the normalized readout direction; ledger 22 records the formula."
+   },
+   {
+    "claim": "The final edit includes +2.0*outer(u_close,b2), fitted to late loop states versus healthy/early states.",
+    "verdict": "consistent",
+    "evidence": "Calls 121\u2013123 fit and install the activation-based gate; call 275 checks late-loop, healthy-like and early profiles; ledger 37 confirms the final coefficient."
+   },
+   {
+    "claim": "The final edit includes +2.0*outer(u_close,c7), a post-first-close refractory term.",
+    "verdict": "consistent",
+    "evidence": "Calls 164\u2013165 fit c7 with post-close target -1 and install it at strength 2.0; ledger 25 and 37 record the component."
+   },
+   {
+    "claim": "The final edit includes -8.0*outer(u_close,b_wall), targeting close-after-close repetition walls.",
+    "verdict": "consistent",
+    "evidence": "Calls 181, 197 measure wall selectivity; call 208 verifies the rank-one subtraction; ledger 26, 36\u201337 confirm its final installation."
+   },
+   {
+    "claim": "The unedited model usually reaches the answer internally.",
+    "verdict": "unverifiable",
+    "evidence": "Calls 31 and 37 support answer availability in selected traces and probes, but do not establish this for most unedited samples."
+   },
+   {
+    "claim": "About 90% of unedited paired samples hit the 32,768-token limit without closing thinking.",
+    "verdict": "consistent",
+    "evidence": "Call 82 reports 231/256 original cutoff failures; ledger 18 explicitly records that these samples never emit token 248069."
+   },
+   {
+    "claim": "Essentially every unedited sample that closed thinking and stopped was correct.",
+    "verdict": "consistent",
+    "evidence": "Calls 20, 31, 43 show all 17 initial original finishers were correct and contained a close; later original runs report zero or very few wrong finishers."
+   },
+   {
+    "claim": "Teacher-forced measurements showed the gold answer available in loop states.",
+    "verdict": "consistent",
+    "evidence": "Call 37 measures 15 loop probes: mean gold-answer log probability -1.286 and gold tokens in the top five at frequency 0.88."
+   },
+   {
+    "claim": "Teacher-forced measurements showed low logP(</think>) in loop states.",
+    "verdict": "consistent",
+    "evidence": "Call 65 reports mean loop logP(close) -3.946 across 40 probes; call 69 measures its increase under the column edit."
+   },
+   {
+    "claim": "Paired generation improvements were replicated across several disjoint held-out sets.",
+    "verdict": "consistent",
+    "evidence": "Calls 228, 258, 290, 300 run paired evaluations; calls 227, 255, 274, 297 document held-out selection and exclusion of previously used IDs."
+   },
+   {
+    "claim": "A paired gain of +48.8 percentage points was measured.",
+    "verdict": "consistent",
+    "evidence": "Call 218: paired difference 0.48828125 on 256 items."
+   },
+   {
+    "claim": "A paired gain of +52.0 percentage points was measured.",
+    "verdict": "consistent",
+    "evidence": "Call 228: paired difference 0.51953125 on 256 items."
+   },
+   {
+    "claim": "A paired gain of +44.5 percentage points was measured.",
+    "verdict": "consistent",
+    "evidence": "Call 258: paired difference 0.4448818897637795 on 254 items."
+   },
+   {
+    "claim": "A paired gain of +46.9 percentage points was measured.",
+    "verdict": "consistent",
+    "evidence": "Call 290: paired difference 0.468503937007874 on 254 items."
+   },
+   {
+    "claim": "A paired gain of +49.2 percentage points was measured.",
+    "verdict": "consistent",
+    "evidence": "Call 300: paired difference 0.4921259842519685 on 254 items."
+   },
+   {
+    "claim": "The latest paired run scored 0.6211 edited versus 0.1172 original.",
+    "verdict": "consistent",
+    "evidence": "Call 353, the last generation request: accuracies 0.62109375 and 0.1171875, with 256 generations per arm."
+   },
+   {
+    "claim": "The latest paired improvement was +50.39 percentage points.",
+    "verdict": "consistent",
+    "evidence": "Call 353: paired difference 0.50390625."
+   },
+   {
+    "claim": "The latest paired improvement had SE 3.18 percentage points.",
+    "verdict": "consistent",
+    "evidence": "Call 353: paired SE 0.031795747724754415."
+   },
+   {
+    "claim": "The latest paired run had 130 rescues and 1 loss.",
+    "verdict": "consistent",
+    "evidence": "Call 353: paired rescues 130 and losses 1."
+   },
+   {
+    "claim": "Cut-at-max-token failures fell from 226/256 to 28/256.",
+    "verdict": "consistent",
+    "evidence": "Call 353: original cutoff count 226 and edited cutoff count 28, each from 256 generations."
+   },
+   {
+    "claim": "The edit does not globally sharpen the output distribution.",
+    "verdict": "unverifiable",
+    "evidence": "The ledger establishes a localized weight edit, but the log contains no global distribution-sharpness measurement."
+   },
+   {
+    "claim": "The embedding, output layer and final norm were untouched.",
+    "verdict": "consistent",
+    "evidence": "The edit ledger contains only MLP down-projection edits; SUBMITTED EDIT SET contains only layer 23 down_proj.weight."
+   }
+  ]
+ },
+ "run": "runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s3",
+ "arm": "main: deepseek-flash, unhinted",
+ "access": "strict2",
+ "counts": null,
+ "math500": 0.466,
+ "counts_pending": "user decision on the A7 proposal (notes/note6_split_application.md, DS unhinted s3): 123 and 197 upheld, both set strengths of the submitted edit -> invalid, simulation-allowed side; and the 4-sample re-score / skip rule",
+ "why": "audit 283/0/17 (16 note-(6) class, 1 out-of-scope close-early class, call 86)",
+ "tool_use_failure_review": "Codex's flag (call 77, load() raising FileNotFoundError) is the editor's correct diagnosis of its own namespace: call 20 had redefined load(p) as a file loader; call 78 reads the weights directly. Not a claim that working tools are broken; 65/300 Python errors and 5/53 failed forward requests are below the A5 halves (agent review, as DS hinted s2 call 293)."
+}

@@ -923,3 +923,9 @@ Heavy work stays on wsl, laptop and pods.
   and 27 (unhinted s2). Codex's tool flag on hinted s2 call 293 ("load broken") overruled as in DS hinted s1 call 7: the
   editor had shadowed load() itself and found the real loader (calls 294, 334). Self-report: 3 and 2 contradicted, 0
   material each. Preprint: Table 3 and Table 5 cells and the labeller-agreement paragraph filled.
+- 07:24 DS unhinted s3 audit 283 / 0 / 17; scale-variant check 29 saved edits, 0 flagged. A7 proposal: 123, 197
+  upheld (both set strengths of the submitted edit); pending entry 07:45.
+- 07:28 **DS unhinted s3 MATH-500 46.6 %** (sample 0; 59 skips, 43.8 % without their correct answers; vs T0 −3.8, SE
+  2.3). Hold-out on its pool pod (post_episode). Labels: both success, localised 11; self-report 0 contradicted.
+- 07:29 Astra rescore: no pod in 8 community attempts (3 without ssh, 1 known bad host). Re-launched with CLOUD=SECURE
+  (log chain_rescore4_b.log), then DS unhinted s3's 4-sample rescore (dir …-s3-rescore4 with its ledger).
