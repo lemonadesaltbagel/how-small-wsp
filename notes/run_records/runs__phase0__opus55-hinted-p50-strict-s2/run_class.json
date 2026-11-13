@@ -1,6 +1,6 @@
 {
  "access": "strict (rules v1 + adjudication)",
- "counts": true,
+ "counts": false,
  "arm": "reference: Opus 5.5, strict",
  "math500": 0.554,
  "failure_label": "success",
@@ -344,5 +344,6 @@
     "evidence": "The supplied log contains no final cross-tabulation of END-loop failures by MATH level."
    }
   ]
- }
+ },
+ "counts_note": "invalid under the note-(6) re-audit (call 237; user 2026-11-14): simulation-allowed tier"
 }

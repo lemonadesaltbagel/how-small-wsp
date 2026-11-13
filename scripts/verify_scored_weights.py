@@ -35,7 +35,8 @@ LOG_RECORDS = [
     ("runs/phase0/opus55-hinted-p50-strict-s1", "4-sample rescore", "logs/rescore4_opus_s1.log"),
 ]
 EXTRA_RUNS = ["runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2",  # counted, not yet in the ledger
-              "runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2"]
+              "runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2",
+              "runs/phase0/opus55-hinted-p50-strict-s2"]  # simulation-allowed tier since 2026-11-14, still reported
 
 
 def read_safetensors(path):

@@ -175,3 +175,6 @@ Written after the results; listed as post hoc in the preprint.
 - Applied to every flagged call in every run (notes/note6_split_application.md). The Validity rule is unchanged: an
   upheld violation makes the run invalid whether or not it reaches the submitted edit (open question for DS unhinted
   s2, notes/pending_user_decisions.md 2026-11-14 01:30).
+- (2026-11-14 03:00, user) The Validity rule is kept: DS unhinted s2 is invalid. A7 applies retroactively to the Opus
+  strict runs (re-audit with note (6)): Opus s2 is invalid by call 237; the strict Opus reference is s1 and s3. Invalid
+  runs above the repair line are reported on the "simulation allowed" side (DS unhinted s2, Opus strict s2).

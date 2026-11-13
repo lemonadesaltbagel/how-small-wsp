@@ -15,5 +15,18 @@
   "151": "nl_score / pe_score are projections onto LDA directions w_nl (call 137) and w_pe (call 139); allowed"
  },
  "valid": true,
- "notes": "notes/phase0_log.md, 'Opus strict s1 finished'"
+ "notes": "notes/phase0_log.md, 'Opus strict s1 finished'",
+ "note6_reaudit": {
+  "audit": "harness/runs/note6_reaudit/opus-strict-s1 (rules + note (6), Codex medium batch 8, 2026-11-13 23:17): 4 flags",
+  "overruled": [
+   "137",
+   "140",
+   "145",
+   "151"
+  ],
+  "upheld": [],
+  "reason": "the up row's implied activation at recorded positions and its shortfall: firing / misfiring checks, no predicted output effect (note-(6) split (A7, user 2026-11-14 ~01:10); per-call application: notes/note6_split_application.md)",
+  "applied": "user decision 2026-11-14 ~03:00 (notes/pending_user_decisions.md 2026-11-14 03:10): retroactive to the Opus strict runs",
+  "valid": true
+ }
 }

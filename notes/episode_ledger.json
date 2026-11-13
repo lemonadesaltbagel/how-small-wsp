@@ -175,7 +175,7 @@
   "run": "runs/phase0/opus55-hinted-p50-strict-s2",
   "arm": "reference: Opus 5.5, strict",
   "access": "strict (rules v1 + adjudication)",
-  "counts": true,
+  "counts": false,
   "math500": 0.554,
   "scoring_error": false,
   "failure_label": "success",
@@ -191,7 +191,7 @@
    "violations": 2,
    "valid": false
   },
-  "adjudicated_valid": true,
+  "adjudicated_valid": false,
   "gate": {
    "allow": 288,
    "block": 0,
@@ -573,7 +573,7 @@
    "violations": 15,
    "valid": false
   },
-  "adjudicated_valid": null,
+  "adjudicated_valid": false,
   "gate": {
    "allow": 298,
    "block": 6,
@@ -685,7 +685,7 @@
    "violations": 0,
    "valid": true
   },
-  "adjudicated_valid": null,
+  "adjudicated_valid": true,
   "gate": {
    "allow": 296,
    "block": 2,

@@ -1,0 +1,14 @@
+{
+ "by": "user decision 2026-11-14 ~03:00 (notes/pending_user_decisions.md 2026-11-14 03:10)",
+ "decided": "2026-11-14T03:00+11:00",
+ "audit": "first audit: see notes/phase0_log.md (Opus strict s3); note-(6) re-audit harness/runs/note6_reaudit/opus-strict-s3 (2026-11-13 23:17): 2 flags",
+ "note6_reaudit": {
+  "overruled": [
+   "305",
+   "308"
+  ],
+  "upheld": [],
+  "reason": "saves G5a' with per-layer c chosen to equalise a gate shift; no predicted output effect (note-(6) split (A7, user 2026-11-14 ~01:10); per-call application: notes/note6_split_application.md); G5a' not submitted"
+ },
+ "valid": true
+}

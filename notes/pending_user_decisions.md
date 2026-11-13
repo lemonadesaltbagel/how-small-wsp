@@ -350,3 +350,16 @@
     if the rule applies to Opus, keep Opus s2 valid.
 - **Still open:** retroactivity to the Opus runs (only s2 is affected now, by 237, a non-submitted edit); DS hinted s1
   proposal A.
+
+## 2026-11-14 03:10 — DECIDED (user, ~03:00): option (i); retroactive to Opus; DS hinted s1 by call 81
+- **(i)**: the Validity rule stands; any upheld violation invalidates the run. **DS unhinted s2 invalid**, reported
+  separately on the "simulation allowed" side (54.7 %, 4 samples; unhinted prompt).
+- **Retroactive to Opus**: v1's post hoc ruling already held predicting an edit's effect at recorded tokens a
+  violation (DS strict s1 243 / 244). **Opus strict s2 invalid by call 237**, moved to the simulation-allowed side; its
+  4-sample re-score runs on and goes in that row. **Opus strict reference = s1 and s3.**
+- DS hinted s2's 8 calls allowed (consistent with 13:40). **DS hinted s1 invalid, main reason call 81**; the logit-lens
+  (28 / 31 / 32) and thinking-skip (321) proposals no longer need a ruling.
+- Preprint: on the strict curve no open editor has a valid repair (DS hinted s2 borderline); DS unhinted s2 on the
+  simulation-allowed side; the two runs that beat thinking off both contain predicted-effect calls (correlational, n = 2,
+  none in the final edit, no causal reading); contribution 2 rewritten.
+- Records: audit_adjudication.json for Opus s1 / s2 / s3, DS unhinted s2, DS hinted s1; Opus s2 run_class counts false.

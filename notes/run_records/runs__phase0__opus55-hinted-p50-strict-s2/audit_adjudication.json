@@ -6,6 +6,17 @@
   "102": "silu formula of the neuron being built, on a grid p=-0.05..0.25 (no recorded activations); k = down column . </think> direction (weight analysis)",
   "108": "linear extrapolation in logit space of per-token END log-probs measured by teacher-forced passes 9 and 12; no weights, norms or activation functions"
  },
- "valid": true,
- "notes": "notes/phase0_log.md, 'Opus strict s2 audit'"
+ "valid": false,
+ "notes": "notes/phase0_log.md, 'Opus strict s2 audit'",
+ "note6_reaudit": {
+  "audit": "harness/runs/note6_reaudit/opus-strict-s2 (2026-11-13 23:17): 1 flag",
+  "upheld": [
+   "237"
+  ],
+  "overruled": [],
+  "reason": "N5b's down strength -0.20 set for '~-4 nats on Wait at the median answer-loop activation 2.72' (measured sensitivity x recorded median activation): a predicted output effect sets a strength (note-(6) split (A7, user 2026-11-14 ~01:10); per-call application: notes/note6_split_application.md). N5b was not submitted.",
+  "applied": "user decision 2026-11-14 ~03:00 (notes/pending_user_decisions.md 2026-11-14 03:10): retroactive to the Opus strict runs; v1's post hoc ruling already held predicting an edit's effect at recorded tokens to be a violation (DS strict s1 243 / 244)"
+ },
+ "valid_before_note6_reaudit": true,
+ "tier": "simulation allowed: reported separately (1-sample 55.4 %; 4-sample re-score running)"
 }

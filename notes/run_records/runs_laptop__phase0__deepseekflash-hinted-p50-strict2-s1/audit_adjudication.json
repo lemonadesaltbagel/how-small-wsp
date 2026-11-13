@@ -1,0 +1,48 @@
+{
+ "by": "user decision 2026-11-14 ~03:00 (notes/pending_user_decisions.md 2026-11-14 03:10); note-(6) split (A7, user 2026-11-14 ~01:10); per-call application: notes/note6_split_application.md",
+ "decided": "2026-11-14T03:00+11:00",
+ "flagged": {
+  "28": "logit_lens: turn 32, saved mean hidden states (pass 2, layers 0-24) projected onto h_hedge",
+  "31": "logit_lens: turn 35, hidden states (layers 8/16/20/23) projected onto h_hedge and h_commit and divided by the RMS at each position",
+  "32": "logit_lens: turn 36, the same at pre-restart positions",
+  "81": "logit_lens (borderline): turn 89, the median recorded RMS of layer-24 hidden states combined with norm.weight * embed[STOP] to predict how many nats a unit push along each candidate direction adds at loop positions; used to choose r_hat over dhat (3.86x). No per-position activation is multiplied by a weight, so this is closer to the allowed weights analysis than 28-32; alternative: overrule",
+  "128": "predicted_effect: turn 153, gate w projected on recorded L23 activations to print the push the installed edit would deliver",
+  "129": "predicted_effect: turn 154, centred gate evaluated at the healthy mean and on recorded positions; strength moderated by it",
+  "166": "predicted_effect: turn 196, old vs new gate firing on recorded positions (failed during loading)",
+  "167": "predicted_effect: turn 197, the same, ran",
+  "249": "predicted_effect: turn 282, installed gate u evaluated after the closer on recorded texts",
+  "277": "predicted_effect: turn 310, attempted (failed before the projections ran)",
+  "278": "predicted_effect: turn 311, attempted (failed before the projections ran)",
+  "279": "predicted_effect: turn 312, attempted (failed while reading activations)",
+  "284": "predicted_effect: turn 317, w4 fitted in closed form (allowed) then evaluated on held-out recorded positions",
+  "285": "predicted_effect: turn 318, per-class gate values of w2/w3/w4 on recorded activations (failed)",
+  "321": "out_of_scope_edit: turn 356 (strength 2; the submitted strength 3 has the same property, 0.92 early close by its own measurement, 0.946 on MATH-500)"
+ },
+ "upheld": [
+  "81"
+ ],
+ "upheld_reason": "81 (main reason): median recorded RMS x norm weight x STOP row predicts the nats per unit push of two candidate directions and chooses the direction",
+ "overruled": [
+  "128",
+  "129",
+  "166",
+  "167",
+  "249",
+  "277",
+  "278",
+  "279",
+  "284",
+  "285"
+ ],
+ "not_adjudicated": {
+  "calls": [
+   "28",
+   "31",
+   "32",
+   "321"
+  ],
+  "why": "logit lens (28 / 31 / 32) and out of scope (321, thinking skip): no longer need a ruling, the run is invalid by 81 (user 2026-11-14)"
+ },
+ "valid": false,
+ "forbidden_attempts_refused": 0
+}

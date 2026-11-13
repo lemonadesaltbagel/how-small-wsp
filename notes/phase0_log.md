@@ -908,3 +908,9 @@ Heavy work stays on wsl, laptop and pods.
   launch line as the `:r` modifier. Killed (no pods rented), relaunched with `${L}`.
 - 00:55 Score convention made uniform (A6 note): the reported score is the re-score's own four samples for every
   repair. DS hinted s1 49.85 % (was 50.9 %, which mixed the original first sample with re-score samples 1-3).
+- 03:10 User decisions (pending entry 2026-11-14 03:10): option (i) kept; DS unhinted s2 and Opus strict s2 invalid
+  (simulation-allowed side); DS hinted s1 invalid by call 81; strict Opus reference = s1, s3. Adjudication files
+  written; preprint (abstract, contributions 2 / 5, §4.1 re-audit paragraph, Tables 2–4, §5 observation on the runs
+  that beat thinking off, limitations) and Figure 1 (DS episodes drawn: valid diamond, invalid crosses) updated.
+- 03:00 opus_s2 rescore pod: 3 failed acquisitions (no ssh ×2, a known bad host), the 4th (community 3090 uve7) slow
+  to set up (vLLM install > 1 h on that host); left running.
