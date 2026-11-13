@@ -894,3 +894,5 @@ Heavy work stays on wsl, laptop and pods.
   24.4 / 20.1). Its work/ (13 GB) archived on the Mac.
 - 20:30 T1 / T2 at DS hinted s2's lengths (secure 4090 ptnr, deleted): 29.2 / 31.0 %; edit − T2 +7.0 pp (SE 1.9).
   Pending entry 2026-11-13 20:40.
+- 21:33 DS hinted s2 4-sample rescore: 36.65 % ± 1.1 (A5000 dvwu deleted; 13:18–21:33 incl. the reboot restart).
+  Weight check ok (3 records). Skip analysis + recommendation: pending entry 2026-11-13 21:50.

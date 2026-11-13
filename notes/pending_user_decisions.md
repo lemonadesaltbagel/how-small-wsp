@@ -285,3 +285,23 @@
   items are the same across samples.
 - The chain's copy of trunc_dsh2.log failed (scp of two files; the JSON came through, both conditions complete); pod
   ptnr deleted 20:30 (4090 secure, 18:15–20:30 ≈ $1.6).
+
+## 2026-11-13 21:50 — DS hinted s2: 4-sample rescore 36.65 % ± 1.1; recommendation on the skip question
+- 4-sample MATH-500 (A5000 dvwu, deleted 21:33): **36.65 % ± 1.08**, cut 60.3 %, mean 22.2k tokens. Weight check ok
+  for all three records (score, hold-out, 4-sample; sha 6b731597). Paired with 4-sample T0: −12.3 pp (SE 1.3).
+- **The skip is mostly per generation, not per problem**: 332 / 2000 generations skip (16.6 %). Items by the number of
+  samples that skip (0–4): 282 / 136 / 58 / 16 / 8; an item-independent coin would give 242 / 193 / 58 / 8 / 0. So a
+  little item dependence, but only 8 items skip every time. Sample 0 reproduces the 1-sample run (same seeds: 83 of
+  its 89 skips skip again).
+- By level (4 samples): skip share 26 / 20 / 17 / 12 / 15 %; accuracy when skipping 82 / 69 / 51 / 35 / 15 %, when
+  not 72 / 55 / 39 / 28 / 15 %. It skips a little more on easy problems, and a skip is never worse than thinking.
+- **Option B fails by 0.2 pp**: without the skips' correct answers, 576 / 2000 = 28.8 % (the line is 29.0 %; it was
+  29.6 % on sample 0). That is well inside one SE, so B decides the run by noise.
+- With T1 / T2 (20:40): the non-skip part beats a fixed-length close (+5.1 pp, z 2.5), and the run sits where Opus
+  strict s1 / s3 do on C1 (below thinking off) and C2 (z 3.8 vs 3.7).
+- **My recommendation: A** (valid repair; 38.0 % counts, 4-sample 36.65 % beside it), reported with: the 16.6 % skip
+  share and its per-generation character, the score without the skips (28.8 %), and the C1 failure. Reasons: the
+  behaviour that C2 excludes (a stop that ignores the problem) is tested and rejected for the thinking part; the skips
+  are a minority whose removal leaves the score at the line, not below it by more than noise; and treating it like
+  Opus strict s1 / s3 keeps one rule for all editors. C stays the strict reading (the excluded behaviour is present in
+  1 of 6 generations). Your call.
