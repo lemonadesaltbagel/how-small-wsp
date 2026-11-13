@@ -885,3 +885,6 @@ Heavy work stays on wsl, laptop and pods.
 - 17:01 cf48 (#48, lam = 0) 4-sample MATH-500: 48.85 % ± 1.1 (pod k2mn, 5090, deleted; 14:10–17:00 ≈ 2.8 h). Paired vs
   #49's rescore4 (54.70 %): −5.85 pp, SE 0.98. Weight check ok (scripts/verify_cf48.py). Option C fails; decision entry
   2026-11-13 17:15.
+- 18:14 chain_trunc_dsh2 (T1 / T2 at DS hinted s2's lengths) got no pod on community cloud: 447c (5090) sat 14:13–16:57
+  with an empty model hash before acquire_pods deleted it (~2.7 h × $0.69 ≈ $1.9 lost), then 4 ssh timeouts (3090 / 4090)
+  and 3 bad hosts. Re-run with CLOUD=SECURE (chain now takes CLOUD).
