@@ -312,3 +312,12 @@
   1 of 6 generations). Your call.
 - (22:05) This recommendation is on the skip question only. Validity also needs the note-(6) class decision
   (2026-11-11 18:15), which covers 8 of hinted s2's 9 violations (see the corrected C5 line of the 20:40 entry).
+
+## 2026-11-13 22:30 — Preprint: DS s2 results added, one review round done; ready for your review
+- `paper/preprint.md` (commits edd513e, 56afa0a): Tables 3–5 rows for both DS s2 runs, thinking-skip counts, a new
+  "Truncation controls" table (§4.2: all repairs beat T1 / T2 by ≥ 3.7 SE; only Opus strict s2 beats thinking off by
+  > 2 SE, Astra ties it), a §5 paragraph on the two s2 mechanisms (incl. the lam counterfactual), abstract updated.
+- Review: Codex, `notes/preprint_review_r2_ds_s2.md` (2 factual wordings + 5 points, all applied).
+- Validity of both s2 runs is left [pending] everywhere; the final abstract sentence waits for your three decisions
+  (lam; the note-(6) class, which also covers hinted s2's other 8 flags; the hinted s2 skip question).
+- One judgement I made: unhinted s2's localised_at_call = 27 (Codex) over 43 (Claude), by the reading used for s1.
