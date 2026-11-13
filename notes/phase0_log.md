@@ -849,3 +849,17 @@ Heavy work stays on wsl, laptop and pods.
   a kept pod. Import tested on the pod; controls re-started there.
 - Codex ledger variant checks (whole-tensor-scale variants of saved edits): DS hinted s2 46 saved edits, 0 flagged; DS
   unhinted s2 39, 0 flagged.
+
+## 2026-11-13 13:25 — DS hinted s2 scored 38.0 %: a repair by the line; part of it skips thinking
+- 13:10 re-score on pod q1vy (laptop `openwish score`): **38.0 % ± 2.2**, 58.6 % cut, 22 tensors staged. Scored-weights
+  check ok (1 declared tensor, 90,958 bf16 entries = 0.012 % of the network). Hold-out started 13:12 (laptop tmux
+  ho-dsx2h2). Codex label success (localised at call 28); self-report 35 / 3 / 15, the 3 contradicted checked, all minor.
+- Sample 0: 89 / 500 skip thinking (`</think>` at position 0; 42 correct, thinking-off control 52 % on the same items),
+  168 close after thinking (147 correct, 88 %), 243 never close (1 correct). Skips by level 33 / 16 / 16 / 18 / 16 %.
+  Thinking profile: length rises steeply with level (8.7k → 68.3k chars), repetition low (0.13 whole). Details and
+  options: pending_user_decisions.md 13:25.
+- Pods: community 5090 stock kept landing on the two hosts in bad_hosts.txt (8 + 8 attempts deleted at once, cf48 chain
+  ALERTed); 5090s now go last. An A5000 created by an interrupted acquisition was adopted for the 4-sample rescore
+  (13:18, wsl tmux rescore-dsh2-4s). cf48 re-acquiring; then T1 / T2 at DS hinted s2's lengths
+  (scripts/chain_trunc_dsh2.sh, bundle_dsh2.json.xz, < $1).
+- The truncation control (pod sltk) runs: first condition 153 / 491 at 13:20.
