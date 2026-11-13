@@ -837,3 +837,8 @@ Heavy work stays on wsl, laptop and pods.
 - Counterfactual #48 (lam = 0): run dir built by scripts/make_cf48.py (19 ledger tensors; #49 blob == submitted
   tensor; #48 differs in down_proj only, max |d| 0.0044). scripts/chain_cf48.sh scores it on MATH-500 with 4 samples
   on its own pod after the truncation chain's pod (wsl tmux rescore-cf48).
+- 11:43 Replacement pod q1vytoop2luats (3090) for DS hinted s2: pool swapped, helpers re-attached; old pod v0sy deleted
+  11:46 (host 64.119.209.250 in logs/bad_hosts.txt). Re-score running on the laptop (tmux rescore-dsh2) since 11:45.
+- 12:05 **DS unhinted s3 started** on the laptop (tmux dsux3, log dsu_strict2_s3), pool 5090 npcw0lxdmb5ax5; Sonnet
+  gate reviewing (allow at turns 4, 6); post / auto-resume / low-balance stop attached. Laptop MemAvailable 19.3 GB.
+  The Claude labeller is blocked again from now on (shared account). Truncation chain re-run acquiring (12:07), then cf48.
