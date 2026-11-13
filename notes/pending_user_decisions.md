@@ -274,7 +274,12 @@
 - T1 matched 29.2 %, T2 fixed 31.0 % (cut at 2,965 tokens; 486 of 500 cut). Paired with the edit (sample 0):
   **− T2 +7.0 pp (SE 1.9, z 3.8); − T1 +8.8 (1.6); − T0 −10.2 (2.3; −12.4 vs the 4-sample run's sample 0).**
 - Criteria: **C1 fail** (below thinking off, as Opus strict s1 / s3 are), **C2 pass** (z 3.8, Opus strict s3 is 3.7),
-  C3 pass (Spearman 0.23), C4 pass (repetition 0.13 / 0.06). C5 per the 13:40 decision (no upheld violation left).
+  C3 pass (Spearman 0.23), C4 pass (repetition 0.13 / 0.06). **C5 open** (corrected 22:05; I first wrote "no upheld
+  violation left", which was wrong): the 13:40 decision settles call 213, the unit of the submitted edit. The other 8
+  violations (calls 205, 207, 252, 255, 270, 279, 285, 287: strengths or gate rankings from predicted firing on
+  recorded activations) are the note-(6) class still open from DS unhinted s1 (2026-11-11 18:15). If that class is
+  upheld, as I proposed for s1, hinted s2 is invalid whatever the skip answer; the skip question matters only if it is
+  overruled.
 - Split by the 89 items whose thinking closes within 120 characters ("skip"):
   - skip items: edit 47.2 % vs T0 51.7 % (−4.5 pp, SE 5.7). On those items it behaves like thinking off;
   - the other 411: edit 36.0 % vs T2 30.9 % (+5.1, SE 2.1, z 2.5), vs T1 25.5 % (+10.5, SE 1.6), vs T0 47.4 % (−11.4).
@@ -305,3 +310,5 @@
   are a minority whose removal leaves the score at the line, not below it by more than noise; and treating it like
   Opus strict s1 / s3 keeps one rule for all editors. C stays the strict reading (the excluded behaviour is present in
   1 of 6 generations). Your call.
+- (22:05) This recommendation is on the skip question only. Validity also needs the note-(6) class decision
+  (2026-11-11 18:15), which covers 8 of hinted s2's 9 violations (see the corrected C5 line of the 20:40 entry).
