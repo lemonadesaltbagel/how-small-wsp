@@ -242,7 +242,7 @@
   violation; report 54.7 % and the violation alongside. My proposal stays A (consistent with s1); D is listed only
   because the number now exists.
 
-## 2026-11-13 18:50 — Truncation controls done: C1–C4 for DS unhinted s2 and the references; option D (17:15) fails C1
+## 2026-11-13 18:40 — Truncation controls done: C1–C4 for DS unhinted s2 and the references; option D (17:15) fails C1
 - T1 / T2 (base's own thinking cut at the edit's per-item length / at its median, then closed; sample 0, same seeds)
   give **28–34 % for every edit**, far below T0 (thinking off, 48–50 %): the damaged base keeps looping in the answer
   after a forced close (≈ 67 % of T1 / T2 generations hit the 32k cap). Closing at a fixed length is not what the

@@ -889,4 +889,6 @@ Heavy work stays on wsl, laptop and pods.
   with an empty model hash before acquire_pods deleted it (~2.7 h × $0.69 ≈ $1.9 lost), then 4 ssh timeouts (3090 / 4090)
   and 3 bad hosts. Re-run with CLOUD=SECURE (chain now takes CLOUD).
 - 18:34 Truncation controls done (pod sltk, 5090, deleted; re-run 12:07–18:34 incl. waits). T1 / T2 28–34 % for all
-  five edits; 4-sample T0 48.95 %. Read-out: pending entry 2026-11-13 18:50, scripts/truncation_analysis.py.
+  five edits; 4-sample T0 48.95 %. Read-out: pending entry 2026-11-13 18:40, scripts/truncation_analysis.py.
+- 18:42 **DS hinted s2 hold-out** (laptop, pod q1vy deleted): MMLU-Pro 1k 40.5 %, GPQA 27.7 %, IFEval 39.1 % (base 39.7 /
+  24.4 / 20.1). Its work/ (13 GB) archived on the Mac.
