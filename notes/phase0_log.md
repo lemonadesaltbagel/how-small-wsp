@@ -882,3 +882,6 @@ Heavy work stays on wsl, laptop and pods.
   its first scan in alpha's (the Mac's) favour. Left for later: DS hinted s2 (hold-out running) and s3 (running).
 - 14:20 Desktop restart (user: Windows driver). Stopped both wsl scorers (4-sample DS hinted s2 after 61 min, cf48 after 9 min) parent-first, so no RESCORE_EXIT was written: their Mac chains keep waiting and keep pods dvwu (A5000) / k2mn (5090). After the reboot: scripts/relaunch_wsl_scorers.sh (same pools and logs).
 - 15:16 Desktop back (22 GB available, commit free 64.5 GB, no pending Windows steps); both scorers re-started (scripts/relaunch_wsl_scorers.sh); workers running on dvwu (A5000, 89 % GPU) and k2mn (5090, loading).
+- 17:01 cf48 (#48, lam = 0) 4-sample MATH-500: 48.85 % ± 1.1 (pod k2mn, 5090, deleted; 14:10–17:00 ≈ 2.8 h). Paired vs
+  #49's rescore4 (54.70 %): −5.85 pp, SE 0.98. Weight check ok (scripts/verify_cf48.py). Option C fails; decision entry
+  2026-11-13 17:15.

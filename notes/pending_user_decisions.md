@@ -226,3 +226,18 @@
 - **Open until the counterfactual is scored:** unhinted s2's lam = 0.12 (11:20 entry, options A / B / C); the user
   decides once cf48 (#48, lam = 0) has its 4-sample score.
 - Still open: DS hinted s2 skip question (13:25 entry; waits for its 4-sample rescore and T1 / T2).
+
+## 2026-11-13 17:15 — DS unhinted s2 counterfactual #48 (lam = 0) scored: 48.9 % ± 1.1 vs #49 54.7 % ± 1.1
+- 4-sample MATH-500 (2000 generations; same items, same sampling settings as #49's rescore; seeds not shared, no
+  generation is identical): **#48 48.85 %, #49 54.70 %; paired by item, #48 − #49 = −5.85 pp, paired SE 0.98 pp
+  (z = −6.0).** Cut at max tokens 27.2 % vs 20.9 %; mean tokens 16.6k vs 14.7k. Both far above base (8.05 %; #48
+  +40.8 pp, SE 1.7).
+- Weight check (scripts/verify_cf48.py, logs/verify_cf48.log): loaded = base + submitted edit set with down_proj = #48
+  blob, bit for bit (sha d8b7a280); 3.16 M bf16 entries changed (0.42 %).
+- **Option C (11:20 entry) fails by its own criterion**: #48 is not within 2 paired SE of #49, so ~5.9 pp of the
+  submitted score rest on lam = 0.12, chosen by the violating computation. Under C the run would not count.
+- The options as they stand: A uphold → invalid (reported, not in the curve); B overrule → 53.0 % counts;
+  C uphold, conditional → not counted (fails). A further variant you could choose, not proposed by me before:
+  D uphold, count the run at #48's score (48.9 %, 4-sample), i.e. only the part of the edit that does not rest on the
+  violation; report 54.7 % and the violation alongside. My proposal stays A (consistent with s1); D is listed only
+  because the number now exists.
