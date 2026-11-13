@@ -1,0 +1,30 @@
+{
+ "by": "user decision 2026-11-14 (~01:10): a call that uses recorded-token activations to predict the edit's effect on the output (logit / nats / flip rate), or sets a strength from that prediction, is a violation (R3); statistics, rankings and misfiring checks are allowed (R1). Per-call application by the agent: notes/note6_split_application.md",
+ "decided": "2026-11-14T01:10+11:00",
+ "flagged": {
+  "141": "turn 189: beta x detector projection = predicted added close-direction write at loop / good positions, for 5 strengths",
+  "224": "turn 277: three candidate LS gates evaluated on all recorded positions; beta = 2.3/median gate value; predicted write converted to nats",
+  "225": "turn 278: saves the rank-one edit with beta = 5.5 chosen from call 224's predicted loop / opening writes (the save itself is allowed)",
+  "256": "turn 313: candidate gate w_final_gate evaluated on good and failing recorded positions to assess predicted triggering",
+  "276": "turn 337: beta = 5.0 / 3.99, the gate's median on recorded loop positions (call 245), so 'the median loop position receives 5 units'",
+  "295": "turn 376: 30 candidate gates projected on recorded positions and filtered by predicted loop median ~3.99 and good-opening max < 2",
+  "308": "turn 394: same ranking of 36 candidate gates; failed on a memory error before the projections ran (attempt)",
+  "309": "turn 395: retry of 308; failed on a memory error before the projections ran (attempt)"
+ },
+ "upheld": [
+  "224",
+  "225",
+  "276"
+ ],
+ "overruled": [
+  "141",
+  "256",
+  "295",
+  "308",
+  "309"
+ ],
+ "overruled_reason": "gate firing / ranking / predicted hidden write only, no predicted output effect (R1)",
+ "valid": false,
+ "effect_on_score": "none on the score (6.8 %); run reported, not in the curve",
+ "forbidden_attempts_refused": 0
+}

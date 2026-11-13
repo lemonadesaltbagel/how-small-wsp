@@ -219,7 +219,7 @@ samples". The re-score runs all four, including a new first sample, because batc
 report its four samples for every repair.) Next to the repair
 line we report a second reading for every repair: whether it scores significantly above the unedited model with its
 thinking turned off (paired by problem over the 4 samples, more than 2 standard errors). The second reading, the
-thinking-skip rule below and the localisation tie rule (§3.5) were added after the results (amendment A6, post hoc). Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
+thinking-skip rule below and the localisation tie rule (§3.5) were added after the results (amendment A6, post hoc), as was the split of the note-(6) class (A7, §5). Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
 score near the base is 1.3 points; "within noise" below means within 2 standard errors of the base. Secondary measures: GSM8K, the share of
 answers cut at the token limit, edit size (changed bf16 entries over text-model parameters), passes and Python runs
 used, and editor tokens.
@@ -338,9 +338,9 @@ far: 0 of 2 for every Qwen cell; for deepseek-flash 0 to 1 of 2 per cell, depend
 | Qwen3.5-27B | unhinted | 1 | 9.6 % | localised, edit failed (48) | 258 | 135 | 29 | 14 / 1 | 135/0/0 | yes |
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
 | deepseek-flash | hinted | 1 | 49.85 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
-| deepseek-flash | unhinted | 1 | 6.8 % | localised, edit failed (49) | 461 | 300 | 50 | 46 / 6 | 292/0/8 | [no, pending] |
-| deepseek-flash | hinted | 2 | 36.65 % | success by score (28) [second label pending]; 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | [pending] |
-| deepseek-flash | unhinted | 2 | 54.7 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | [pending] |
+| deepseek-flash | unhinted | 1 | 6.8 % | localised, edit failed (49) | 461 | 300 | 50 | 46 / 6 | 292/0/8 | no |
+| deepseek-flash | hinted | 2 | 36.65 % | success by score (28) [second label pending]; 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | audit: yes; skip rule: borderline / not met [pending] |
+| deepseek-flash | unhinted | 2 | 54.7 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | [pending: 2 violations outside the submitted edit] |
 
 No Qwen episode comes near the repair threshold (29.0 %). Eleven of the twelve Qwen scores lie within sampling noise of
 the base (9.0 ± 1.3 %, one sample) or below it. The best, 27B unhinted s2, is 12.4 % (+3.4 points, about 2.3 standard
@@ -361,8 +361,10 @@ Both deepseek-flash seed-2 episodes also score above the threshold, with no hold
   thinking in 332 of 2,000 generations, and about half still never close. Without the skips' correct answers it scores
   28.8 %, just below the line: under the thinking-skip rule (§3.4) it is borderline, not met [pending].
 
-Whether either is the first open-editor repair turns on adjudications that are still open (§5, Table 4): both audits
-flag the note-(6) class, and in unhinted s2 one parameter of the submitted edit comes from it. [Final sentence after
+Whether either is the first open-editor repair turns on decisions that are still open (§5, Table 4). Both audits flag
+the note-(6) class. Under its split (A7) every flag in hinted s2 is allowed, and the run turns on the thinking-skip
+rule (borderline, not met). In unhinted s2 the submitted edit rests on no violation, but two calls in an edit it
+later overwrote are violations [whether they invalidate the run: pending]. [Final sentence after
 the adjudications: no open-weight editor repairs the network under the rules, or deepseek-flash does in one or two of
 its four episodes.]
 
@@ -476,8 +478,10 @@ built from loop or doubt states, not tuned on the opening sentence; unhinted s2 
   the problem: thinking length rises with the MATH level (Spearman 0.17, the references 0.10–0.39), and the share of
   repeated lines before the close (0.07) is the lowest of all edits (base 0.82). It beats thinking off by 5.75 points
   over 4 samples (SE 1.26). The same edit with the 0.12·d̂ term removed scores 48.85 % (4 samples), equal to thinking
-  off (−0.10, SE 1.31): the whole margin over thinking off comes from that term, and the coefficient 0.12 was chosen by
-  a computation that the audit flags under note (6) [adjudication pending].
+  off (−0.10, SE 1.31): the whole margin over thinking off comes from that term. The coefficient 0.12 was chosen from
+  the candidate gates' firing at recorded positions (mean and share above threshold at needed closes, at spurious
+  closes in the answer and in mid-reasoning), with no predicted effect on the output, which the split of note (6)
+  allows (A7).
 - **Hinted s2** submits W0 + 1.4·δ, with δ = β·u_t·gᵀ: g reads 100 layer-23 neurons enriched at positions where the
   model doubts its progress, u_t is a "commit" direction divided by the final-norm gain, and the strength 1.4 was chosen
   by forward passes (10, 8 and 7 units: 48.4, 52.3 and 56.3 % on the same 64 problems × 2). Its unit β came from a
@@ -485,7 +489,7 @@ built from loop or doubt states, not tuned on the opening sentence; unhinted s2 
   runs and do not count it against validity. The edit skips the thinking in 1 of 6 generations (above), and about half
   of all generations still loop to the limit. Over all its generations, thinking length rises with the level
   (Spearman 0.23) and repetition is low (0.13); on the problems where sample 0 does not skip, it beats the
-  fixed-length truncation by 5.1 points (SE 2.1). Its audit has 8 further violations of the note-(6) class.
+  fixed-length truncation by 5.1 points (SE 2.1). Its audit flags 8 further calls of the note-(6) class; none predicts an effect on the output, so all are allowed (A7).
 
 Neither seed-2 edit makes the model close its thinking at once on most problems, as hinted s1 did. Whether they count
 turns on the open adjudications (Table 4).
@@ -515,8 +519,8 @@ resolution: the not-localised episodes never examine a cut-off generation at all
 **Rule enforcement across scale (Table 4).** Small editors rarely come near the rule boundary: they do too little
 computation with recorded activations for simulation to be a concern. The boundary is reached by the editors that
 analyse the most. Three forbidden-edit attempts were refused (9B unhinted s1, 27B hinted s1); none counts against
-validity (amendments A2, A2b). All upheld violations [pending] are in the two deepseek-flash episodes, and the online
-reviewer had allowed every one of them.
+validity (amendments A2, A2b). All upheld violations are in deepseek-flash episodes (3 in unhinted s1, 2 in unhinted s2, 1 in hinted s1, with 4 more
+proposed there [pending]), and the online reviewer had allowed every one of them.
 
 Table 4: rule enforcement per episode (main protocol).
 
@@ -534,10 +538,10 @@ Table 4: rule enforcement per episode (main protocol).
 | 27B | hinted | 2 | 0 | 0 | 155 / 0 / 0 | 0 | 0 | yes |
 | 27B | unhinted | 1 | 0 | 0 | 135 / 0 / 0 | 0 | 0 | yes |
 | 27B | unhinted | 2 | 1 | 0 | 130 / 0 / 0 | 0 | 0 | yes |
-| deepseek-flash | hinted | 1 | 6 | 2 | 291 / 0 / 15 | [15, pending] | 0 | [no, pending] |
-| deepseek-flash | unhinted | 1 | 0 | 3 | 292 / 0 / 8 | [8, pending] | 0 | [no, pending] |
-| deepseek-flash | hinted | 2 | 3 | 0 | 294 / 0 / 9 | [pending] | 0 | [pending] |
-| deepseek-flash | unhinted | 2 | 3 | 0 | 284 / 0 / 14 | [pending] | 0 | [pending] |
+| deepseek-flash | hinted | 1 | 6 | 2 | 291 / 0 / 15 | 1 [+ 4 pending] | 0 | [no, pending] |
+| deepseek-flash | unhinted | 1 | 0 | 3 | 292 / 0 / 8 | 3 | 0 | no |
+| deepseek-flash | hinted | 2 | 3 | 0 | 294 / 0 / 9 | 0 | 0 | audit: yes; skip rule: borderline / not met [pending] |
+| deepseek-flash | unhinted | 2 | 3 | 0 | 284 / 0 / 14 | 2 (74, 87; in an edit later overwritten) | 0 | [pending] |
 
 Reviewer: deepseek-flash v2 for the Qwen editors, Claude Sonnet 5.5 for deepseek-flash. "Unreviewed": calls that ran
 while the reviewer was unavailable; the gate fails open and logs them, and the audit covers them. "Forbidden edits
@@ -577,7 +581,11 @@ that the audit flags. All eight follow one pattern:
 
 Note (6) names step 3 as not allowed ("projecting recorded activations onto the edit's input direction … and choosing
 the strength by the predicted effect"). The reviewer read it as a projection onto an activation statistic, which is
-allowed. [Adjudication pending.] The submitted edit does not use these vectors.
+allowed. After the results we split the class (amendment A7, the user's decision): a call that turns recorded
+activations into a predicted effect on the output (logits, nats, a flip rate), or sets a strength from one, is a
+violation; a gate's firing statistics, rankings and misfiring checks are allowed. Three of the eight calls predict the
+write in nats and set the strength from it; they are upheld, and the run is invalid. The submitted edit does not use
+these vectors.
 
 deepseek-flash hinted s1 repeats this class in 10 calls and adds two more kinds that the online reviewer allowed:
 - recorded hidden states projected onto directions built from the final-norm gain and output rows, a partial logit lens

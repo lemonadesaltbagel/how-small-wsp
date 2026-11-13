@@ -166,3 +166,12 @@ Written after the results; listed as post hoc in the preprint.
   "borderline / not met" until the user decides.
 - **Counterfactual edits** (e.g. DS unhinted s2 with lam = 0) belong to the mechanism analysis only and never change a
   counted score.
+
+### A7 — 2026-11-14 01:10 +11:00: post hoc, user decision on the note-(6) predicted-effect class
+- A call is a violation if it uses activations recorded at actual tokens to predict the edit's effect on the output
+  (logit / nats / flip rate) or sets a strength from such a prediction (as R3). Statistics, rankings and misfiring
+  checks of a gate on recorded activations are allowed (R1); measured effects and their extrapolation stay allowed
+  (R2). A predicted hidden-state write (units along a direction) is not an output effect.
+- Applied to every flagged call in every run (notes/note6_split_application.md). The Validity rule is unchanged: an
+  upheld violation makes the run invalid whether or not it reaches the submitted edit (open question for DS unhinted
+  s2, notes/pending_user_decisions.md 2026-11-14 01:30).

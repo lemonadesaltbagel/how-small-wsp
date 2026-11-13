@@ -321,3 +321,32 @@
 - Validity of both s2 runs is left [pending] everywhere; the final abstract sentence waits for your three decisions
   (lam; the note-(6) class, which also covers hinted s2's other 8 flags; the hinted s2 skip question).
 - One judgement I made: unhinted s2's localised_at_call = 27 (Codex) over 43 (Claude), by the reading used for s1.
+
+## 2026-11-14 01:30 — DECIDED (user, ~01:10): note-(6) class split; lam rule; skip kept. Applied; one conflict
+- **Decided:** a call is a violation if it uses recorded-token activations to predict the edit's effect on the output
+  (logit / nats / flip rate) or sets a strength from that prediction (examples 1, 2 = R3); statistics, rankings and
+  misfiring checks are allowed (example 3 = R1). lam: violation → A, allowed → B. DS hinted s2 skip: stays
+  "borderline / not met".
+- **Applied to every flagged call** (notes/note6_split_application.md; code read for each):
+  - DS unhinted s1: 224, 225, 276 upheld (nats predictions; 225 / 276 set beta from them), 5 allowed → **invalid**.
+  - DS unhinted s2: **lam calls 245 / 246 allowed** (gate firing means and fractions at needed / spurious / mid
+    positions; no output effect) → by your rule, **B**. But calls **74 and 87 are violations** (87: the edit's input
+    projected on recorded activations × 26.8 logits per unit → "~5.4 logits where the detector fires", lam = 0.20 for
+    EDIT 3; 74: "alpha for +1 nat" from norm weight × output row and recorded hidden norms). EDIT 3 was overwritten at
+    call 130 and the submitted #49 uses none of it.
+  - DS hinted s2: all 9 allowed (beta = target hidden units / firing, dose then measured; 213 by the 13:35 decision).
+    Validity rests on the skip rule: borderline / not met.
+  - DS hinted s1: class part 81 upheld, the other 10 allowed; validity still open on the logit lens (28 / 31 / 32) and
+    the thinking skip (321) (entry 2026-11-11 23:20).
+  - Opus strict (re-audit): s1 0 of 4 (the up row's implied activation, no output effect), s2 1 (237, "~−4 nats on
+    'Wait'", N5b not submitted), s3 0 of 2.
+- **Conflict needing your decision — DS unhinted s2.** The validity rule (analysis plan, Validity) says any upheld
+  violation makes the run invalid, whether or not it reaches the submitted edit (applied so just now to DS unhinted
+  s1, whose submitted edit uses none of its violations). So B on lam does not make the run valid by itself: 74 / 87 invalidate it.
+  - (i) keep the rule as written: DS unhinted s2 invalid (like s1), whatever lam is. My recommendation (no post hoc
+    change; consistent with s1).
+  - (ii) change it post hoc to "only violations that reach the submitted edit invalidate": DS unhinted s2 valid
+    (54.7 %); this would also make DS unhinted s1 valid (its submitted edit uses none of 224 / 225 / 276; 6.8 %) and,
+    if the rule applies to Opus, keep Opus s2 valid.
+- **Still open:** retroactivity to the Opus runs (only s2 is affected now, by 237, a non-submitted edit); DS hinted s1
+  proposal A.

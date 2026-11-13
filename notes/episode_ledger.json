@@ -615,7 +615,7 @@
    "violations": 8,
    "valid": false
   },
-  "adjudicated_valid": null,
+  "adjudicated_valid": false,
   "gate": {
    "allow": 297,
    "block": 0,
