@@ -892,3 +892,5 @@ Heavy work stays on wsl, laptop and pods.
   five edits; 4-sample T0 48.95 %. Read-out: pending entry 2026-11-13 18:40, scripts/truncation_analysis.py.
 - 18:42 **DS hinted s2 hold-out** (laptop, pod q1vy deleted): MMLU-Pro 1k 40.5 %, GPQA 27.7 %, IFEval 39.1 % (base 39.7 /
   24.4 / 20.1). Its work/ (13 GB) archived on the Mac.
+- 20:30 T1 / T2 at DS hinted s2's lengths (secure 4090 ptnr, deleted): 29.2 / 31.0 %; edit − T2 +7.0 pp (SE 1.9).
+  Pending entry 2026-11-13 20:40.

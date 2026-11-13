@@ -269,3 +269,19 @@
 - DS hinted s2 C2 still waits for its T1 / T2 (secure-cloud 4090 being set up, 18:15).
 - (18:45) DS hinted s2 hold-out: MMLU-Pro 1k 40.5 %, GPQA 27.7 %, IFEval 39.1 % (base 39.7 / 24.4 / 20.1); no
   hold-out loss. Its skip question (13:25 entry) still waits for the 4-sample rescore and T1 / T2.
+
+## 2026-11-13 20:40 — DS hinted s2 (38.0 %): T1 / T2 done; C1 fails, C2–C4 pass
+- T1 matched 29.2 %, T2 fixed 31.0 % (cut at 2,965 tokens; 486 of 500 cut). Paired with the edit (sample 0):
+  **− T2 +7.0 pp (SE 1.9, z 3.8); − T1 +8.8 (1.6); − T0 −10.2 (2.3; −12.4 vs the 4-sample run's sample 0).**
+- Criteria: **C1 fail** (below thinking off, as Opus strict s1 / s3 are), **C2 pass** (z 3.8, Opus strict s3 is 3.7),
+  C3 pass (Spearman 0.23), C4 pass (repetition 0.13 / 0.06). C5 per the 13:40 decision (no upheld violation left).
+- Split by the 89 items whose thinking closes within 120 characters ("skip"):
+  - skip items: edit 47.2 % vs T0 51.7 % (−4.5 pp, SE 5.7). On those items it behaves like thinking off;
+  - the other 411: edit 36.0 % vs T2 30.9 % (+5.1, SE 2.1, z 2.5), vs T1 25.5 % (+10.5, SE 1.6), vs T0 47.4 % (−11.4).
+  So the part that thinks also beats a fixed-length close, by 2.5 SE, without the skips.
+- By the 03:40 rule (fail C2 or C3 → "early closing"; pass C1–C5 → valid; otherwise you decide) this is **"you decide"**,
+  the same position as Opus strict s1 / s3, which count. Options from the 13:25 entry stand (A / B / C); my
+  recommendation follows when the 4-sample rescore is in (A5000, running), the remaining check being whether the skip
+  items are the same across samples.
+- The chain's copy of trunc_dsh2.log failed (scp of two files; the JSON came through, both conditions complete); pod
+  ptnr deleted 20:30 (4090 secure, 18:15–20:30 ≈ $1.6).

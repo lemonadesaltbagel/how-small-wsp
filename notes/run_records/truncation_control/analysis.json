@@ -208,5 +208,47 @@
    "se_pp": 1.88,
    "z": 3.72
   }
+ },
+ "DS hinted s2": {
+  "edit_acc": 0.38,
+  "T1 matched n_cut": 248,
+  "T1 matched cut_tokens": 2935.0,
+  "T2 fixed n_cut": 486,
+  "T2 fixed cut_tokens": 2965,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": -10.2,
+   "se_pp": 2.26,
+   "z": -4.51
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": -12.4,
+   "se_pp": 2.21,
+   "z": -5.6
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 29.0,
+   "se_pp": 2.07,
+   "z": 14.01
+  },
+  "T1 matched": {
+   "acc": 0.292,
+   "n": 500,
+   "diff_pp": 8.8,
+   "se_pp": 1.6,
+   "z": 5.49
+  },
+  "T2 fixed": {
+   "acc": 0.31,
+   "n": 500,
+   "diff_pp": 7.0,
+   "se_pp": 1.86,
+   "z": 3.76
+  }
  }
 }
