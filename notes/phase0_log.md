@@ -929,3 +929,8 @@ Heavy work stays on wsl, laptop and pods.
   2.3). Hold-out on its pool pod (post_episode). Labels: both success, localised 11; self-report 0 contradicted.
 - 07:29 Astra rescore: no pod in 8 community attempts (3 without ssh, 1 known bad host). Re-launched with CLOUD=SECURE
   (log chain_rescore4_b.log), then DS unhinted s3's 4-sample rescore (dir …-s3-rescore4 with its ledger).
+- 07:59 DS unhinted s3 hold-out: MMLU-Pro 1k 37.6 %, GPQA 24.7 %, IFEval 33.3 % (base 39.7 / 24.4 / 20.1). Pool pod
+  npcw0lxdmb5ax5 deleted by post_episode. 07:47 Astra and DS s3 4-sample rescores started (secure 4090s
+  gzdnbo2qqamsax, 55svglzhxvytoz).
+- 08:05 DS unhinted s3 work/ (412 files, 23.3 GB, identical on Mac and laptop) moved on the Mac to the archive; the
+  deletion reached the laptop. Low-balance helper for dsux3 stopped.
