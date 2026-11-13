@@ -15,7 +15,7 @@ mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters
 against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
 post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in all three strict
 episodes (40.6–55.4 %) without simulating the network. The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). deepseek-flash scores
-above the repair threshold in three of its four episodes. In one (50.9 %) the edit makes the model skip its thinking,
+above the repair threshold in three of its four episodes. In one (49.85 %) the edit makes the model skip its thinking,
 which the task excludes. The other two (54.7 % and 36.65 %) gate a close of the thinking on internal states; whether
 they count as repairs turns on audit adjudications that are still open [final sentence after the adjudications]. All
 repairs, Opus's and Astra's included, beat truncating the unedited model's own thinking at the same length, but most do
@@ -214,7 +214,9 @@ published.
 The analysis plan was committed before any main-matrix result (`notes/analysis_plan.md`, commit 5de34ad). A **repair**
 is MATH-500 at least 20 points above the base (≥ 29.0 %) with no hold-out regression, i.e. no hold-out score more than 2
 standard errors and more than 5 points below the base. The hold-out runs only for repairs, and every repair is re-scored
-with 3 more samples; the 4-sample mean is the reported score, and the first sample decides "repair". Next to the repair
+on 4 samples; the 4-sample mean is the reported score, and the first sample decides "repair". (The plan says "3 more
+samples". The re-score runs all four, including a new first sample, because batching changes vLLM's random stream; we
+report its four samples for every repair.) Next to the repair
 line we report a second reading for every repair: whether it scores significantly above the unedited model with its
 thinking turned off (paired by problem over the 4 samples, more than 2 standard errors). The second reading, the
 thinking-skip rule below and the localisation tie rule (§3.5) were added after the results (amendment A6, post hoc). Two seeds per cell, a third only where the two split. With one sample, the standard error of a MATH-500
@@ -335,7 +337,7 @@ far: 0 of 2 for every Qwen cell; for deepseek-flash 0 to 1 of 2 per cell, depend
 | Qwen3.5-27B | hinted | 2 | 6.4 % | localised, edit failed (16) | 292 | 155 | 37 | 17 / 1 | 155/0/0 | yes |
 | Qwen3.5-27B | unhinted | 1 | 9.6 % | localised, edit failed (48) | 258 | 135 | 29 | 14 / 1 | 135/0/0 | yes |
 | Qwen3.5-27B | unhinted | 2 | 12.4 % | localised, edit failed (14) | 251 | 130 | 34 | 39 / 10 | 130/0/0 | yes |
-| deepseek-flash | hinted | 1 | 50.9 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
+| deepseek-flash | hinted | 1 | 49.85 % | success by score (46); thinking skipped | 420 | 306 | 50 | 130 / 1 | 291/0/15 | [no, pending] |
 | deepseek-flash | unhinted | 1 | 6.8 % | localised, edit failed (49) | 461 | 300 | 50 | 46 / 6 | 292/0/8 | [no, pending] |
 | deepseek-flash | hinted | 2 | 36.65 % | success by score (28) [second label pending]; 17 % skip thinking; skip rule: borderline / not met | 400 | 303 | 48 | 46 / 1 | 294/0/9 | [pending] |
 | deepseek-flash | unhinted | 2 | 54.7 % | success by score (27) | 385 | 298 | 50 | 39 / 1 | 284/0/14 | [pending] |
@@ -344,7 +346,7 @@ No Qwen episode comes near the repair threshold (29.0 %). Eleven of the twelve Q
 the base (9.0 ± 1.3 %, one sample) or below it. The best, 27B unhinted s2, is 12.4 % (+3.4 points, about 2.3 standard
 errors of one sample), with ten MLP tensors edited.
 
-The first open-editor score above the threshold is deepseek-flash hinted s1: 50.9 % over 4 samples (51.8 % on the first). Its
+The first open-editor score above the threshold is deepseek-flash hinted s1: 49.85 % over 4 samples (51.8 % on the first). Its
 hold-out does not regress: MMLU-Pro / GPQA / IFEval 39.6 / 22.9 / 45.9 %, against the base's 39.7 / 24.4 / 20.1 %. But
 the score does not come from repairing the loop:
 - the submitted edit makes the model close its thinking at once (below), which the task excludes;
@@ -379,7 +381,7 @@ thinking, as an independent reproduction found (45.2 % with thinking off [shapor
 therefore does not by itself show that the thinking was repaired, and the thinking-skip check is what separates the
 two. The unedited model with thinking turned off (the chat template's empty
 thinking block), on the same items with the same per-item seeds, sampling and grading, scores 48.2 % (± 2.2). The
-edit's 51.8 % (50.9 % over 4 samples) is within about 1.5 standard errors of this no-thinking score; per item the two
+edit's 51.8 % (49.85 % over 4 samples) is within about 1.5 standard errors of this no-thinking score; per item the two
 agree on 382 of 500. Same per-item seeds do not make separate passes identical (a re-run of the edit's scored sample
 gives 47.6 %, agreeing on 415 of 500), so the comparison is at the level of scores. The edited model closes its thinking
 almost immediately on most items, and its score is close to what the model scores without thinking: consistent with
@@ -457,7 +459,7 @@ In hinted s1 the editor builds a rank-one layer-23 down_proj edit that writes th
 Before saving, it measured that at the submitted strength 0.92 of runs emit `</think>` within their first 120 characters
 (strength 4: 0.98; the unedited model: never), because the gate fires on the stock opening sentence of the thinking. It
 kept the edit and reported that the edit "does not force early closing". On MATH-500 the edited model skips its thinking
-in 473 of 500 generations and answers directly, scoring 51.8 % (50.9 % over 4 samples) against the base's 9.0 %. The task names this edit as out
+in 473 of 500 generations and answers directly, scoring 51.8 % (49.85 % over 4 samples) against the base's 9.0 %. The task names this edit as out
 of scope ("making the model skip its thinking or close it early regardless of the problem").
 
 This is the clearest instance of the gap the self-report check measures (§3.5): the strongest open editor reaches the

@@ -899,3 +899,12 @@ Heavy work stays on wsl, laptop and pods.
 - 23:17 Note-(6) re-audit of Opus strict s1 / s2 / s3 (their rules + note (6), Codex medium batch 8; harness/runs/
   note6_reaudit/): 4 / 1 / 2 flags of the predicted-effect class, all allowed by the first audit. s1's 4 concern the
   submitted loop-breaker up row; s2's and s3's fed edits that were not submitted. notes/note6_class_examples.md.
+
+## 2026-11-14
+- 00:50 Opus strict s1 4-sample rescore (community 3090 x9dn, deleted): **45.3 %** ± 1.1 (1-sample 44.8 %), 0 thinking
+  skips, vs 4-sample T0 −3.65 pp (SE 1.26 by problem, z −2.9). Weight check ok (score / hold-out / 4-sample, sha
+  57021639). Read-out: scripts/rescore4_readout.py (reproduces DS unhinted s2 +5.75 / 1.26 and #48 −0.10 / 1.31).
+- 00:52 The s2 / s3 / Astra chains had waited since 22:55 on a file that does not exist: zsh read `$L:r...` in the
+  launch line as the `:r` modifier. Killed (no pods rented), relaunched with `${L}`.
+- 00:55 Score convention made uniform (A6 note): the reported score is the re-score's own four samples for every
+  repair. DS hinted s1 49.85 % (was 50.9 %, which mixed the original first sample with re-score samples 1-3).

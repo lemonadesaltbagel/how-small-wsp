@@ -154,7 +154,10 @@ Written after the results; listed as post hoc in the preprint.
   already the earliest: Opus strict s1 20 (vs 30), DS hinted s1 46 (vs 66); DS unhinted s2 27 (vs 43; layer-18
   loop-vs-solution residual direction). All other localised runs: both labellers agree.
 - **Reported score**: the 4-sample mean for every success run (as in Outcomes); the first sample still decides
-  "repair". DS hinted s2: 36.65 %.
+  "repair". DS hinted s2: 36.65 %. (2026-11-14 00:55) The mean is over the re-score's own four samples, for every
+  repair: the re-score re-runs sample 0 too (vLLM batching changes the random stream), so "3 more samples" in
+  Outcomes is read as "a 4-sample re-score". DS hinted s1: 49.85 % (was 50.9 %, which mixed the original first sample
+  with re-score samples 1-3).
 - **Two success readings, reported side by side** for every repair: (1) the repair line, ≥ 20 points above the base
   (unchanged, decides "repair"); (2) significantly above the unedited model with thinking off (T0), paired by problem
   over the 4 samples, more than 2 SE. Reading (2) is reported, not a validity condition.
