@@ -241,3 +241,29 @@
   D uphold, count the run at #48's score (48.9 %, 4-sample), i.e. only the part of the edit that does not rest on the
   violation; report 54.7 % and the violation alongside. My proposal stays A (consistent with s1); D is listed only
   because the number now exists.
+
+## 2026-11-13 18:50 — Truncation controls done: C1–C4 for DS unhinted s2 and the references; option D (17:15) fails C1
+- T1 / T2 (base's own thinking cut at the edit's per-item length / at its median, then closed; sample 0, same seeds)
+  give **28–34 % for every edit**, far below T0 (thinking off, 48–50 %): the damaged base keeps looping in the answer
+  after a forced close (≈ 67 % of T1 / T2 generations hit the 32k cap). Closing at a fixed length is not what the
+  repairs do. Paired, sample 0 (scripts/truncation_analysis.py → notes/run_records/truncation_control/analysis.json):
+
+  | edit | edit | − T0 (1-s, 11-12) | − T2 fixed | − T1 matched | Spearman lvl | rep. whole / tail |
+  |---|---|---|---|---|---|---|
+  | DS unhinted s2 | 53.0 | +4.8 (SE 2.4) | +21.2 (2.1) | +21.4 (2.1) | 0.17 | 0.07 / 0.07 |
+  | Astra p50c | 50.4 | +2.2 (2.2) | +17.6 (1.9) | +19.6 (1.9) | 0.34 | 0.24 / 0.21 |
+  | Opus strict s1 | 44.8 | −3.4 (2.2) | +12.6 (1.9) | +12.6 (1.9) | 0.10 | 0.22 / 0.43 |
+  | Opus strict s2 | 55.4 | +7.2 (2.3) | +23.4 (2.2) | +23.0 (2.0) | 0.16 | 0.20 / 0.25 |
+  | Opus strict s3 | 40.6 | −7.6 (2.2) | +7.0 (1.9) | +12.8 (1.7) | 0.39 | 0.37 / 0.29 |
+  | base | 9.0 | | | | 0.08 | 0.82 / 0.93 |
+
+- 4-sample, paired with the 4-sample T0 (48.95 % ± 1.1, same seeds as the scorer): **#49 +5.75 pp (SE 1.26, z 4.6);
+  #48 (lam = 0) −0.10 pp (SE 1.31); DS hinted s1 +0.9 pp (SE 1.2).**
+- **DS unhinted s2 (#49): C1 pass (4-sample z 4.6; 1-sample z 2.0), C2 pass, C3 pass (0.17 > 0, inside the
+  references' 0.10–0.39), C4 pass (lowest repetition of all).** C5 is the open lam question.
+- **The whole margin over thinking-off comes from lam = 0.12**: #48 equals T0 to 0.1 pp. So option D (count at #48's
+  48.9 %) would fail C1, and I withdraw it. What remains: A invalid / B 53.0 % counts / C not counted. My proposal
+  stays A. Under A, B or C the "beats thinking-off" claim for this run rests on the violating parameter alone.
+- For the paper (not a decision): C1 as written fails for two of the four references (Opus strict s1, s3 below T0;
+  Astra p50c equal to it). Thinking off on the damaged model already scores as well as the published repair.
+- DS hinted s2 C2 still waits for its T1 / T2 (secure-cloud 4090 being set up, 18:15).

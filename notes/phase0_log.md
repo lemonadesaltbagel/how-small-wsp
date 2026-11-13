@@ -888,3 +888,5 @@ Heavy work stays on wsl, laptop and pods.
 - 18:14 chain_trunc_dsh2 (T1 / T2 at DS hinted s2's lengths) got no pod on community cloud: 447c (5090) sat 14:13–16:57
   with an empty model hash before acquire_pods deleted it (~2.7 h × $0.69 ≈ $1.9 lost), then 4 ssh timeouts (3090 / 4090)
   and 3 bad hosts. Re-run with CLOUD=SECURE (chain now takes CLOUD).
+- 18:34 Truncation controls done (pod sltk, 5090, deleted; re-run 12:07–18:34 incl. waits). T1 / T2 28–34 % for all
+  five edits; 4-sample T0 48.95 %. Read-out: pending entry 2026-11-13 18:50, scripts/truncation_analysis.py.

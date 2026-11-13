@@ -1,0 +1,212 @@
+{
+ "DS unhinted s2": {
+  "edit_acc": 0.53,
+  "T1 matched n_cut": 491,
+  "T1 matched cut_tokens": 3680,
+  "T2 fixed n_cut": 484,
+  "T2 fixed cut_tokens": 3683,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": 4.8,
+   "se_pp": 2.39,
+   "z": 2.01
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": 2.6,
+   "se_pp": 2.29,
+   "z": 1.14
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 44.0,
+   "se_pp": 2.28,
+   "z": 19.34
+  },
+  "T1 matched": {
+   "acc": 0.316,
+   "n": 500,
+   "diff_pp": 21.4,
+   "se_pp": 2.14,
+   "z": 10.01
+  },
+  "T2 fixed": {
+   "acc": 0.318,
+   "n": 500,
+   "diff_pp": 21.2,
+   "se_pp": 2.1,
+   "z": 10.12
+  }
+ },
+ "Astra p50c": {
+  "edit_acc": 0.504,
+  "T1 matched n_cut": 378,
+  "T1 matched cut_tokens": 16362.0,
+  "T2 fixed n_cut": 455,
+  "T2 fixed cut_tokens": 15779,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": 2.2,
+   "se_pp": 2.16,
+   "z": 1.02
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": 0.0,
+   "se_pp": 2.27,
+   "z": 0.0
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 41.4,
+   "se_pp": 2.22,
+   "z": 18.62
+  },
+  "T1 matched": {
+   "acc": 0.308,
+   "n": 500,
+   "diff_pp": 19.6,
+   "se_pp": 1.87,
+   "z": 10.51
+  },
+  "T2 fixed": {
+   "acc": 0.328,
+   "n": 500,
+   "diff_pp": 17.6,
+   "se_pp": 1.93,
+   "z": 9.14
+  }
+ },
+ "Opus strict s1": {
+  "edit_acc": 0.448,
+  "T1 matched n_cut": 455,
+  "T1 matched cut_tokens": 5570,
+  "T2 fixed n_cut": 478,
+  "T2 fixed cut_tokens": 5443,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": -3.4,
+   "se_pp": 2.23,
+   "z": -1.52
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": -5.6,
+   "se_pp": 2.2,
+   "z": -2.55
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 35.8,
+   "se_pp": 2.16,
+   "z": 16.54
+  },
+  "T1 matched": {
+   "acc": 0.322,
+   "n": 500,
+   "diff_pp": 12.6,
+   "se_pp": 1.93,
+   "z": 6.52
+  },
+  "T2 fixed": {
+   "acc": 0.322,
+   "n": 500,
+   "diff_pp": 12.6,
+   "se_pp": 1.89,
+   "z": 6.67
+  }
+ },
+ "Opus strict s2": {
+  "edit_acc": 0.554,
+  "T1 matched n_cut": 464,
+  "T1 matched cut_tokens": 10801.0,
+  "T2 fixed n_cut": 459,
+  "T2 fixed cut_tokens": 10687,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": 7.2,
+   "se_pp": 2.28,
+   "z": 3.16
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": 5.0,
+   "se_pp": 2.21,
+   "z": 2.26
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 46.4,
+   "se_pp": 2.29,
+   "z": 20.3
+  },
+  "T1 matched": {
+   "acc": 0.324,
+   "n": 500,
+   "diff_pp": 23.0,
+   "se_pp": 2.05,
+   "z": 11.24
+  },
+  "T2 fixed": {
+   "acc": 0.32,
+   "n": 500,
+   "diff_pp": 23.4,
+   "se_pp": 2.23,
+   "z": 10.51
+  }
+ },
+ "Opus strict s3": {
+  "edit_acc": 0.406,
+  "T1 matched n_cut": 276,
+  "T1 matched cut_tokens": 18862.0,
+  "T2 fixed n_cut": 455,
+  "T2 fixed cut_tokens": 17474,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": -7.6,
+   "se_pp": 2.2,
+   "z": -3.45
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": -9.8,
+   "se_pp": 2.28,
+   "z": -4.29
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 31.6,
+   "se_pp": 2.12,
+   "z": 14.91
+  },
+  "T1 matched": {
+   "acc": 0.278,
+   "n": 500,
+   "diff_pp": 12.8,
+   "se_pp": 1.74,
+   "z": 7.34
+  },
+  "T2 fixed": {
+   "acc": 0.336,
+   "n": 500,
+   "diff_pp": 7.0,
+   "se_pp": 1.88,
+   "z": 3.72
+  }
+ }
+}
