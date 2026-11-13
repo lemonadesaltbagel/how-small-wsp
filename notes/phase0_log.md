@@ -875,3 +875,8 @@ Heavy work stays on wsl, laptop and pods.
   session's one conflict). `uv cache prune` freed only 10 MB.
 - Consequence: an episode on wsl keeps its work/ on wsl only. The D: drive gets the space back only after the vhdx is
   compacted (user, admin PowerShell, needs `wsl --shutdown`).
+- 14:00 Laptop too: the 9 finished laptop runs' work/ dirs (identical on Mac and laptop, files and bytes) were moved on
+  the Mac out of the synced tree to `~/Research/wsp-scale-ladder-archive/harness/runs_laptop/phase0/<run>/work`
+  (a rename on one volume, 112 GB); Mutagen propagated the deletion to the laptop (WSL used 268 → 156 GB), no conflicts.
+  No session rebuild here: s3 and my chains write synced files, and a new session resolves any file changed during
+  its first scan in alpha's (the Mac's) favour. Left for later: DS hinted s2 (hold-out running) and s3 (running).
