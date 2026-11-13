@@ -14,7 +14,7 @@ open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and, as a separate 
 mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
 against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
 post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in two of three strict
-episodes without simulating the network (45.3 % and 40.6 % [s3 after its 4-sample re-score]); its third (55.4 %)
+episodes without simulating the network (45.3 % and 40.6 % [s3 after its 4-sample re-score]); its third (56.5 %)
 contains a call that predicts an edit's effect at recorded tokens and is reported with the simulation-allowed results.
 The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). Under the strict rules no open-weight
 editor has a valid repair. deepseek-flash scores above the repair threshold in four of its five episodes: one
@@ -286,7 +286,7 @@ note 6 then wrote down for the main protocol. MATH-500 over 4 samples, the first
 | seed | MATH-500 | MMLU-Pro 1k | GPQA | IFEval | turns | reviewer blocks |
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 45.3 % (44.8) | 40.4 | 27.8 | 57.7 | 356 | 2 |
-| 2 (invalid) | [4-sample] (55.4) | 44.8 | 30.8 | 60.4 | 343 | 0 |
+| 2 (invalid; simulation allowed) | 56.5 % (55.4) | 44.8 | 30.8 | 60.4 | 343 | 0 |
 | 3 | [4-sample] (40.6) | 44.7 | 30.1 | 60.8 | 357 | 2 |
 | base | 9.0 % | 39.7 | 24.4 | 20.1 | — | — |
 
@@ -438,7 +438,7 @@ score (T0) is 48.95 ± 1.1 %.
 
 Differences in points, paired by problem on sample 0 (standard errors in brackets); T0 here is the 1-sample run. Astra's
 score is our re-scoring of the published edit. Over 4 samples, paired with the 4-sample T0: deepseek-flash unhinted s2
-+5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26); [Opus s2, s3 and Astra after
++5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26); [Opus s3 and Astra after
 their 4-sample re-scores].
 
 Every edit beats both truncations by at least 3.7 standard errors [check DS unhinted s3]. A cut does not get the base out of the loop: after
@@ -561,7 +561,7 @@ the open editors lack is an edit that works within the rules: of the two deepsee
 invalid and one borderline, and the third unhinted seed closes at one length.
 
 **The runs that beat thinking off (an observation).** Two runs beat thinking off by more than two standard errors:
-Opus strict s2 (+7.2 points on sample 0 [4-sample]) and deepseek-flash unhinted s2 (+5.75 over 4 samples). Both
+Opus strict s2 (+7.55 over 4 samples, SE 1.26) and deepseek-flash unhinted s2 (+5.75, SE 1.26). Both
 contain calls of the predicted-effect class that A7 upholds (Opus call 237; deepseek-flash calls 74 and 87), and both
 are invalid for them. In neither does such a call feed the submitted edit: Opus removed the neuron before submitting,
 and deepseek-flash overwrote the edit. With two runs, and the violating calls outside both final edits, this is a

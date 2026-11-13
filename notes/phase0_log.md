@@ -940,3 +940,6 @@ Heavy work stays on wsl, laptop and pods.
   skip in all 4 samples), 26 % at level 5. Entry in pending_user_decisions 10:30.
 - 10:20 truncation controls T1 / T2 for DS unhinted s3: bundle_dsu3.json.xz (median thinking 1,863 tokens, 500 of 500
   closed), `scripts/chain_trunc_dsu3.sh` (secure pod; log chain_trunc_dsu3.log).
+- 10:50 **Opus strict s2 4-sample 56.5 % ± 1.1** (A5000 rye3, deleted); 0 / 2000 thinking skips; vs 4-sample T0
+  +7.55 pp (SE 1.26). verify_scored_weights ok (score, hold-out, 4-sample). Preprint: Table 2 row (simulation-allowed),
+  abstract, 4-sample line, observation paragraph.
