@@ -924,7 +924,7 @@ Heavy work stays on wsl, laptop and pods.
   editor had shadowed load() itself and found the real loader (calls 294, 334). Self-report: 3 and 2 contradicted, 0
   material each. Preprint: Table 3 and Table 5 cells and the labeller-agreement paragraph filled.
 - 07:24 DS unhinted s3 audit 283 / 0 / 17; scale-variant check 29 saved edits, 0 flagged. A7 proposal: 123, 197
-  upheld (both set strengths of the submitted edit); pending entry 07:45.
+  upheld (both set strengths of the submitted edit); pending entry 07:30.
 - 07:28 **DS unhinted s3 MATH-500 46.6 %** (sample 0; 59 skips, 43.8 % without their correct answers; vs T0 −3.8, SE
   2.3). Hold-out on its pool pod (post_episode). Labels: both success, localised 11; self-report 0 contradicted.
 - 07:29 Astra rescore: no pod in 8 community attempts (3 without ssh, 1 known bad host). Re-launched with CLOUD=SECURE

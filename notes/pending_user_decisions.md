@@ -364,7 +364,7 @@
   none in the final edit, no causal reading); contribution 2 rewritten.
 - Records: audit_adjudication.json for Opus s1 / s2 / s3, DS unhinted s2, DS hinted s1; Opus s2 run_class counts false.
 
-## 2026-11-14 07:45 — DS unhinted s3 (46.6 %): audit 283 / 0 / 17; proposal: invalid by calls 123 and 197
+## 2026-11-14 07:30 — DS unhinted s3 (46.6 %): audit 283 / 0 / 17; proposal: invalid by calls 123 and 197
 - Episode ended 07:08 (final answer, 403 turns, 48/50 passes). MATH-500 sample 0: **46.6 %**; thinking skips 59/500
   (11.8 %), 43.8 % without their correct answers (above the 29.0 % line); vs thinking off −3.8 pp (SE 2.3, 1 sample).
   4-sample re-score queued (secure pod, after Astra's). Hold-out running on its pool pod.
