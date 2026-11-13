@@ -14,7 +14,7 @@
   "budget exhausted"
  ],
  "label_justification": "Loop evidence holds from call 9, which printed the longest identical-line runs and the tails of generations cut at 32768 tokens; calls 12 and 19-20 extended this with repeated-suffix families and loop-onset positions. The locus is tied to that evidence from call 24, which ranked MLP neurons by activation at loop positions versus non-loop reasoning positions in the loop traces, with per-trace consistency; call 25 checked neuron L14 n891 (loop mean 0.189 vs reasoning mean 0.029). Later work repeated this on real loop traces: L22/L23 gate neurons at loop vs pre-loop vs success positions (calls 232-236) and stop-token rank at loop line starts. No submitted edit repaired the failure. The L0 head-8 decay fix (call 63) scored 0.094 on the paired diagnostic. The L22 stop edit (call 30) scored 0.109 against 0.121 for the original, a null result. The L22/L23 conditional stop edit (call 53) scored 0.0. The dense gate edit (call 265) scored 0.0, and the sparse gate edit (call 279) scored 0.0, with 231 of 256 generations finishing without an answer. The alpha=50 edit (call 297 onward) was reverted, and the final submission scored 0.072, below the 0.29 needed for success.",
- "localised_at_call": 24,
+ "localised_at_call": 22,
  "label_first": {
   "label": "localised, edit failed",
   "loop_evidence_call": 9,
@@ -271,5 +271,6 @@
     "evidence": "Ledger 34 reverts 1024 entries; call 328 reports drop_edit succeeded, and the submitted edit set is empty."
    }
   ]
- }
+ },
+ "localised_at_call_resolution": "A6 (2026-11-13): earliest call either labeller cites that meets A3 against the tool record; was 24. call 22 (second labeller): per-layer MLP activation differences between loop positions and earlier reasoning positions (A3 (ii)); call 24 (first labeller) ranks the same differences"
 }

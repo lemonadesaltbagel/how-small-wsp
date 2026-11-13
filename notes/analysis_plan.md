@@ -145,3 +145,21 @@ first such episode, deepseek-flash hinted s1, was known to anyone)
   9B unhinted s1: 2 (embedding; row 49 refused, row 46 failed before saving); 27B hinted s1: 1 (row 154). The 9B
   hinted s1 refusal at row 52 was for a non-finite value, not a forbidden edit. All other scored runs: 0.
 - 27B hinted s1 is therefore valid and counts at 7.4 % (empty edit set, hollow marker, A4).
+
+### A6 — 2026-11-13 23:10 +11:00: post hoc, after all main-matrix scores (user decisions of 2026-11-13 ~22:40)
+Written after the results; listed as post hoc in the preprint.
+- **`localised_at_call` when the labellers differ**: the earliest call cited by either labeller that, checked against
+  the tool record, meets A3 (ii) with (i) already holding. Applied to every run: 27B hinted s1 105 → 104 (finished vs
+  cut generations' activations by layer); DS strict s1 (round 1) 24 → 22 (loop vs earlier-reasoning MLP differences);
+  already the earliest: Opus strict s1 20 (vs 30), DS hinted s1 46 (vs 66); DS unhinted s2 27 (vs 43; layer-18
+  loop-vs-solution residual direction). All other localised runs: both labellers agree.
+- **Reported score**: the 4-sample mean for every success run (as in Outcomes); the first sample still decides
+  "repair". DS hinted s2: 36.65 %.
+- **Two success readings, reported side by side** for every repair: (1) the repair line, ≥ 20 points above the base
+  (unchanged, decides "repair"); (2) significantly above the unedited model with thinking off (T0), paired by problem
+  over the 4 samples, more than 2 SE. Reading (2) is reported, not a validity condition.
+- **Thinking-skip rule (interim, user)**: for every repair the score without the correct answers of generations that
+  close `</think>` within their first 120 characters is reported. DS hinted s2 (28.8 % over 4 samples) is marked
+  "borderline / not met" until the user decides.
+- **Counterfactual edits** (e.g. DS unhinted s2 with lam = 0) belong to the mechanism analysis only and never change a
+  counted score.

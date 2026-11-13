@@ -13,7 +13,7 @@
  ],
  "failure_label": "localised, edit failed",
  "label_justification": "Loop evidence holds from call 51, which printed the last 200 characters of cut-off generations showing verbatim looping. Call 58 then counted repeated token sequences in the failing traces. A locus tied to that evidence first appears at call 105. It compared layer-23 MLP activations between finished (stop) and cut-off looping generations and found neuron 22 much more active in the looping ones. Call 259 later compared layer-23 heads 2 and 6 self-attention between a Wait-loop text and a boxed-completion text. Calls 66-69 and 117 looked at attention on failing traces only, which does not separate looping from non-looping. No submitted edit repaired the failure: every edit was reverted or left at about base level (7.4% on the final MATH-500 score), below the 0.29 threshold. The edits were A_log shifts, gate suppression of neurons 22/46/19/107/94 and others, boosts of neurons 40 and 96, o_proj scaling of heads 2 and 6, and dt_bias reductions in layers 21 and 22. The final dt_bias plus o_proj configuration scored 7.8% in call 358 and was then dropped.",
- "localised_at_call": 105,
+ "localised_at_call": 104,
  "label_first": {
   "label": "localised, edit failed",
   "loop_evidence_call": 51,
@@ -149,5 +149,6 @@
     "evidence": "Call 358 records 20 correct and 1 wrong finished original outputs versus 10 correct and 0 wrong finished edited outputs: finished-output accuracy was 95.2% original versus 100% edited."
    }
   ]
- }
+ },
+ "localised_at_call_resolution": "A6 (2026-11-13): earliest call either labeller cites that meets A3 against the tool record; was 105. call 104 (second labeller): mean hidden / MLP activations of finished vs cut-at-limit generations by layer, i.e. looping vs finished texts (A3 (ii)); call 105 (first labeller) narrows it to L23 neuron 22"
 }
