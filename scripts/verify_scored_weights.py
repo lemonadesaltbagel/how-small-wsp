@@ -32,7 +32,8 @@ LOG_RECORDS = [
     ("runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s1", "4-sample rescore", "logs/rescore_dsh1.log"),
     ("runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2", "4-sample rescore", "logs/rescore_dsu2.log"),
 ]
-EXTRA_RUNS = ["runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2"]  # counted, not yet in the ledger
+EXTRA_RUNS = ["runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2",  # counted, not yet in the ledger
+              "runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2"]
 
 
 def read_safetensors(path):

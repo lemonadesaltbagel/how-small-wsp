@@ -7,16 +7,23 @@ cd "$(dirname "$0")/.."
 run=runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2; remote=scratch_remote_rescore_dsh2_4s.json; rlog=logs/rescore_dsh2_4s.log
 say() { echo "$(date +%H:%M) rescore-dsh2-4s $*"; }
 [ -s "harness/$run-rescore4/edits/ledger.jsonl" ] || { say "ALERT no ledger in the rescore dir"; exit 1; }
-until grep -q -E "cf48 (pod .* ready|ALERT)" logs/chain_cf48.log 2>/dev/null; do sleep 60; done
+# ADOPT="<pod id>:<gpu>:<TB/s>": finish setting up a pod whose acquisition was interrupted (acquire_pods.sh ADOPT) and use it
 n0=$(wc -l < logs/pool_hosts.jsonl)
+if [ -n "${ADOPT:-}" ]; then
+  ADOPT="$ADOPT" bash scripts/acquire_pods.sh 1 30 >> logs/acquire_rescore_dsh2_4s.log 2>&1 < /dev/null
+  n1=$(wc -l < logs/pool_hosts.jsonl)
+  [ "$n1" -gt "$n0" ] || { say "ALERT adopting ${ADOPT%%:*} failed (logs/acquire_rescore_dsh2_4s.log)"; exit 1; }
+else
+until grep -q -E "cf48 (pod .* ready|ALERT)" logs/chain_cf48.log 2>/dev/null; do sleep 60; done
 # acquire_pods.sh counts created pods, not set-up ones (a pod on a known bad host is deleted and still counted): retry
 for attempt in 1 2 3 4 5 6 7 8; do
-  CLOUD=COMMUNITY DISK_GB=40 GPU_LIST="NVIDIA GeForce RTX 5090:1.79;NVIDIA GeForce RTX 4090:1.01;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 3090:0.94" \
+  CLOUD=COMMUNITY DISK_GB=40 GPU_LIST="${GPU_LIST:-NVIDIA GeForce RTX 4090:1.01;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 3090:0.94;NVIDIA GeForce RTX 5090:1.79}" \
     bash scripts/acquire_pods.sh 1 30 >> logs/acquire_rescore_dsh2_4s.log 2>&1 < /dev/null
   n1=$(wc -l < logs/pool_hosts.jsonl)
   [ "$n1" -gt "$n0" ] && break
   say "acquire attempt $attempt gave no ready pod"; sleep 60
 done
+fi
 [ "$n1" -gt "$n0" ] || { say "ALERT no pod acquired (logs/acquire_rescore_dsh2_4s.log)"; exit 1; }
 h=$(tail -n 1 logs/pool_hosts.jsonl); pod=$(echo "$h" | jq -r .pod)
 echo "{\"hosts\":[$h]}" > "$remote"

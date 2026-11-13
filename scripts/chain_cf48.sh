@@ -9,10 +9,12 @@ run=runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2-cf48; remote=scratc
 say() { echo "$(date +%H:%M) cf48 $*"; }
 [ -s "harness/$run/edits/ledger.jsonl" ] && [ -s "harness/$run/cf48.json" ] || { say "ALERT counterfactual dir incomplete"; exit 1; }
 # the truncation chain's re-run starts after the marker line; wait for its pod (or its ALERT)
-until awk '/trunc re-run/ {on=1} on && /trunc (pod .* ready|ALERT)/ {f=1} END {exit !f}' logs/chain_trunc.log 2>/dev/null; do sleep 60; done
+# 5090s are listed last: on 11-13 community 5090 stock kept landing on hosts in logs/bad_hosts.txt
+# NOWAIT=1: skip the wait for the truncation chain's pod
+[ -n "${NOWAIT:-}" ] || until awk '/trunc re-run/ {on=1} on && /trunc (pod .* ready|ALERT)/ {f=1} END {exit !f}' logs/chain_trunc.log 2>/dev/null; do sleep 60; done
 n0=$(wc -l < logs/pool_hosts.jsonl)
 for attempt in 1 2 3 4 5 6 7 8; do
-  CLOUD=COMMUNITY DISK_GB=40 GPU_LIST="NVIDIA GeForce RTX 5090:1.79;NVIDIA GeForce RTX 4090:1.01;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 3090:0.94" \
+  CLOUD=COMMUNITY DISK_GB=40 GPU_LIST="${GPU_LIST:-NVIDIA GeForce RTX 4090:1.01;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 3090:0.94;NVIDIA GeForce RTX 5090:1.79}" \
     bash scripts/acquire_pods.sh 1 30 >> logs/acquire_cf48.log 2>&1 < /dev/null
   n1=$(wc -l < logs/pool_hosts.jsonl)
   [ "$n1" -gt "$n0" ] && break
