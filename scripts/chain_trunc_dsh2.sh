@@ -11,7 +11,7 @@ say() { echo "$(date +%H:%M) trunc-dsh2 $*"; }
 until awk '/cf48 re-run/ {on=1} on && /cf48 (pod .* ready|ALERT)/ {f=1} END {exit !f}' logs/chain_cf48.log 2>/dev/null; do sleep 60; done
 n0=$(wc -l < logs/pool_hosts.jsonl)
 for attempt in 1 2 3 4 5 6 7 8; do
-  CLOUD=COMMUNITY DISK_GB=40 GPU_LIST="${GPU_LIST:-NVIDIA GeForce RTX 4090:1.01;NVIDIA GeForce RTX 3090:0.94;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 5090:1.79}" \
+  CLOUD="${CLOUD:-COMMUNITY}" DISK_GB=40 GPU_LIST="${GPU_LIST:-NVIDIA GeForce RTX 4090:1.01;NVIDIA GeForce RTX 3090:0.94;NVIDIA RTX A5000:0.77;NVIDIA GeForce RTX 5090:1.79}" \
     bash scripts/acquire_pods.sh 1 30 >> logs/acquire_trunc_dsh2.log 2>&1 < /dev/null
   n1=$(wc -l < logs/pool_hosts.jsonl)
   [ "$n1" -gt "$n0" ] && break
