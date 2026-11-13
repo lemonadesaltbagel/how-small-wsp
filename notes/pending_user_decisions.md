@@ -218,3 +218,11 @@
   - C: not a repair (the excluded behaviour is present, whatever its share).
   No recommendation yet: I would wait for the 4-sample rescore (does the same item skip in every sample, i.e. is the
   skip problem-dependent?) and, if you want it, T1 / T2 at this edit's lengths.
+
+## 2026-11-13 13:40 — User decisions on the DS s2 audit points
+- **DECIDED (user, 13:35): "normalisation + measured dose" is treated alike in both DS s2 runs** (11:40 proposal):
+  setting a unit by a statistic at recorded positions and then choosing the strength by forward passes does not by
+  itself make the submitted strength a prediction. Applies to unhinted s2 call 127 and hinted s2 call 213 (beta5).
+- **Open until the counterfactual is scored:** unhinted s2's lam = 0.12 (11:20 entry, options A / B / C); the user
+  decides once cf48 (#48, lam = 0) has its 4-sample score.
+- Still open: DS hinted s2 skip question (13:25 entry; waits for its 4-sample rescore and T1 / T2).
