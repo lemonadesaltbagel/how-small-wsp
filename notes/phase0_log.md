@@ -842,3 +842,10 @@ Heavy work stays on wsl, laptop and pods.
 - 12:05 **DS unhinted s3 started** on the laptop (tmux dsux3, log dsu_strict2_s3), pool 5090 npcw0lxdmb5ax5; Sonnet
   gate reviewing (allow at turns 4, 6); post / auto-resume / low-balance stop attached. Laptop MemAvailable 19.3 GB.
   The Claude labeller is blocked again from now on (shared account). Truncation chain re-run acquiring (12:07), then cf48.
+
+## 2026-11-13 13:05 — Truncation chain: first run failed (no worker on the pod); re-run on the kept pod
+- 13:01 both controls exited at import: `qwen_worker.py` is pushed by qwen_pass at a pass's start, and a freshly set-up pod
+  has none. The script kept pod sltkzknnr7fesq (5090) as designed. Fix (aefc18c): upload the worker; `REUSE=<pod>` runs on
+  a kept pod. Import tested on the pod; controls re-started there.
+- Codex ledger variant checks (whole-tensor-scale variants of saved edits): DS hinted s2 46 saved edits, 0 flagged; DS
+  unhinted s2 39, 0 flagged.
