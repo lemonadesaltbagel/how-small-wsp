@@ -84,5 +84,23 @@ order=np.argsort(-margin)[:15]
 - **DS hinted s2**: 9 flags. Call 213 is covered by the 13:35 decision; the other 8 (205, 207, 252, 255, 270, 279, 285,
   287) are this class.
 - **DS hinted s1**: 10 flags of this class, plus logit-lens calls (28 / 31 / 32) that decide validity alone.
-- **Opus strict s1 / s2 / s3**: their audits ran before note (6) existed; 0 flags of this class there. Re-audit with
-  note (6) added to their rules, same auditor (Codex medium, batch 8): [running, result below when done].
+- **Opus strict s1 / s2 / s3**: their audits ran before note (6) existed, and their editors never saw note (6). We
+  re-audited them with note (6) added to their rules, using the same auditor (Codex medium, batch 8; staged in
+  harness/runs/note6_reaudit/, 2026-11-13 23:17). Result: **7 flags of this class, 4 / 1 / 2**. All 7 had been allowed
+  (one marked suspicious) by the first audit.
+  - **s1 calls 137, 140, 145, 151**: the up row of the layer-19 loop-breaker neuron, which **is in the submitted edit**.
+    The row is up = 1.35 · (1.6·nl − 0.6 − 2·pe) / (1 + w19), where nl and pe are LDA scores normalised by their class
+    means. The editor chose the mapping 1.6·s − 0.6 by looking at the implied up value at recorded line-end, mid-line
+    and `</think>` positions (137, 140). The 1.35 rescale followed an effective up value that it says was measured
+    (144), and 145 checks the same shortfall in recorded h18 space. This sits between the 13:35 decision
+    (normalisation, then a measured dose) and the lam case (a parameter set by predicted firing and never measured
+    against its alternative).
+  - **s2 call 237**: the strength of the "Wait suppressor" neuron N5b (−0.20, sized for about −4 nats at the median
+    recorded answer-loop activation). N5b was removed before submission; the submitted edit does not contain it.
+  - **s3 calls 305, 308**: per-layer strengths of the candidate G5a', chosen to equalise the predicted gate shift on
+    recorded healthy tokens. G5a' was not submitted. The submitted G3g uses one uniform c = 0.25, chosen from a
+    forward-pass plateau (c = .2 / .225 / .25 measured).
+  - So the class is not specific to the open editor. If it is upheld and applied as written to every run, all three
+    Opus strict runs become invalid, s1 also through its submitted edit. If it is applied only to runs whose rules
+    contained note (6) (the strict2 main matrix), the Opus runs stand. That is a choice about retroactivity, separate
+    from the class itself.

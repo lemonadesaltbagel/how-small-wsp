@@ -896,3 +896,6 @@ Heavy work stays on wsl, laptop and pods.
   Pending entry 2026-11-13 20:40.
 - 21:33 DS hinted s2 4-sample rescore: 36.65 % ± 1.1 (A5000 dvwu deleted; 13:18–21:33 incl. the reboot restart).
   Weight check ok (3 records). Skip analysis + recommendation: pending entry 2026-11-13 21:50.
+- 23:17 Note-(6) re-audit of Opus strict s1 / s2 / s3 (their rules + note (6), Codex medium batch 8; harness/runs/
+  note6_reaudit/): 4 / 1 / 2 flags of the predicted-effect class, all allowed by the first audit. s1's 4 concern the
+  submitted loop-breaker up row; s2's and s3's fed edits that were not submitted. notes/note6_class_examples.md.
