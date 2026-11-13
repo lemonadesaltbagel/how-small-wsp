@@ -863,3 +863,15 @@ Heavy work stays on wsl, laptop and pods.
   (13:18, wsl tmux rescore-dsh2-4s). cf48 re-acquiring; then T1 / T2 at DS hinted s2's lengths
   (scripts/chain_trunc_dsh2.sh, bundle_dsh2.json.xz, < $1).
 - The truncation control (pod sltk) runs: first condition 153 / 491 at 13:20.
+
+## 2026-11-13 13:50 — wsl disk: run work/ dirs no longer synced to wsl; 292 GB freed there
+- The desktop's Windows disks were nearly full (D: 36 GB free; WSL vhdx 551 GB; C: 16 GB). In WSL the project held
+  246 GB (runs) + 188 GB (runs_laptop), mostly the editors' work/ scratch (292 GB in 25 runs).
+- Mutagen session wsl-41d103eb53 rebuilt (same name / label / mode) with ignores `/harness/runs/*/*/work` and
+  `/harness/runs_laptop/*/*/work`; initial sync clean (166 GB, no conflicts), probes checked both ways and the ignore.
+  The 24 finished runs' work/ dirs were identical on Mac and wsl (files and bytes); s3's differs only as the Mac copy
+  is newer. Deleted on wsl except work/edited (1.1 GB, read by scripts/edit_structure.py). WSL used 613 → 321 GB; Mac
+  copies untouched (246 + 200 GB). Removed wsl's stale harness/runs/tmp_extract (deleted on the Mac earlier; the old
+  session's one conflict). `uv cache prune` freed only 10 MB.
+- Consequence: an episode on wsl keeps its work/ on wsl only. The D: drive gets the space back only after the vhdx is
+  compacted (user, admin PowerShell, needs `wsl --shutdown`).
