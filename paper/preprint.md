@@ -1,7 +1,8 @@
 # How Small Can a Weight-Space Programmer Be?
 
-[Authors] · draft of 2026-11-12, merged from `paper/draft_*.md`. [Brackets] mark what still waits for the two
-deepseek-flash seed-2 episodes, a citation or the user's decision. Numbers come from `notes/episode_ledger.json`,
+[Authors] · draft of 2026-11-14, merged from `paper/draft_*.md`. [Brackets] mark what still waits for Opus strict
+s3's 4-sample re-score, a citation or the user's decision (marked "pending": the A7 ruling on deepseek-flash unhinted
+s3 and whether it is reported as early closing). Numbers come from `notes/episode_ledger.json`,
 `notes/phase0_log.md` and each run's `run_class.json`.
 
 ## Abstract
@@ -14,7 +15,7 @@ open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and, as a separate 
 mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
 against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
 post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in two of three strict
-episodes without simulating the network (45.3 % and 40.6 % [s3 after its 4-sample re-score]); its third (56.5 %)
+episodes without simulating the network (45.3 % and 44.5 %); its third (56.5 %)
 contains a call that predicts an edit's effect at recorded tokens and is reported with the simulation-allowed results.
 The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). Under the strict rules no open-weight
 editor has a valid repair. deepseek-flash scores above the repair threshold in four of its five episodes: one
@@ -23,7 +24,7 @@ predict an edit's effect and is reported with the simulation-allowed results; on
 scoring 28.8 % without the generations that skip their thinking; the fourth (46.2 %, a third unhinted seed) ends its
 thinking after about the same length on every problem, which the task excludes [and its submitted strengths were set
 from predicted effects: pending]. The valid repairs beat truncating the unedited
-model's own thinking at the same length but not simply switching its thinking off, which scores 48.95 % [check s3].
+model's own thinking at the same length but not simply switching its thinking off, which scores 48.95 %.
 The two runs that beat thinking off both contain calls that predict an edit's effect, though no such call feeds
 either submitted edit (n = 2) [pending: a third run with such calls, inside its submitted edit, scores below thinking
 off]. Scores of repairs are 4-sample means. The failure modes differ by size in these episodes: none
@@ -287,7 +288,7 @@ note 6 then wrote down for the main protocol. MATH-500 over 4 samples, the first
 | --- | --- | --- | --- | --- | --- | --- |
 | 1 | 45.3 % (44.8) | 40.4 | 27.8 | 57.7 | 356 | 2 |
 | 2 (invalid; simulation allowed) | 56.5 % (55.4) | 44.8 | 30.8 | 60.4 | 343 | 0 |
-| 3 | [4-sample] (40.6) | 44.7 | 30.1 | 60.8 | 357 | 2 |
+| 3 | 44.5 % (40.6) | 44.7 | 30.1 | 60.8 | 357 | 2 |
 | base | 9.0 % | 39.7 | 24.4 | 20.1 | — | — |
 
 All three seeds score above the repair line (+31.6 to +46.4 points on the first sample) with no hold-out regression. IFEval rises by about 40 points
@@ -314,7 +315,7 @@ upheld, and s2 is invalid. That neuron was removed before submission. s2 is repo
 results, and the strict Opus reference is s1 and s3.
 
 **Simulation is not necessary for the threshold.** The first-round Opus episodes, which simulated parts of the network
-in the kernel, scored 50.8 % and 35.0 %. The two valid strict episodes, which could not, score 45.3 and [40.6] %. The
+in the kernel, scored 50.8 % and 35.0 %. The two valid strict episodes, which could not, score 45.3 and 44.5 %. The
 rounds differ in more than the rule (mid-run notices and kernel restarts in the first round), so we read this only as:
 reading the weights plus forward-pass feedback suffices to clear the line.
 
@@ -339,7 +340,8 @@ strict rules or close early are crosses on dotted intervals (reported, not in th
 
 Table 3 lists the main-matrix episodes (main protocol). Passes: forward passes charged (of 50). Saved: edits saved
 during the episode (replacements, not counting reverts). Submitted: tensors in the final edit set. Valid repairs per
-cell: 0 of 2 in every cell; deepseek-flash hinted s2 is borderline (below).
+cell: 0 of 2 in every two-seed cell, 0 of 3 in the deepseek-flash unhinted cell; deepseek-flash hinted s2 is
+borderline (below).
 
 | editor | prompt | seed | MATH-500 | label (localised at call) | turns | Python runs | passes | saved / submitted | audit (allowed/susp./viol.) | valid |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -438,13 +440,12 @@ score (T0) is 48.95 ± 1.1 %.
 
 Differences in points, paired by problem on sample 0 (standard errors in brackets); T0 here is the 1-sample run. Astra's
 score is our re-scoring of the published edit. Over 4 samples, paired with the 4-sample T0: deepseek-flash unhinted s2
-+5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26), Astra +2.25 (1.32; our 4-sample re-score 51.2 %); [Opus s3 after its 4-sample
-re-score].
++5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26), Astra +2.25 (1.32; our 4-sample re-score 51.2 %), Opus strict s3 −4.45 (1.39).
 
 Every edit beats both truncations by at least 3.7 standard errors. A cut does not get the base out of the loop: after
 a forced close it often loops on in the answer, and 63–72 % of all T1 and T2 generations reach the token limit, so T1
 and T2 land near 30 % whatever the cut length (1.8k to 17.5k tokens). Against thinking off, the picture is different: the two
-valid strict repairs, Opus s1 and s3, score below it (s1 by 3.65 points over 4 samples, SE 1.26 [s3 4-sample]), and
+valid strict repairs, Opus s1 and s3, score below it (by 3.65 and 4.45 points over 4 samples, SE 1.26 and 1.39), and
 Astra's edit is level with it (+2.25 over 4 samples, SE 1.32). Only the two invalid runs, Opus strict s2 and deepseek-flash unhinted s2, beat it by more than
 two standard errors (§5). The damaged model with its thinking switched off already scores as high as the published
 repair. A repair that keeps the thinking is therefore told apart from the excluded shortcut by its outputs (the
@@ -549,7 +550,7 @@ divided by a predicted nats-per-unit at recorded walls) were set from effects pr
 upheld, the run is also invalid, and unlike the other invalid runs the violating calls set strengths of the submitted
 edit.]
 
-**How the frontier reference differs.** The two valid strict Opus 5.5 repairs (45.3 and [40.6] %) score in the same
+**How the frontier reference differs.** The two valid strict Opus 5.5 repairs (45.3 and 44.5 %) score in the same
 range as the shortcut, so the threshold alone does not tell them apart. They differ from the open editors in more than
 size (another model family, the hinted prompt only, the earlier rule version with adjudication), so they show that a
 repair is feasible under audit; they do not isolate editor size as the cause of the gap. Two of them also write `</think>` from a neuron,
@@ -557,8 +558,9 @@ as the shortcut does. The difference is the gate: in Opus's edits it opens only 
 ends), so the thinking is kept. None of the 2,500 scored generations of the five Opus runs (the three strict episodes and the two first-round runs)
 closes `</think>` early, and they close within the limit far more often than the base: 24, 10 and 194 of 500 never
 close in the strict runs, 175 and 270 in the first-round runs, against the base's 455. Labelled with the same procedure, the strict
-Opus episodes localise at calls 20, 15 and 26, no earlier than the 27B editor (14, 16, 48, 104) or deepseek-flash (46,
-49, 28, 27, 11). Within this budget the open editors that reach the diagnosis reach it about as early as the frontier editor; what
+Opus episodes localise at calls 20, 15 and 26, the 27B editor at 14, 16, 48 and 104, and deepseek-flash at 46, 49, 28,
+27 and 11: overlapping ranges. In these few episodes the open editors that reach the diagnosis reach it within the same
+range of calls as the frontier editor; what
 the open editors lack is an edit that works within the rules: of the two deepseek-flash seed-2 edits that work, one is
 invalid and one borderline, and the third unhinted seed closes at one length.
 
@@ -581,7 +583,8 @@ unhinted s2, 27 vs 43: a layer-18 hidden-state direction contrasting loop and so
 contrasts between loop tails and heads; by the same reading we take 27. The third is deepseek-flash unhinted s3, 11 vs
 40: layer-wise MLP activations of the cut-off (looping) generations vs a finished one, vs loop-state vs early-state
 contrasts at layers 22–23; we take 11. Agreement is easy at this
-resolution: the not-localised episodes never examine a cut-off generation at all.
+resolution: the not-localised episodes, even those that print a cut-off generation, never tie a model component to
+the loop.
 
 **Rule enforcement across scale (Table 4).** Small editors rarely come near the rule boundary: they do too little
 computation with recorded activations for simulation to be a concern. The boundary is reached by the editors that
@@ -738,8 +741,11 @@ the editor's view.
 ## Appendix
 
 **A. Checks.**
-- Edits: every scored network equals the base plus its declared edit set exactly (all 320 tensors) in all 14
+- Edits: every scored network equals the base plus its declared edit set exactly (all 320 tensors) in all 17
   scored main-protocol episodes, the five Opus runs and one earlier deepseek-flash run (`notes/verify_edits.jsonl`).
+  For the runs above the line, the tensors each scoring pass loaded (score, hold-out, 4-sample re-score) give the
+  same model hash as base plus declared edit, and the re-scored Astra tensors equal the published files
+  (`scripts/verify_scored_weights.py`).
 - Grading: independent re-extraction plus MATH normalisation agrees on 96.6–99.2 % of answers and never counts an
   answer we mark wrong as right (`notes/regrade_independent.jsonl`).
 - The analysis plan was frozen and pushed before the first main-matrix result (`notes/analysis_plan.md`, commit
@@ -760,7 +766,7 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 2. "(such as repetition)" after "repairing a specific failure inside the thinking";
 3. "(often while repeating itself in its thinking)" after "being cut off at the token limit".
 
-**D. Compute.** [Per-episode cost split from the pod timelines, after the deepseek-flash s2 seeds; interim totals in
+**D. Compute.** [Per-episode cost split from the pod timelines, still to do; interim totals in
 `notes/compute_log.md`.]
 
 **E. Adjudications.** [Each flagged call with its class and decision: `notes/note6_split_application.md` and each

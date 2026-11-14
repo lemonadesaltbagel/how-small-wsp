@@ -18,3 +18,6 @@
 {"run": "harness/runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s1", "edited_tensors": 0, "changed_total": 0, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
 {"run": "harness/runs_laptop/phase0/qwen0p8b-unhinted-p50-strict2-s2", "edited_tensors": 0, "changed_total": 0, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
 {"run": "harness/runs_laptop/phase0/qwen9b-hinted-p50-strict2-s2", "edited_tensors": 1, "changed_total": 3666432, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs_laptop/phase0/deepseekflash-hinted-p50-strict2-s2", "edited_tensors": 1, "changed_total": 102400, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s2", "edited_tensors": 1, "changed_total": 3670010, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}
+{"run": "harness/runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s3", "edited_tensors": 1, "changed_total": 3670011, "numel_total": 752393024, "net_tensors_checked": 320, "ok": true, "problems": []}

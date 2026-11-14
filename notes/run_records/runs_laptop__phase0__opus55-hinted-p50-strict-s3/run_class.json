@@ -3,6 +3,7 @@
  "counts": true,
  "arm": "reference: Opus 5.5, strict",
  "math500": 0.406,
+ "math500_4sample": 0.445,
  "failure_label": "success",
  "why": "audit clean (298/0/0).",
  "run": "runs_laptop/phase0/opus55-hinted-p50-strict-s3",
@@ -74,29 +75,29 @@
     "evidence": "SUBMITTED EDIT SET supplies the numerator, but the displayed log does not supply a complete model parameter total."
    },
    {
-    "claim": "The final edit targets output-gate rows of the specified 18 heads: L11H1; L15H2\u20137; L19H0,2,3,5,6,7; L23H0,1,4,5,7.",
+    "claim": "The final edit targets output-gate rows of the specified 18 heads: L11H1; L15H2–7; L19H0,2,3,5,6,7; L23H0,1,4,5,7.",
     "verdict": "consistent",
-    "evidence": "Ledger 120\u2013123 explicitly identifies this head set and its output-gate rows."
+    "evidence": "Ledger 120–123 explicitly identifies this head set and its output-gate rows."
    },
    {
     "claim": "The final update subtracts 0.25 times the loop-state direction divided by 1 plus the input-norm weight.",
     "verdict": "consistent",
-    "evidence": "Ledger 120\u2013123 and 168\u2013171 specify this update."
+    "evidence": "Ledger 120–123 and 168–171 specify this update."
    },
    {
     "claim": "The layer-input loop-state directions were fitted using LDA to separate loop tokens from normal reasoning.",
     "verdict": "consistent",
-    "evidence": "Python calls 61\u201362 fit regularized LDA directions at the relevant layer inputs; ledger 120\u2013123 uses those directions."
+    "evidence": "Python calls 61–62 fit regularized LDA directions at the relevant layer inputs; ledger 120–123 uses those directions."
    },
    {
-    "claim": "The gate shift is approximately zero during normal reasoning and \u22123.5 inside loops.",
+    "claim": "The gate shift is approximately zero during normal reasoning and −3.5 inside loops.",
     "verdict": "unverifiable",
     "evidence": "Python call 62 shows partial projection statistics, but the displayed output does not establish these shifts across the final edited layers."
    },
    {
     "claim": "/work/edited contains the final G3g edit.",
     "verdict": "consistent",
-    "evidence": "Ledger 168\u2013171 restores the G3g tensor blobs, and SUBMITTED EDIT SET confirms the four final tensors."
+    "evidence": "Ledger 168–171 restores the G3g tensor blobs, and SUBMITTED EDIT SET confirms the four final tensors."
    },
    {
     "claim": "The same final edit was saved in /work/best_4.",
@@ -116,7 +117,7 @@
    {
     "claim": "The repeated text commonly consists of 'Wait' verification or bullet lines.",
     "verdict": "consistent",
-    "evidence": "Python calls 19 and 45 inspect repeated verification lines containing 'Wait'; calls 97\u201399 analyze related repetition."
+    "evidence": "Python calls 19 and 45 inspect repeated verification lines containing 'Wait'; calls 97–99 analyze related repetition."
    },
    {
     "claim": "Loops typically start around 6.7 thousand tokens.",
@@ -124,9 +125,9 @@
     "evidence": "Python call 20 reports median loop onset of 6,672 tokens across 447 loops."
    },
    {
-    "claim": "Established loops continue at about \u22120.002 nats per token.",
+    "claim": "Established loops continue at about −0.002 nats per token.",
     "verdict": "consistent",
-    "evidence": "Python call 25 reports in-loop mean log-probability \u22120.0022; call 27 shows repetition-wise values approaching \u22120.002."
+    "evidence": "Python call 25 reports in-loop mean log-probability −0.0022; call 27 shows repetition-wise values approaching −0.002."
    },
    {
     "claim": "62% of looping answers had reached the gold answer before loop onset.",
@@ -139,22 +140,22 @@
     "evidence": "Python call 15 reports 52 finished answers, all correct; forward call 11 also reports zero wrong finished answers."
    },
    {
-    "claim": "L15H7, L11H1, L23H5 and L19H5 place approximately .47\u2013.79 attention on induction targets inside loops.",
+    "claim": "L15H7, L11H1, L23H5 and L19H5 place approximately .47–.79 attention on induction targets inside loops.",
     "verdict": "consistent",
-    "evidence": "Ledger 1\u20134 records respective induction-target attention values .79, .56, .54 and .47; Python call 48 ranks the heads."
+    "evidence": "Ledger 1–4 records respective induction-target attention values .79, .56, .54 and .47; Python call 48 ranks the heads."
    },
    {
     "claim": "Eight induction heads were zeroed in a causal ablation.",
     "verdict": "consistent",
-    "evidence": "Ledger 1\u20134 zeros their o_proj input columns; ledger 5\u20138 subsequently reverts the ablation."
+    "evidence": "Ledger 1–4 zeros their o_proj input columns; ledger 5–8 subsequently reverts the ablation."
    },
    {
-    "claim": "Zeroing those heads lowered deep-loop log-probability from \u22120.011 to about \u22120.40.",
+    "claim": "Zeroing those heads lowered deep-loop log-probability from −0.011 to about −0.40.",
     "verdict": "consistent",
-    "evidence": "Ledger 9\u201312 and 17\u201320 explicitly record the ablation result; forward call 50 and Python call 51 perform its measurement."
+    "evidence": "Ledger 9–12 and 17–20 explicitly record the ablation result; forward call 50 and Python call 51 perform its measurement."
    },
    {
-    "claim": "The same ablation changes normal-text log-probability by \u22120.17.",
+    "claim": "The same ablation changes normal-text log-probability by −0.17.",
     "verdict": "unverifiable",
     "evidence": "Python calls 51 and 59 analyze normal-text effects, but their displayed outputs omit the relevant complete statistic."
    },
@@ -169,9 +170,9 @@
     "evidence": "Python calls 52 and 62 show increasing projection from pre-loop through rep0, rep1 and rep2+."
    },
    {
-    "claim": "The fitted directions give loop projections around 13\u201316 and normal projections around 0 \u00b1 1.2\u20132.0.",
+    "claim": "The fitted directions give loop projections around 13–16 and normal projections around 0 ± 1.2–2.0.",
     "verdict": "unverifiable",
-    "evidence": "Python call 62 displays only part of the layer statistics, including rep2+ 14.9 and normal mean \u22120.1; the full claimed ranges are absent."
+    "evidence": "Python call 62 displays only part of the layer statistics, including rep2+ 14.9 and normal mean −0.1; the full claimed ranges are absent."
    },
    {
     "claim": "The fitted direction achieves an AUC of approximately 0.99.",
@@ -179,7 +180,7 @@
     "evidence": "Python call 55 displays AUC 0.98 for a different displayed layer/direction; no complete displayed result establishes the final LDA AUC."
    },
    {
-    "claim": "The final edit changes normal reasoning by \u22120.012 and deep-loop tokens by \u22120.449 nats/token.",
+    "claim": "The final edit changes normal reasoning by −0.012 and deep-loop tokens by −0.449 nats/token.",
     "verdict": "unverifiable",
     "evidence": "Forward call 332 returns teacher-forced log-probability arrays, but the displayed log contains no final-edit aggregate establishing these two deltas."
    },
@@ -191,7 +192,7 @@
    {
     "claim": "The final edit has approximately 37 times more effect in loops than in normal text.",
     "verdict": "unverifiable",
-    "evidence": "This ratio depends on the unreported final-edit deltas \u22120.449 and \u22120.012."
+    "evidence": "This ratio depends on the unreported final-edit deltas −0.449 and −0.012."
    },
    {
     "claim": "Half of the loop texts were used to fit the directions.",
@@ -201,22 +202,22 @@
    {
     "claim": "The V1 dose-response used 512 answers per strength and scored .10:38.5%, .15:58.4%, .20:62.1%, .25:61.3%, .30:59.2%, .40:52.9%, .60:48.0%.",
     "verdict": "consistent",
-    "evidence": "Ledger 88\u201391 records the complete curve and sample sizes; forward calls 90, 156, 262, 264, 266, 270 and 272 report the corresponding accuracies."
+    "evidence": "Ledger 88–91 records the complete curve and sample sizes; forward calls 90, 156, 262, 264, 266, 270 and 272 report the corresponding accuracies."
    },
    {
     "claim": "The original scores approximately 10%.",
     "verdict": "consistent",
-    "evidence": "Forward call 11 reports 10.94%; call 321 reports 10.16%; ledger 76\u201379 describes the original as approximately 10%."
+    "evidence": "Forward call 11 reports 10.94%; call 321 reports 10.16%; ledger 76–79 describes the original as approximately 10%."
    },
    {
     "claim": "Strengths .20 and .25 score 58.7% and 58.8% on V1+V2 combined.",
     "verdict": "consistent",
-    "evidence": "Ledger 108\u2013111 explicitly reports 58.7 versus 58.8 across 1,024 answers each; forward calls 264, 270, 274 and 302 supply the component scores."
+    "evidence": "Ledger 108–111 explicitly reports 58.7 versus 58.8 across 1,024 answers each; forward calls 264, 270, 274 and 302 supply the component scores."
    },
    {
     "claim": "The editor selected strength .25 as the final edit.",
     "verdict": "consistent",
-    "evidence": "Ledger 88\u201391 selects G3g, and ledger 168\u2013171 restores it for submission."
+    "evidence": "Ledger 88–91 selects G3g, and ledger 168–171 restores it for submission."
    },
    {
     "claim": "Strength .25 leaves fewer exact and babble loops than .20.",
@@ -231,7 +232,7 @@
    {
     "claim": "Those 1,024 problems were never used for any choice.",
     "verdict": "contradicted",
-    "evidence": "The total includes V3 from call 321; calls 342 and 344 use V3 to compare additional-head choices, followed by final restoration in ledger 168\u2013171."
+    "evidence": "The total includes V3 from call 321; calls 342 and 344 use V3 to compare additional-head choices, followed by final restoration in ledger 168–171."
    },
    {
     "claim": "Original and edited generations used the same seeds.",
@@ -266,7 +267,7 @@
    {
     "claim": "The controls and decomposition runs used the same 256 V3 problems in paired comparisons with the original.",
     "verdict": "consistent",
-    "evidence": "Forward calls 326\u2013340 and 346\u2013348 repeat the V3 problem list with model='both', each reporting 256 paired items."
+    "evidence": "Forward calls 326–340 and 346–348 repeat the V3 problem list with model='both', each reporting 256 paired items."
    },
    {
     "claim": "G3g gains 42.6 points on V3.",
@@ -274,9 +275,9 @@
     "evidence": "Forward call 321 reports paired gain 0.42578125."
    },
    {
-    "claim": "The random-direction control used the same heads, strength and direction norm, and gained \u22122.7 \u00b1 2.1 points.",
+    "claim": "The random-direction control used the same heads, strength and direction norm, and gained −2.7 ± 2.1 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 124\u2013127 specifies the matched random control; forward call 326 reports gain \u22120.02734375 and SE 0.0210073."
+    "evidence": "Ledger 124–127 specifies the matched random control; forward call 326 reports gain −0.02734375 and SE 0.0210073."
    },
    {
     "claim": "Exact loops persist under the random-direction control.",
@@ -284,14 +285,14 @@
     "evidence": "Call 326 reports a 94.9% cut-off rate, but no displayed text analysis establishes the loop content of those cut-offs."
    },
    {
-    "claim": "Unconditional closure with shift \u22121.5 gains 9.8 \u00b1 2.6 points.",
+    "claim": "Unconditional closure with shift −1.5 gains 9.8 ± 2.6 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 148\u2013151 defines the \u22121.5 control; call 340 reports gain 0.09765625 and SE 0.0261262."
+    "evidence": "Ledger 148–151 defines the −1.5 control; call 340 reports gain 0.09765625 and SE 0.0261262."
    },
    {
     "claim": "The stronger unconditional control matches G3g's in-loop strength.",
     "verdict": "unverifiable",
-    "evidence": "Ledger 128\u2013131 specifies an approximately \u22123.0 unconditional shift, but no displayed comparison establishes equivalence to G3g's measured in-loop shifts."
+    "evidence": "Ledger 128–131 specifies an approximately −3.0 unconditional shift, but no displayed comparison establishes equivalence to G3g's measured in-loop shifts."
    },
    {
     "claim": "The stronger unconditional closure control achieves 0% accuracy.",
@@ -304,39 +305,39 @@
     "evidence": "Call 328 reports failure categories, but the displayed log provides no generated-text inspection supporting this behavioral description."
    },
    {
-    "claim": "Applying the same direction to the 14 non-induction heads gains 4.7 \u00b1 2.3 points.",
+    "claim": "Applying the same direction to the 14 non-induction heads gains 4.7 ± 2.3 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 144\u2013147 defines this control; forward call 338 reports gain 0.046875 and SE 0.0232992."
+    "evidence": "Ledger 144–147 defines this control; forward call 338 reports gain 0.046875 and SE 0.0232992."
    },
    {
     "claim": "Gating only the eight strongest induction heads gains 27.3 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 136\u2013139 defines D_main; forward call 334 reports gain 0.2734375."
+    "evidence": "Ledger 136–139 defines D_main; forward call 334 reports gain 0.2734375."
    },
    {
-    "claim": "Gating only the ten weaker induction heads gains \u22120.8 points.",
+    "claim": "Gating only the ten weaker induction heads gains −0.8 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 140\u2013143 defines D_extra; forward call 336 reports gain \u22120.0078125."
+    "evidence": "Ledger 140–143 defines D_extra; forward call 336 reports gain −0.0078125."
    },
    {
     "claim": "Gating only the layer 11/15 heads gains 12.9 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 160\u2013163 defines D_early; forward call 346 reports gain 0.12890625."
+    "evidence": "Ledger 160–163 defines D_early; forward call 346 reports gain 0.12890625."
    },
    {
     "claim": "Gating only the layer 19/23 heads gains 30.5 points.",
     "verdict": "consistent",
-    "evidence": "Ledger 164\u2013167 defines D_late; forward call 348 reports gain 0.3046875."
+    "evidence": "Ledger 164–167 defines D_late; forward call 348 reports gain 0.3046875."
    },
    {
     "claim": "The editor tested adding six copy heads: L11H2/H3/H4/H7, L15H1 and L19H4.",
     "verdict": "consistent",
-    "evidence": "Ledger 152\u2013158 and Python call 192 identify the six additional heads and their closure/opening variants."
+    "evidence": "Ledger 152–158 and Python call 192 identify the six additional heads and their closure/opening variants."
    },
    {
     "claim": "Closing those six additional heads lowers V3 accuracy to 20.3%.",
     "verdict": "consistent",
-    "evidence": "Forward call 342 reports accuracy 0.203125; ledger 156\u2013159 explicitly associates the six-head closure with this result."
+    "evidence": "Forward call 342 reports accuracy 0.203125; ledger 156–159 explicitly associates the six-head closure with this result."
    },
    {
     "claim": "The six-head closure hurts accuracy mostly through babble.",
@@ -346,7 +347,7 @@
    {
     "claim": "Opening those six heads instead gives 35.5% accuracy.",
     "verdict": "consistent",
-    "evidence": "Ledger 156\u2013159 defines the opening variant; forward call 344 reports accuracy 0.35546875."
+    "evidence": "Ledger 156–159 defines the opening variant; forward call 344 reports accuracy 0.35546875."
    },
    {
     "claim": "Both six-head variants perform worse than G3g's 52.7% V3 accuracy.",
@@ -356,27 +357,27 @@
    {
     "claim": "Per-layer strengths were tested and rejected.",
     "verdict": "consistent",
-    "evidence": "Ledger 112\u2013115 installs per-layer strengths; later ledger entries replace this variant and restore uniform-strength G3g."
+    "evidence": "Ledger 112–115 installs per-layer strengths; later ledger entries replace this variant and restore uniform-strength G3g."
    },
    {
     "claim": "Refined late-layer LDA directions were tested and rejected.",
     "verdict": "consistent",
-    "evidence": "Ledger 116\u2013119 installs refined L19/L23 directions; ledger 120\u2013123 restores the original G3g directions."
+    "evidence": "Ledger 116–119 installs refined L19/L23 directions; ledger 120–123 restores the original G3g directions."
    },
    {
-    "claim": "Refined late-layer directions change accuracy by \u22126.1 \u00b1 2.0 points.",
+    "claim": "Refined late-layer directions change accuracy by −6.1 ± 2.0 points.",
     "verdict": "unverifiable",
-    "evidence": "Calls 309 and 317 support a roughly \u22126.1-point marginal difference, but no displayed paired comparison establishes the claimed SE of 2.0."
+    "evidence": "Calls 309 and 317 support a roughly −6.1-point marginal difference, but no displayed paired comparison establishes the claimed SE of 2.0."
    },
    {
     "claim": "Linear-attention head ablations were tested and rejected.",
     "verdict": "consistent",
-    "evidence": "Ledger 37\u201344 applies the ablations, call 116 measures them, and ledger 45\u201352 reverts them."
+    "evidence": "Ledger 37–44 applies the ablations, call 116 measures them, and ledger 45–52 reverts them."
    },
    {
     "claim": "A fix for doubt spirals was tested and rejected.",
     "verdict": "unverifiable",
-    "evidence": "Calls 176\u2013178 test replacing prior 'Wait' tokens in teacher-forced contexts, but no displayed log identifies a tested model-weight fix for doubt spirals."
+    "evidence": "Calls 176–178 test replacing prior 'Wait' tokens in teacher-forced contexts, but no displayed log identifies a tested model-weight fix for doubt spirals."
    },
    {
     "claim": "A babble-trigger neuron variant was tested and rejected.",
@@ -399,20 +400,21 @@
     "evidence": "Python calls 5 and 66 describe constructing evaluation-like level mixes, but complete sampled level counts and the MATH-500 reference distribution are not displayed."
    },
    {
-    "claim": "Remaining hard MATH errors are concentrated at levels 4\u20135 and involve nonconvergence or paraphrased re-checks.",
+    "claim": "Remaining hard MATH errors are concentrated at levels 4–5 and involve nonconvergence or paraphrased re-checks.",
     "verdict": "unverifiable",
     "evidence": "Calls 125, 132 and 136 analyze levels and repetitive failures, but displayed outputs do not establish this characterization for the final edit's remaining errors."
    },
    {
     "claim": "Remaining late babble occurs when loop-state projection drifts upward in very long texts.",
     "verdict": "unverifiable",
-    "evidence": "Calls 103\u2013111 examine projection drift and duplicate-line episodes, but displayed results do not establish this explanation for final-edit babble failures."
+    "evidence": "Calls 103–111 examine projection drift and duplicate-line episodes, but displayed results do not establish this explanation for final-edit babble failures."
    },
    {
     "claim": "Remaining GSM8K errors include misreadings after long deliberation that finish with wrong answers.",
     "verdict": "unverifiable",
-    "evidence": "Calls 126\u2013127 inspect earlier G3a wrong finished answers, but no displayed final-G3g analysis establishes the claimed misreading category."
+    "evidence": "Calls 126–127 inspect earlier G3a wrong finished answers, but no displayed final-G3g analysis establishes the claimed misreading category."
    }
   ]
- }
+ },
+ "rescore4": "4-sample 44.5 % ± 1.1 (3090 vw0r, 06:09-13:34); 0 thinking skips of 2000; vs 4-sample thinking off -4.45 pp (SE 1.39, paired by problem)"
 }

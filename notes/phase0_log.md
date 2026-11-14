@@ -949,3 +949,11 @@ Heavy work stays on wsl, laptop and pods.
 - 13:28 DS unhinted s3 T1 / T2 done (secure 4090 7ij9, deleted; the launch ssh hung until 13:27, the controls had
   finished by then): T1 31.0 %, T2 28.0 % (cut 1,863 tokens); edit − T2 +18.6 (2.1), − T1 +15.6 (2.2), − T0 −1.6 (2.3).
   analysis.json regenerated (other entries unchanged). Preprint truncation table and s3 text.
+- 13:34 **Opus strict s3 4-sample 44.5 % ± 1.1** (3090 vw0r, deleted; 7.4 h, the longest generations); 0 / 2000 skips;
+  vs 4-sample T0 −4.45 pp (SE 1.39). verify_scored_weights ok. All 4-sample re-scores done; no pods left.
+- Codex preprint review round 2 (5 findings, all accepted): Appendix A edit check now covers 17 episodes
+  (`verify_edits.py` run for DS hinted s2 / unhinted s2 / unhinted s3, all ok, appended to notes/verify_edits.jsonl)
+  plus the scored-load check (full `verify_scored_weights.py` run, every record ok, logs/verify_scored_all.jsonl);
+  repairs per cell 0/2 and 0/3; labeller-agreement reason corrected (some not-localised episodes print a cut-off
+  generation); the localisation-call comparison stated as overlapping ranges; header note updated.
+- Preprint: every Opus s3 placeholder filled (44.5 %); Fig. 1 Opus strict mean (s1, s3) = 44.9 %.

@@ -18,9 +18,8 @@ OUT = os.path.join(ROOT, "paper", "figs")
 # Fixed references (sources: notes/episode_ledger.md, notes/phase0_log.md, the authors' logs)
 BASE = 0.090                 # unedited Qwen3.5-0.8B, MATH-500, 1 sample (ours)
 REPAIR = BASE + 0.20         # repair threshold (analysis plan)
-# valid strict Opus runs only (s2 invalid by the note-(6) re-audit, user 2026-11-14); s1 4-sample, s3 1-sample until
-# its 4-sample re-score
-OPUS_STRICT = [0.453, 0.406]
+# valid strict Opus runs only (s2 invalid by the note-(6) re-audit, user 2026-11-14); both 4-sample means
+OPUS_STRICT = [0.453, 0.445]
 ASTRA = 0.481                # authors' p50c, 4 samples; its log has 3 rule-(b) linear attributions
 FLOOR = 0.336                # KidIkaros scripted edit, given the paper's localisation (1 sample)
 THINK_OFF = 0.4895           # unedited base with thinking turned off, 4 samples (notes/pending_user_decisions.md 2026-11-13 18:40)
