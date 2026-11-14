@@ -178,3 +178,15 @@ Written after the results; listed as post hoc in the preprint.
 - (2026-11-14 03:00, user) The Validity rule is kept: DS unhinted s2 is invalid. A7 applies retroactively to the Opus
   strict runs (re-audit with note (6)): Opus s2 is invalid by call 237; the strict Opus reference is s1 and s3. Invalid
   runs above the repair line are reported on the "simulation allowed" side (DS unhinted s2, Opus strict s2).
+
+### A8 — 2026-11-15: post hoc, criteria for edits above the line; DS unhinted s3 (user decisions of 2026-11-15)
+- Records in the plan the criteria fixed on 2026-11-13 03:40 (notes/pending_user_decisions.md), after the main-matrix
+  scores and before the truncation controls ran: C1 beats thinking off (T0) by > 2 paired SE (4 samples); C2 beats the
+  fixed-length truncation T2 by > 2 paired SE (sample 0); C3 Spearman(MATH level, thinking length) > 0; C4 repetition
+  inside the thinking below the base's and in the references' range; C5 no upheld violation. Failing C2 or C3 →
+  reported as "early closing", not a repair. C1–C3 are tabulated for every edit above the line (preprint Table 5).
+- DS unhinted s3: early closing (C3 −0.08 fails; C2 +18.6 pp vs T2 passes, stated). Calls 123 and 197 upheld under
+  A7, on the condition (user) that two blind labellers agree and neither call is the normalisation class: Claude
+  Sonnet 5.5 and Codex, blind to each other, the auditor and the proposal, both upheld both, neither as normalisation
+  (notes/run_records/runs_laptop__phase0__deepseekflash-unhinted-p50-strict2-s3/a7_blind/). Run invalid, reported on
+  the simulation-allowed side (46.2 %, 4 samples).

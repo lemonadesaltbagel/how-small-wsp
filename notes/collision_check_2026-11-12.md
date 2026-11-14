@@ -33,3 +33,27 @@ attempt); no study varies the editor or audits tool calls for simulation. New it
   controls address.
 - Willison's weight-reading replication with Qwen 3.8 27B (reading, no tools; his original is already cited).
 - wsplab is on PyPI (alpha); no editor comparison.
+
+## Re-check 2026-11-15 (before posting; web + GitHub repo search "weight-space programming", awesome-wsp)
+- **Partial overlap, cite: WKJBryan/wsp-lab** (GitHub, phase 4 results 2026-11-12/13; phase 9 "team deliberation"
+  2026-11-14). Cross-editor, no-hint Qwen3.5-0.8B repair with GLM-5.3-Flash, mimo-v2.6-flash, mimo-v2.6-pro (one
+  episode each, 10 passes x 64 practice problems): all three rescale the tied-embedding row of `</think>` (~x1.5) →
+  MATH-500 25.2 / 27.8 / 27.8 % (their base 6.0 %, published p50c 39.4 % on their stack; random matched-norm 2.2 %).
+  Differences: embedding editable (our task protects it; such an edit would be refused by our save_edit), offline
+  generation in the sandbox allowed (their ISSUES #12), no size ladder, no audit for simulation, no thinking-off or
+  truncation control. Our contribution 1 (scale curve) and 2 (audit) stand; added to §2 as a community replication.
+- Other new repos, no overlap: atharva-naik/auto-weight-space-programming (a 4B model trained with LoRA to read its own
+  neurons), FiveTechSoft/weights (delta-to-LoRA transplant), dljantz/wsp-gym, dspy-weightspace (frontier editor),
+  awesome-wsp lists (SajjadPSavoji, brighterr; mirrors).
+- Web search: still only Astra-based editing results plus write-ups.
+- **Closest so far, cite: Prayas-Agrawal/weight-whisperer** (GitHub, created 2026-11-11, pushed 11-12; found via
+  SajjadPSavoji/awesome-weight-space-programming). Same task, open-weight editor Qwen3.8-Flash-Next-FP8 (185.5 GB
+  weights, TP 4), 2 runs: MATH-500 7.70 → 50.40 / 51.55 % (4 samples, authors' sampling). Edit W += a·e(</think>)·vᵀ
+  at layer 23, v a loop-vs-productive activation contrast (the DS-style loop-gated close). Differences: no pass
+  budget (editor submits when it likes); the prompt names the failure and says "Check what the proposed change does at
+  observed states before spending a generation call" (the note-(6) class) while stating rule (b); no audit; no
+  thinking-off / truncation control (their scores are at our T0 48.95 %); one editor, one size. Headline "Open models
+  can do weight-space programming too" overlaps our question; our curve (fixed budget, strict rules, audit, controls,
+  size ladder) is not pre-empted. Added to §2 and the introduction.
+- Unjuno/beyond-math-weight-space-programming: audit of the released p50c evidence (reconstruction, small local
+  evals); no editor comparison. No overlap.

@@ -737,7 +737,7 @@
   "run": "runs_laptop/phase0/deepseekflash-unhinted-p50-strict2-s3",
   "arm": "main: deepseek-flash, unhinted",
   "access": "strict2",
-  "counts": null,
+  "counts": false,
   "math500": 0.466,
   "scoring_error": false,
   "failure_label": "success",

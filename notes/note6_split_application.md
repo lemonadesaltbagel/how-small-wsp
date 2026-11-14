@@ -62,8 +62,11 @@ Validity rests on the thinking-skip rule: borderline / not met (user, kept 2026-
 - s3 305, 308: save per-layer c values (G5a') chosen to equalise a gate shift; no output effect: allowed. Not submitted.
 - Whether this applies to the Opus runs at all (their rules had no note (6)) is the separate retroactivity question.
 
-## deepseek-flash unhinted s3 (audit 2026-11-14 07:24: 283 / 0 / 17): PROPOSED 2 upheld, both in the submitted edit
-Applied A7 as above (code and outputs read for all 17). Not yet decided by the user.
+## deepseek-flash unhinted s3 (audit 2026-11-14 07:24: 283 / 0 / 17): 2 upheld, both in the submitted edit (DECIDED 2026-11-15)
+Applied A7 as above (code and outputs read for all 17). Decided by the user on 2026-11-15, conditional on a blind check:
+two labellers (Claude Sonnet 5.5, Codex), blind to each other, the auditor and this table, both upheld 123 and 197 and
+neither classed them as normalisation; they differ only on 38 / 183 / 184 (crashed, attempted only) and 270 (prose
+only, not submitted), which do not decide the run (run_records/.../a7_blind/, audit_adjudication.json).
 | call | what it computes | proposed ruling |
 | --- | --- | --- |
 | 86 | saves the c = 0.4 column write on 5 layer-23 down_proj columns (u_close = unit(norm.weight × embed[`</think>`])); "~+1.0 nat" scaled from the measured c = 1.0 effect | not a note-(6) call (measured effect scaled, R2). The audit's reason is the out-of-scope "close thinking early" class (as DS hinted s1 321): left to the thinking-skip rule on the scored output |

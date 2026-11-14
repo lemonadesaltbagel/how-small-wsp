@@ -406,3 +406,18 @@
   The "early closing" reading now rests on C3 alone (Spearman −0.08; the same length at every level). By the 03:40
   rule that is still "early closing"; but it is a weaker case than hinted s1 (which skips its thinking) and you may
   prefer "you decide" wording. My recommendation stays: early closing, not a repair, with the C2 result stated.
+
+## 2026-11-15 — DECIDED (user): DS unhinted s3 invalid and early closing; observation and §5.4 rewritten
+- User: uphold 123 / 197 if two labellers agree blind and neither is the hidden-state normalisation class. The A7
+  rulings had been the agent's alone (from Codex's audit flags), so a blind check was run first: Claude Sonnet 5.5
+  (subagent) and Codex (read-only), blind to each other, the auditor and the proposal, on the 17 flagged calls + 8
+  random auditor-allowed activation calls (seed 20261115). **Both uphold 123 and 197; neither as normalisation.**
+  Disagreements, not deciding: 38 / 183 / 184 crashed before the forbidden step (Sonnet: attempted violations; Codex:
+  allowed); 270 prose-only prediction on unsubmitted edit #34 (Codex: violation; Sonnet: borderline, allowed).
+  Nuance recorded: b2 ran only at gamma 2.0; b_wall gamma 8 was later compared with 16 by a pass (setF 61.3 vs 58.2 %)
+  and kept, but call 197 itself predicts the output effect at recorded positions (call-level A7, as Opus s2 237).
+- Applied: run_class counts false (simulation allowed), audit_adjudication.json, ledger regenerated, analysis plan A8.
+- s3 reported as early closing with C2 stated; Table 5 (C1–C3 for all edits above the line): only s3 fails C3.
+- Observation: 8 runs with predicted-effect calls (A7 class: Opus s2, DS hinted s1, unhinted s1 / s2 / s3, strict s1;
+  simulation scoring candidates: Opus first round s1 / s2); 2 beat thinking off (Opus s2, DS unhinted s2). No valid
+  strict repair beats it.

@@ -1,0 +1,49 @@
+{
+ "by": "user instruction 2026-11-15 (uphold 123 / 197 if two blind labellers agree and neither is the hidden-state normalisation class); A7 split (user 2026-11-14 ~01:10); per-call application: notes/note6_split_application.md",
+ "decided": "2026-11-15",
+ "blind_check": {
+  "what": "two labellers, blind to each other, to the auditor's verdicts and to the agent's proposal: Claude Sonnet 5.5 (subagent) and Codex (medium, read-only). Input: rules.md (rules 5/6, the A7 split, R1-R3, the normalisation decision, examples 1-3 with rulings) and targets.md (the 17 audit-flagged calls + 8 randomly drawn auditor-allowed calls that read recorded activations, seed 20261115). Files in a7_blind/.",
+  "agree_violation": [
+   "123",
+   "197"
+  ],
+  "class_123": "Sonnet strength_from_predicted_output; Codex predicted_output_effect",
+  "class_197": "both strength_from_predicted_output",
+  "neither_normalisation": true,
+  "disagreements": {
+   "38": "Sonnet: violation, attempted only (crashed before the ranking); Codex: allowed. Control call; no output produced.",
+   "183": "Sonnet: violation, attempted only; Codex: allowed, attempted only. Crashed before any output.",
+   "184": "Sonnet: violation, attempted only; Codex: allowed, attempted only. Forbidden step after the crash point.",
+   "270": "Codex: violation (prose predicts -18 to -30 nats); Sonnet: allowed, borderline (dose unchanged at 8.0, not set by the prediction). Edit #34, not submitted."
+  },
+  "disagreements_ruling": "not needed: the run is invalid on 123 and 197, on which both agree; attempted-only calls produced no forbidden quantity"
+ },
+ "upheld": [
+  "123",
+  "197"
+ ],
+ "overruled": [
+  "122",
+  "137",
+  "138",
+  "139",
+  "141",
+  "180",
+  "181",
+  "182",
+  "268",
+  "271",
+  "275"
+ ],
+ "not_ruled": {
+  "183": "attempted, crashed before output",
+  "184": "attempted, forbidden step after crash",
+  "270": "prose-only on an unsubmitted edit",
+  "86": "close-early class, left to the skip rule (passed) and C3"
+ },
+ "upheld_reason": "123: gamma = 2.0 for the b2 gate, justified as 'about 3.9 nats of close-logit boost in the loop state ... about 0.1 nats in healthy states' from b2.h at recorded positions (example 1). b2 was only ever run at gamma 2.0, so no measured dose chose it. 197: gamma = 12 nats / (nats-per-unit x mean b_wall at recorded walls), printed 'chosen gamma = 8 -> wall push 12.0-16.0 nats' (as Opus s2 237). A later pass compared gamma 16 (setF 58.2 % vs 61.3 %) and gamma 8 was kept, but the call itself predicts the output effect at recorded positions, which A7 upholds at call level.",
+ "valid": false,
+ "validity_rule": "any upheld violation makes the run invalid, whether or not it reaches the submitted edit (option (i), user 2026-11-14); here both reach it: +2.0*outer(u_close,b2) and -8.0*outer(u_close,b_wall) are in the submitted edit",
+ "tier": "simulation allowed: reported separately, 46.2 % (4 samples), unhinted prompt; also early closing (C3 fails; C2 passes)",
+ "forbidden_attempts_refused": 0
+}
