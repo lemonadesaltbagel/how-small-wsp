@@ -200,8 +200,17 @@ def main():
         eds = {f[:-4]: np.load(os.path.join(pub, f)) for f in sorted(os.listdir(pub)) if f.endswith(".npy")}
         # conformance scoring staged exactly these files (summary.json config = p50c); the published hashes were
         # checked on 2026-11-06 (both sha256 match), so loaded == declared by construction; recorded for completeness
+        # the 4-sample rescore (2026-11-14) staged runs/exp8_conformance/p50c-rescore4/final/net: equal to the published
+        # files, and the tensors named in its log
+        rnet = os.path.join(H, "runs", "exp8_conformance", "p50c-rescore4", "final", "net")
+        same = sorted(fname(k) for k in eds) == sorted(f for f in os.listdir(rnet) if f.endswith(".npy")) and all(
+            np.array_equal(np.load(os.path.join(rnet, fname(k))), eds[k]) for k in eds)
+        txt = open(os.path.join(ROOT, "logs", "rescore4_astra_p50c.log")).read()
+        rec = json.loads(txt[txt.index("{"):txt.rindex("}") + 1])
+        print(json.dumps({"astra_rescore4_net_equals_published": same}), flush=True)
+        ok &= same
         ok &= check_run(st, base_net, "exp8_conformance/p50c_math500 (Astra p50c)", edits_src=eds,
-                        recs=[("conformance score", sorted(eds))])
+                        recs=[("conformance score", sorted(eds)), ("4-sample rescore", rec["edited_tensors"])])
     sys.exit(0 if ok else 1)
 
 

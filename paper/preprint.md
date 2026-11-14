@@ -323,7 +323,7 @@ violations among 80 Python runs. All three are linear attributions through down_
 MLP-activation difference between repetitive and productive tokens, times the down_proj columns projected on the
 repetition direction, i.e. each neuron's contribution along that direction. Two of them rank the neurons that make up
 the submitted edit (64 per layer in layers 15 and 19). No nonlinearity was simulated. Under the authors' rules this was
-plausibly allowed. Under ours, Astra's 48.1 % belongs with the simulation-allowed results and is not compared directly
+plausibly allowed. Under ours, Astra's 48.1 % (the authors' 4-sample score; our re-score of the published edit: 51.2 %) belongs with the simulation-allowed results and is not compared directly
 with the strict ones.
 
 **Scripted floor.** KidIkaros's scripted edit scores 33.6 % (1 sample). It re-derives the loop direction from
@@ -438,14 +438,14 @@ score (T0) is 48.95 ± 1.1 %.
 
 Differences in points, paired by problem on sample 0 (standard errors in brackets); T0 here is the 1-sample run. Astra's
 score is our re-scoring of the published edit. Over 4 samples, paired with the 4-sample T0: deepseek-flash unhinted s2
-+5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26); [Opus s3 and Astra after
-their 4-sample re-scores].
++5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26), Astra +2.25 (1.32; our 4-sample re-score 51.2 %); [Opus s3 after its 4-sample
+re-score].
 
 Every edit beats both truncations by at least 3.7 standard errors [check DS unhinted s3]. A cut does not get the base out of the loop: after
 a forced close it often loops on in the answer, and 64–72 % of all T1 and T2 generations reach the token limit, so T1
 and T2 land near 30 % whatever the cut length (3.0k to 17.5k tokens). Against thinking off, the picture is different: the two
 valid strict repairs, Opus s1 and s3, score below it (s1 by 3.65 points over 4 samples, SE 1.26 [s3 4-sample]), and
-Astra's edit ties it. Only the two invalid runs, Opus strict s2 and deepseek-flash unhinted s2, beat it by more than
+Astra's edit is level with it (+2.25 over 4 samples, SE 1.32). Only the two invalid runs, Opus strict s2 and deepseek-flash unhinted s2, beat it by more than
 two standard errors (§5). The damaged model with its thinking switched off already scores as high as the published
 repair. A repair that keeps the thinking is therefore told apart from the excluded shortcut by its outputs (the
 thinking-skip check, the problem-dependence of where it stops, repetition before the stop; §5), not by its score.

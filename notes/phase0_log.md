@@ -943,3 +943,6 @@ Heavy work stays on wsl, laptop and pods.
 - 10:50 **Opus strict s2 4-sample 56.5 % ± 1.1** (A5000 rye3, deleted); 0 / 2000 thinking skips; vs 4-sample T0
   +7.55 pp (SE 1.26). verify_scored_weights ok (score, hold-out, 4-sample). Preprint: Table 2 row (simulation-allowed),
   abstract, 4-sample line, observation paragraph.
+- 11:49 **Astra p50c 4-sample re-score 51.2 % ± 1.1** (secure 4090 gzdn, deleted; authors 48.1 %); 0 / 2000 skips;
+  vs 4-sample T0 +2.25 pp (SE 1.32, z 1.7): level with thinking off. verify_scored_weights ok (rescore net equals the
+  published files; extended the Astra check to this record). Preprint 4-sample line, §4 and the Astra paragraph.
