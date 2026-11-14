@@ -766,8 +766,12 @@ prompt (`unhinted-p50.txt`) differs only by removing three phrases:
 2. "(such as repetition)" after "repairing a specific failure inside the thinking";
 3. "(often while repeating itself in its thinking)" after "being cut off at the token limit".
 
-**D. Compute.** [Per-episode cost split from the pod timelines, still to do; interim totals in
-`notes/compute_log.md`.]
+**D. Compute.** RunPod GPU time for this project, from the per-pod billing records (2026-11-06 to 11-14), was about
+$518 (`notes/compute_split_2026-11-14.md`): the main-matrix episodes $257 (target passes, scoring and hold-out on pools
+of cheap GPUs $178; serving the Qwen 9B and 27B editors $79), the strict Opus 5.5 episodes $100, the 4-sample re-scores
+and the truncation and thinking-off controls $48, the first Opus round $70, runs abandoned under earlier rules $40, and
+setup $3. The deepseek-flash editor and reviewer ran on the DeepSeek API, Opus 5.5 and the Claude labeller on a
+subscription; these are not included [DeepSeek API spend].
 
 **E. Adjudications.** [Each flagged call with its class and decision: `notes/note6_split_application.md` and each
 run's `audit_adjudication.json`; all decided 2026-11-14.]
