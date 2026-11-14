@@ -34,7 +34,7 @@ edits are public [repository still private: release before posting].
 
 A language model that can read and rewrite another network's weights is a new kind of tool, and a step toward models
 that improve models. The first demonstrations use a frontier editor [Takehi et al. 2026; Hu et al. 2026]; community runs since report
-open-weight editors clearing the bar under looser conditions, with no pass budget or rules that let the editor edit the
+other editors, one of them open-weight, clearing the bar under looser conditions: no pass budget, or an editable
 embedding (§2). If the ability is
 frontier-only, it is a capability to track at the frontier. If it appears gradually with scale, small open models can do
 it too, which matters for who can use the tool and for how safety discussions treat self-modification.
@@ -82,9 +82,10 @@ or audit tool calls; we vary the editor and audit. Community reproductions:
   [Prayas-Agrawal 2026]: MATH-500 7.7 → 50.4 % and 51.55 % (4 samples). Its edit writes the `</think>` direction from a
   loop-state contrast at layer 23, as the deepseek-flash edits here do. The conditions differ from ours. There is no
   pass budget; the editor submits when it chooses. The prompt names the repetition failure and tells the editor to
-  "check what the proposed change does at observed states before spending a generation call", which is what note (6)
-  forbids, while keeping the original rule (b). Its tool calls are not audited, and there is no thinking-off control;
-  in our harness thinking off scores 48.95 %. It is one editor and one size, so it is a point, not a curve;
+  "check what the proposed change does at observed states before spending a generation call". It keeps the original
+  rule (b), so the check is meant for the forward tool, which here is unmetered. Its tool calls are not audited, and
+  there is no thinking-off control; in our harness thinking off scores 48.95 %. It is one editor and one size, so it is
+  a point, not a curve;
 - a cross-editor replication on Qwen3.5-0.8B with other editors (GLM-5.3-Flash, MiMo-v2.6 Flash and Pro), without
   hints and with 10 passes of 64 practice problems [WKJBryan 2026]. All three rescale one row of the tied embedding, that
   of `</think>`, by about 1.5 and reach 25.2–27.8 % (base 6.0 % and the published edit 39.4 % in its harness). Its rules
@@ -212,7 +213,7 @@ submitted edit.
 Calibration against adjudicated audits: v1 blocked 36 of 37 violations and 1 of 37 allowed calls (first-round runs).
 v2 blocked 3 of 3 violations and 0 of 21 allowed calls; Sonnet 5.5 blocked 2 of 3 and 0 of 21. The samples are small,
 and the one miss is a boundary case that was blocked at run time and never audited. We report reviewer blocks for every
-run (Table 6). The reviewer is itself a weak form of feedback (§6).
+run (Table 6). The reviewer is itself a weak form of feedback (§7).
 
 ### 3.3 Editors, prompts and budget
 
@@ -417,6 +418,16 @@ where it closes does not depend on the problem, which the task excludes ("close 
 we report it as early closing, not a repair (Table 5). It is also invalid: two calls set strengths of its submitted
 edit from effects predicted at recorded positions (123 and 197; both blind labellers agree, §5.4), so it is reported
 with the simulation-allowed results.
+
+**Hinted vs unhinted.** In these episodes the hint does not separate the cells. The Qwen editors stay near the base
+with either prompt. The hint is not what lets an editor find the loop:
+- the 27B editor localises with the unhinted prompt as with the hinted one (calls 48 and 14, against 104 and 16);
+- so does deepseek-flash (49, 27 and 11, against 46 and 28);
+- the 9B editor given the hint repeats its wording but never localises.
+
+deepseek-flash's scores above the line come from both prompts (hinted s1 and s2, unhinted s2 and s3), and none is a
+valid repair. With two or three seeds per cell we cannot estimate the hint's effect on the score; for both prompts
+the count of valid repairs is zero.
 
 **Thinking-skip check.** The base emits `</think>` within its first 120 characters in 0 of 500 generations (455 never
 close within the 32,768-token limit). So does every Qwen run, deepseek-flash unhinted s1 and all five Opus 5.5
@@ -795,7 +806,38 @@ In these few episodes the kind of error differs by size: the small editors inven
 effects and the independence of their validation. This is why labels are taken from the tool record, and why the scores are always computed outside
 the editor's view.
 
-## 6 Limitations
+## 6 Discussion
+
+**What the curve says.** Under a fixed budget of 50 passes and a rule against simulating the network, no open-weight
+editor in these episodes repairs the loop validly. Localisation appears with size: none of the 0.8B and 9B episodes
+ties a component to the loop, and every 27B and deepseek-flash episode does. A working edit appears only in the
+largest open editor, and every one of those is a shortcut, invalid or borderline. The frontier editor repairs the
+loop validly in two of three strict episodes. Read as a question about tools, locating a fault from the weights
+and forward passes is within reach of a 27B open model in this setting, and turning the location into a permissible
+edit that works is not.
+
+**The +20-point line is a weak test of repair.** The damaged model scores 48.95 % with its thinking switched off,
+above both valid strict repairs and level with Astra's published edit. An edit that makes the model stop thinking and
+answer cleanly can clear the line without repairing the thinking. Two community results report open editors on this
+task: 50.4–51.55 % without a pass budget [Prayas-Agrawal 2026], and 25.2–27.8 % in another harness with an editable
+embedding [WKJBryan 2026]. Neither reports a thinking-off control. The thinking-off and truncation controls (Tables 4
+and 5) and the thinking-skip check need one MATH-500 run each, or none, and we suggest them as standard for this task. A stronger test would be a target whose thinking, switched off,
+does not already clear the bar.
+
+**Simulation and calibration.** The two runs that beat thinking off both contain calls that predict an edit's effect
+at recorded positions (§5.4). The open-weight run above [Prayas-Agrawal 2026] had no pass budget and was told to check
+each change at observed states before a generation pass. A plausible reading, which these runs cannot test, is that
+an edit's effect at recorded states is what calibrates a gate's strength. Predicting it in the kernel is cheap;
+measuring it costs passes. With the kernel route forbidden and 50 passes, the gated close lands at or below the
+thinking-off score. Two arms with the same budget, one allowing the check
+and one forbidding it, would test this directly.
+
+**Removing a failure, not adding a skill.** Every working edit here, valid or not, writes the `</think>` direction
+from a detector of the loop state; the valid Opus edits differ in where the gate opens (§5.2). This fits the authors'
+Gemma result and the community view that weight edits remove a blocker rather than add mathematical skill. Our
+results speak to repairs of that kind. They do not speak to editing that adds a capability.
+
+## 7 Limitations
 
 - One target model and one failure (reasoning loops). The Gemma follow-up suggests this is the regime where weight
   editing helps; the results need not transfer to adding capability.
@@ -829,7 +871,7 @@ the editor's view.
 - The out-of-scope rule ("skip its thinking or close it early") is enforced after the fact, by the audit and the
   thinking-skip check, not by `save_edit`.
 
-## 7 Future work
+## 8 Future work
 
 - Self-editing: an editor that edits its own weights. Our 0.8B editor edits a copy of a same-size model, which is a
   reference point only.

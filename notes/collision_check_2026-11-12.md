@@ -51,7 +51,8 @@ attempt); no study varies the editor or audits tool calls for simulation. New it
   weights, TP 4), 2 runs: MATH-500 7.70 → 50.40 / 51.55 % (4 samples, authors' sampling). Edit W += a·e(</think>)·vᵀ
   at layer 23, v a loop-vs-productive activation contrast (the DS-style loop-gated close). Differences: no pass
   budget (editor submits when it likes); the prompt names the failure and says "Check what the proposed change does at
-  observed states before spending a generation call" (the note-(6) class) while stating rule (b); no audit; no
+  observed states before spending a generation call" while stating rule (b), i.e. via the (unmetered) forward tool;
+  in our harness that costs passes, and doing it in the kernel is the note-(6) class; no audit; no
   thinking-off / truncation control (their scores are at our T0 48.95 %); one editor, one size. Headline "Open models
   can do weight-space programming too" overlaps our question; our curve (fixed budget, strict rules, audit, controls,
   size ladder) is not pre-empted. Added to §2 and the introduction.
