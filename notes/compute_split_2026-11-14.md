@@ -1,7 +1,7 @@
 # RunPod cost split by purpose (2026-11-14)
 
 Source: `runpodctl billing pods --bucket-size day --start-time 2026-11-05T00:00:00Z --end-time 2026-11-14T06:00:00Z`
-(saved as notes/run_records/runpod_billing_2026-11-14.json; GPU + disk, per pod). A pod belongs to this project when
+(this project's pods saved as notes/run_records/runpod_billing_2026-11-14.json; GPU + disk, per pod). A pod belongs to this project when
 its id appears in logs/, notes/ or scripts/; the 48 pods with no mention ($151.77) are other projects' (the account
 is shared). Purpose from the files that mention the pod (post_* pipelines, acquire_* logs, pods_strict.txt) and the
 compute log. Pool pods served one episode each (swap_pool); the two editor-serving pods served the Qwen 9B / 27B editors.
