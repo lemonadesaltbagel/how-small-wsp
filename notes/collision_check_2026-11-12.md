@@ -21,3 +21,15 @@ nothing audits tool calls for network simulation. The closest items:
 Implication for the paper: the shapor result shows that the repair threshold (29 %) is below what the base reaches
 with thinking off, so meeting the threshold does not by itself show a repair of the thinking; our thinking-skip check
 is the test that separates them. This is now in §2 and §4.2. Re-run this check before posting.
+
+## Re-check 2026-11-14 14:10 (after preprint review round 2)
+Searches (web, extended and standard): weight-space programming + open-weight / smaller editor, editor size, gpt-oss /
+Qwen / DeepSeek editor, arXiv Nov 2026 LLM-edits-weights, reproductions with thinking-off controls, open WSP
+benchmarks / leaderboards. **Still no collision**: every editing result found uses Astra (or Claude in one blind
+attempt); no study varies the editor or audits tool calls for simulation. New items, none overlapping:
+- korben.info report of a reviewer's thinking-off test (the edit costs ~2 points with thinking off), secondary only;
+  consistent with shapor and our T0.
+- buildmvpfast / several write-ups: the "loop fix, not ability" critique, which our thinking-off and truncation
+  controls address.
+- Willison's weight-reading replication with Qwen 3.8 27B (reading, no tools; his original is already cited).
+- wsplab is on PyPI (alpha); no editor comparison.
