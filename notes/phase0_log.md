@@ -946,3 +946,6 @@ Heavy work stays on wsl, laptop and pods.
 - 11:49 **Astra p50c 4-sample re-score 51.2 % ± 1.1** (secure 4090 gzdn, deleted; authors 48.1 %); 0 / 2000 skips;
   vs 4-sample T0 +2.25 pp (SE 1.32, z 1.7): level with thinking off. verify_scored_weights ok (rescore net equals the
   published files; extended the Astra check to this record). Preprint 4-sample line, §4 and the Astra paragraph.
+- 13:28 DS unhinted s3 T1 / T2 done (secure 4090 7ij9, deleted; the launch ssh hung until 13:27, the controls had
+  finished by then): T1 31.0 %, T2 28.0 % (cut 1,863 tokens); edit − T2 +18.6 (2.1), − T1 +15.6 (2.2), − T0 −1.6 (2.3).
+  analysis.json regenerated (other entries unchanged). Preprint truncation table and s3 text.

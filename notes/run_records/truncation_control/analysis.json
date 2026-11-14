@@ -250,5 +250,47 @@
    "se_pp": 1.86,
    "z": 3.76
   }
+ },
+ "DS unhinted s3": {
+  "edit_acc": 0.466,
+  "T1 matched n_cut": 491,
+  "T1 matched cut_tokens": 1820,
+  "T2 fixed n_cut": 491,
+  "T2 fixed cut_tokens": 1863,
+  "T0 (1-sample, 11-12)": {
+   "acc": 0.482,
+   "n": 500,
+   "diff_pp": -1.6,
+   "se_pp": 2.28,
+   "z": -0.7
+  },
+  "T0 (4-sample run, sample 0)": {
+   "acc": 0.504,
+   "n": 500,
+   "diff_pp": -3.8,
+   "se_pp": 2.32,
+   "z": -1.64
+  },
+  "base": {
+   "acc": 0.09,
+   "n": 500,
+   "diff_pp": 37.6,
+   "se_pp": 2.19,
+   "z": 17.19
+  },
+  "T1 matched": {
+   "acc": 0.31,
+   "n": 500,
+   "diff_pp": 15.6,
+   "se_pp": 2.19,
+   "z": 7.12
+  },
+  "T2 fixed": {
+   "acc": 0.28,
+   "n": 500,
+   "diff_pp": 18.6,
+   "se_pp": 2.1,
+   "z": 8.87
+  }
  }
 }

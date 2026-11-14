@@ -392,8 +392,8 @@ Unhinted s1 failed while unhinted s2 succeeded, so the unhinted cell got a third
 **46.2 ± 1.1 %** (4 samples; 46.6 % on the first); hold-out 37.6 / 24.7 / 33.3 %. It skips its thinking in 240 of 2,000
 generations (44.2 % without the skips' correct answers, above the line). But its edit does not stop at a point that
 depends on the problem: it thinks for about 1,900 tokens (median) on every problem, and thinking length does not rise
-with the MATH level (Spearman −0.08; §5). It scores 2.75 points below thinking off over 4 samples (SE 1.38). It passes the
-thinking-skip rule, but its close does not depend on the problem, which the task excludes ("close it early regardless
+with the MATH level (Spearman −0.08; §5). It scores 2.75 points below thinking off over 4 samples (SE 1.38) and 18.6 above the base's
+thinking cut at the same length (SE 2.1). It passes the thinking-skip rule, but its close does not depend on the problem, which the task excludes ("close it early regardless
 of the problem"); [pending] we report it as early closing, not a repair (§5). [Pending the A7 ruling: two calls that set strengths of the submitted edit from
 predicted effects (123, 197) would also make it invalid, and it would be reported with the simulation-allowed results.]
 
@@ -434,16 +434,16 @@ score (T0) is 48.95 ± 1.1 %.
 | Astra p50c | 50.4 % | +2.2 (2.2) | +17.6 (1.9) | +19.6 (1.9) | 32.8 / 30.8 % |
 | deepseek-flash unhinted s2 (invalid) | 53.0 % | +4.8 (2.4) | +21.2 (2.1) | +21.4 (2.1) | 31.8 / 31.6 % |
 | deepseek-flash hinted s2 | 38.0 % | −10.2 (2.3) | +7.0 (1.9) | +8.8 (1.6) | 31.0 / 29.2 % |
-| deepseek-flash unhinted s3 (early closing) | 46.6 % | [T0] | [T2] | [T1] | [T2 / T1] |
+| deepseek-flash unhinted s3 (early closing) | 46.6 % | −1.6 (2.3) | +18.6 (2.1) | +15.6 (2.2) | 28.0 / 31.0 % |
 
 Differences in points, paired by problem on sample 0 (standard errors in brackets); T0 here is the 1-sample run. Astra's
 score is our re-scoring of the published edit. Over 4 samples, paired with the 4-sample T0: deepseek-flash unhinted s2
 +5.75 (1.26), hinted s2 −12.3 (1.3), hinted s1 +0.9 (1.2), unhinted s3 −2.75 (1.38), Opus strict s1 −3.65 (1.26), Opus strict s2 +7.55 (1.26), Astra +2.25 (1.32; our 4-sample re-score 51.2 %); [Opus s3 after its 4-sample
 re-score].
 
-Every edit beats both truncations by at least 3.7 standard errors [check DS unhinted s3]. A cut does not get the base out of the loop: after
-a forced close it often loops on in the answer, and 64–72 % of all T1 and T2 generations reach the token limit, so T1
-and T2 land near 30 % whatever the cut length (3.0k to 17.5k tokens). Against thinking off, the picture is different: the two
+Every edit beats both truncations by at least 3.7 standard errors. A cut does not get the base out of the loop: after
+a forced close it often loops on in the answer, and 63–72 % of all T1 and T2 generations reach the token limit, so T1
+and T2 land near 30 % whatever the cut length (1.8k to 17.5k tokens). Against thinking off, the picture is different: the two
 valid strict repairs, Opus s1 and s3, score below it (s1 by 3.65 points over 4 samples, SE 1.26 [s3 4-sample]), and
 Astra's edit is level with it (+2.25 over 4 samples, SE 1.32). Only the two invalid runs, Opus strict s2 and deepseek-flash unhinted s2, beat it by more than
 two standard errors (§5). The damaged model with its thinking switched off already scores as high as the published
@@ -538,7 +538,9 @@ generation closes its thinking, but not at a point that depends on the problem: 
 characters at every MATH level (Spearman −0.08, the only edit at or below the base's 0.08; the references 0.10–0.39).
 Its median thinking is shorter than 6,000 characters, the opening window in which repetition is about 0.02 for every
 run, so its low repetition (0.02) says little about loops. Its skips fall on hard problems (26 % at level 5). It scores below thinking
-off (−2.75 over 4 samples, SE 1.38) [and against fixed-length truncation: T2]. The editor measured paired gains of +44
+off (−2.75 over 4 samples, SE 1.38). It does more than end the thinking at one length: the base's own thinking
+cut at the edit's median length (1,863 tokens) scores 28.0 %, 18.6 points lower (SE 2.1), because the base loops on
+in the answer after a forced close. But where the edit ends the thinking does not depend on the problem. The editor measured paired gains of +44
 to +52 points over the unedited model on practice problems, where the unedited model mostly hits the limit, and
 reported the edit as repairing "non-termination of thinking despite an internally available answer". Against a base
 that rarely closes, any close earns most of that gain. [Pending the A7 ruling: the strengths of the loop-state gate

@@ -400,3 +400,9 @@
   keeps a short thinking instead of skipping it), and, if the A7 proposal is accepted, also invalid. Not a repair on
   either side of the strict / simulation-allowed split. Decisions needed: (a) the A7 proposal (07:30); (b) whether C3
   failing makes it "early closing" as the 03:40 rule says (my recommendation: yes; C2 will be added when T2 is in).
+- (13:30) **C2 passes**: T1 matched 31.0 %, T2 fixed 28.0 % (cut at 1,863 tokens; 491 of 500 cut; 63 / 72 % of the
+  controls' generations reach the limit). Edit − T2 **+18.6 pp (SE 2.1, z 8.9)**, − T1 +15.6 (2.2), − T0 (1-sample)
+  −1.6 (2.3). So the edit does more than end the thinking at one length; the base, cut there, loops on in the answer.
+  The "early closing" reading now rests on C3 alone (Spearman −0.08; the same length at every level). By the 03:40
+  rule that is still "early closing"; but it is a weaker case than hinted s1 (which skips its thinking) and you may
+  prefer "you decide" wording. My recommendation stays: early closing, not a repair, with the C2 result stated.
