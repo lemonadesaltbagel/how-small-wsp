@@ -79,3 +79,12 @@ Deleted 23:20. Retry on a new pod (chain_rescore_dsu2_retry.sh).
   ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) → ¥85.23 (DS unhinted s3 start) → ¥63.04 (11-15). Spend ≥ (65.20 −
   35.90) + (134.29 − 63.04) = ¥100.55; the top-up amount and any spend between 11-09 17:24 and 11-10 02:08 are not
   recorded (the exact total is on the DeepSeek usage page). ≈ $14 at ¥7.1/$.
+- Logged DeepSeek usage priced (`python3 -I scripts/ds_api_cost.py`, list price read 2026-11-15: deepseek-flash
+  ¥0.04 / ¥2 / ¥8 per M cache-hit / miss / output at peak = Beijing Mon–Fri 09–12 and 14–18, half off-peak; checks with
+  the pilot readings ¥0.09 and ¥0.51, both off-peak): editor 2,526 turns ¥62.4 (hinted-p50-s1 0.89, strict-s1 8.63,
+  strict2 hinted s1 14.43 / s2 6.58, unhinted s1 14.27 / s2 6.78 / s3 10.80), DeepSeek reviews 2,331 ¥3.25; total
+  ¥65.6. Per balance window, logged vs balance fall: to 11-09 17:24 ¥11.2 vs ¥29.3; top-up window ¥0.2 vs n/a;
+  11-10 02:08–11-11 23:30 ¥30.1 vs ¥34.2; 11-11 23:30–11-15 ¥24.2 vs ¥37.0. Spend as reported: balance fall ¥100.55 +
+  ¥0.2 ≈ ¥101 (≈ $14). The ¥35 gap is not explained (unlogged calibrations / API checks are too small to cover it as
+  far as we can tell; the key's use outside this project, or prices differing from today's list, cannot be checked
+  from here).

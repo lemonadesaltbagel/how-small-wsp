@@ -1,7 +1,7 @@
 # How Small Can a Weight-Space Programmer Be?
 
-[Authors] · draft of 2026-11-15, merged from `paper/draft_*.md`. [Brackets] mark what still needs a citation check
-or a figure from the authors' side. Numbers come from `notes/episode_ledger.json`, `notes/phase0_log.md` and each
+Xintian Huang · draft of 2026-11-15, merged from `paper/draft_*.md`. [Brackets] mark what still needs a figure or a check
+from the author's side. Numbers come from `notes/episode_ledger.json`, `notes/phase0_log.md` and each
 run's `run_class.json`.
 
 ## Abstract
@@ -76,26 +76,30 @@ or audit tool calls; we vary the editor and audit. Community reproductions:
 - experiment 1 (which game a policy network plays) with a local Qwen3.8-27B (Q4_K_M) that reads the weights in its
   prompt, without tools or code, and identifies 3 of 4 games (Willison 2026,
   simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/). This is interpretation only, with no editing;
+  a study that gives Opus 5.5 every weight of small image classifiers (~125k parameters) as text, without tools or
+  forward passes, concludes that its zero-shot reading is "local arithmetic plus dataset priors" [Ahmed 2026];
 - a reproduction with Astra, Opus and Fable on experiments 1–6, which also finds that with thinking turned off the
-  unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [shapor 2026];
+  unedited Qwen3.5-0.8B scores 45.2 % on MATH-500 and the p50c edit 44.2 % [Naghibzadeh 2026];
 - the same task with an open-weight editor, Qwen3.8-Flash-Next (FP8, about 186 GB of weights), in two runs
   [Prayas-Agrawal 2026]: MATH-500 7.7 → 50.4 % and 51.55 % (4 samples). Its edit writes the `</think>` direction from a
   loop-state contrast at layer 23, as the deepseek-flash edits here do. The conditions differ from ours. There is no
   pass budget; the editor submits when it chooses. The prompt names the repetition failure and tells the editor to
   "check what the proposed change does at observed states before spending a generation call". It keeps the original
-  rule (b), so the check is meant for the forward tool, which here is unmetered. Its tool calls are not audited, and
+  rule (b), so the check is meant for the forward tool, which here has no total budget (up to 512 generations per
+  call; 38 and 23 calls in its two runs). Its tool calls are not audited, and
   there is no thinking-off control; in our harness thinking off scores 48.95 %. It is one editor and one size, so it is
   a point, not a curve;
 - a cross-editor replication on Qwen3.5-0.8B with other editors (GLM-5.3-Flash, MiMo-v2.6 Flash and Pro), without
-  hints and with 10 passes of 64 practice problems [WKJBryan 2026]. All three rescale one row of the tied embedding, that
-  of `</think>`, by about 1.5 and reach 25.2–27.8 % (base 6.0 % and the published edit 39.4 % in its harness). Its rules
+  hints and with 10 passes of 64 practice problems [WKJBryan 2026]. All three rescale the `</think>` row of the tied
+  embedding by about 1.5 (GLM-5.3-Flash also rescales the comma and `<|im_end|>` rows) and reach 25.2–27.8 % (phase 4, one sample per problem; base 6.0 % and the published edit 39.4 % in its harness). Its rules
   differ from ours: the embedding is editable (our task protects it), and the editors could generate with the model
-  offline in their sandbox. It reports one episode per editor, with no size ladder and no audit of the tool calls;
+  offline in their sandbox. Its phase 4 has one scored episode per editor (MiMo-v2.6 Flash after a retry; later phases add GLM-5.3 runs at
+  9.0–24.4 %), with no size ladder and no audit of the tool calls;
 - random-direction controls for the p50c edit (a random edit of the same 64 neurons per layer recovers about a fifth of
   the gain) and a blind Claude attempt that found no fix [Chalmers 2026];
 - a framework report that a session with a vLLM-served Qwen3.5-0.8B "couldn't do the job" and that "a strong open
-  model" is needed [Ahmedn1 2026]; it is the only attempt we found with an editor of the target's size, and it does not
-  say whether the small model was the editor or the target, or compare sizes.
+  model" is needed [Dawod 2026]; the 0.8B model was the editor (the sentence sits under "An open-source editor"), so it is the
+  only attempt we found with an editor of the target's size, and it does not compare sizes.
 
 **Non-agent repairs.** Tree-Ising (Salloum and Ali 2026, arXiv 2611.14210) finds the repair without an LLM, as a
 discrete optimisation of bit-level sign and exponent edits over forward-pass statistics, and reports 54.6–55.1 % against
@@ -442,7 +446,7 @@ once, 58 twice, 16 three times and 8 every time, close to what an item-independe
 correct answers its 4-sample score is 28.8 %, 0.2 points below the threshold.
 
 A control corroborates this. It also shows that the repair threshold lies below what the base reaches without
-thinking, as an independent reproduction found (45.2 % with thinking off [shapor 2026]); meeting the threshold
+thinking, as an independent reproduction found (45.2 % with thinking off [Naghibzadeh 2026]); meeting the threshold
 therefore does not by itself show that the thinking was repaired, and the thinking-skip check is what separates the
 two. The unedited model with thinking turned off (the chat template's empty
 thinking block), on the same items with the same per-item seeds, sampling and grading, scores 48.2 % (± 2.2). The
@@ -918,9 +922,14 @@ $518 (`notes/compute_split_2026-11-14.md`): the main-matrix episodes $257 (targe
 of cheap GPUs $178; serving the Qwen 9B and 27B editors $79), the strict Opus 5.5 episodes $100, the 4-sample re-scores
 and the truncation and thinking-off controls $48, the first Opus round $70, runs abandoned under earlier rules $40, and
 setup $3. The DeepSeek API (the deepseek-flash editor, and the deepseek-flash reviewer of the Qwen and strict Opus
-runs) cost at least ¥100.6 (about $14 at ¥7.1 per dollar) over the project: ¥65.20 → ¥35.90 before a top-up, ¥134.29 after it →
-¥63.04 on 2026-11-15 (account balance, `notes/compute_log.md`; the spend between the last reading before the top-up and the first after it is
-not recorded) [exact figure from the DeepSeek usage page]. Opus 5.5 and the Claude reviewer and labeller ran on a
+runs) cost about ¥101 (about $14 at ¥7.1 per dollar). This is the fall of the account balance (¥65.20 → ¥35.90, then
+after a top-up ¥134.29 → ¥63.04 on 2026-11-15, ¥100.55 in all; `notes/compute_log.md`) plus ¥0.2 of logged calls in the
+eight hours between the readings before and after the top-up. The logged usage (`scripts/ds_api_cost.py`) is 2,526
+editor turns (108.1M cached and 5.3M uncached input tokens, 10.8M output) and 2,331 reviews (3.3M input, 0.4M output);
+at the list price on 2026-11-15 (¥0.04 / ¥2 / ¥8 per million cached input, uncached input and output at peak hours,
+half off-peak) that is ¥65.6, of which ¥6.6–14.4 per main-protocol episode. The remaining ¥35 of the balance fall,
+mostly on 11-07/08 and 11-12 to 11-15, is not matched by logged calls (reviewer calibrations and API checks were not
+logged; we cannot tell whether that explains it). Opus 5.5 and the Claude reviewer and labeller ran on a
 subscription and are not included.
 
 **E. Adjudications.** Each flagged call of the main protocol, the strict Opus runs and deepseek-flash strict s1, with
@@ -931,33 +940,34 @@ declared invalid as a whole when the rule was made explicit) (decided 2026-11-14
 
 ## References
 
-[Honnibal, Hu et al., Khan et al. and Willison checked against their sources on 2026-11-13; check the rest before posting.]
-
 - Ahmed, N. S. (2026). Can an LLM actually reason and program about neural network's weights or is it just memorization
-  on steroids? arXiv:2611.08070.
-- Ahmedn1 (2026). wsplab: weight-space programming, end to end. github.com/Ahmedn1/wsplab.
+  on steroids? Exploring "Weight-Space Programming". arXiv:2611.08070.
 - Arditi, A., et al. (2024). Refusal in language models is mediated by a single direction. NeurIPS 2024.
-- Prayas-Agrawal (2026). Weight Whisperer: open models can do weight-space programming too. github.com/Prayas-Agrawal/weight-whisperer [author name to check].
-- WKJBryan (2026). wsp-lab: replication and stress-test of weight-space programming, phase 4 (external editors, blind). github.com/WKJBryan/wsp-lab [author name to check].
-- Chalmers, K. (2026). weight-space-programming: replication with random-direction controls and a blind Claude
-  attempt. github.com/kyle-chalmers/weight-space-programming.
+- Chalmers, K. (2026). Weight-space programming on a laptop: replicating a loop-fixing weight edit.
+  github.com/kyle-chalmers/weight-space-programming.
+- Dawod, A. (2026). wsplab: weight-space programming, end to end. github.com/Ahmedn1/wsplab.
 - Honnibal, M. (2026, 3 November). The "Astra can read and write weights to improve Qwen" post is misleading.
   honnibal.dev/blog/astra-read-write-misleading.
 - Hu, J., Tang, C., Li, W., Zhu, H., Feng, C.-M., Zhang, Q., Chen, Y., Hu, M. (2026). Exploring weight-space
   programming: capabilities, generalization, and limitations. arXiv:2611.09382.
 - Khan, A. A., Kohli, H., Yao, Y., Sun, H., Yao, Z. (2026). Can language model agents be helpful circuit explainers in
   mechanistic interpretability? Findings of EMNLP 2026. arXiv:2606.24026.
-- KidIkaros (2026). wsp-reproduction. github.com/KidIkaros/wsp-reproduction.
+- KidIkaros (2026). Weight-space programming: independent recreation (Qwen3.5-0.8B).
+  github.com/KidIkaros/wsp-reproduction.
 - Meng, K., Bau, D., Andonian, A., Belinkov, Y. (2022). Locating and editing factual associations in GPT (ROME).
   NeurIPS 2022.
-- Meng, K., Sharma, A. S., Andonian, A., Belinkov, Y., Bau, D. (2023). Mass-editing memory in a transformer (MEMIT).
+- Meng, K., Sen Sharma, A., Andonian, A., Belinkov, Y., Bau, D. (2023). Mass-editing memory in a transformer (MEMIT).
   ICLR 2023.
+- Naghibzadeh, S. (2026). Re-running "Sparks of Weight-Space Programming". github.com/shapor/weight-space-experiments.
+- Prayas-Agrawal (2026). Weight Whisperer: open models can do weight-space programming too.
+  github.com/Prayas-Agrawal/weight-whisperer.
 - Salloum, H., Ali, A. (2026). Tree-Ising: repairing language models with bit-level Ising edits. arXiv:2611.14210.
-- Sarabamoun, E. (2026). weight-space-programming-opus. github.com/EphraiemSarabamoun/weight-space-programming-opus.
-- shapor (2026). weight-space-experiments. github.com/shapor/weight-space-experiments.
-- Takehi, R., Teoh, J., Zhang, A., Khattab, O. (2026). Sparks of weight-space programming: LLMs can natively read and
-  write neural network weights. MIT CSAIL blog, rikiyat.github.io/blog/weight-space-programming/.
-- Turner, A. M., et al. (2023). Steering language models with activation engineering (activation addition).
-  arXiv:2308.10248.
+- Sarabamoun, E. (2026). Weight-space programming, reproduced with Claude Opus 5.5.
+  github.com/EphraiemSarabamoun/weight-space-programming-opus.
+- Takehi, R., Teoh, J., Zhang, A., Khattab, O. (2026, 2 November). Sparks of weight-space programming: LLMs can natively
+  read & write neural network weights. Blog post, rikiyat.github.io/blog/weight-space-programming/.
+- Turner, A. M., et al. (2023). Steering language models with activation engineering. arXiv:2308.10248.
 - Willison, S. (2026, 3 November). Qwen 3.8 27B on my laptop can interpret model weights, too.
   simonwillison.net/2026/Nov/3/qwen-can-interpret-model-weights/.
+- WKJBryan (2026). wsp-lab: a replication and stress-test of weight-space programming, phase 4 (external editor
+  models, blind), phase4/results.md. github.com/WKJBryan/wsp-lab (accessed 2026-11-15).
