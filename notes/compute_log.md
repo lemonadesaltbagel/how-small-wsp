@@ -72,3 +72,10 @@ Deleted 23:20. Retry on a new pod (chain_rescore_dsu2_retry.sh).
 - 2026-11-13: rescore retry for DS unhinted s2. p3u5odb36il2sq (4090, community) 00:20–00:37, no ssh, ≈ $0.3;
   iep51js2cc1q4o (5090, community) 01:06–02:48 ≈ 1.7 h ≈ $1.2–3.0 (check the billing page for the community price).
   Both deleted. Running: v0sy (3090, $0.22/h) for DS hinted s2.
+
+## DeepSeek API balance, 2026-11-15 (for Appendix D)
+- GET https://api.deepseek.com/user/balance (from the laptop, key from .env), 2026-11-15: total ¥63.04 (topped-up
+  ¥63.04, granted ¥0). Recorded balances: ¥65.20 (start, before the pilot) → ¥35.90 (2026-11-09 17:24) → top-up →
+  ¥134.29 (11-10 02:08) → ¥100.05 (11-11 23:30) → ¥85.23 (DS unhinted s3 start) → ¥63.04 (11-15). Spend ≥ (65.20 −
+  35.90) + (134.29 − 63.04) = ¥100.55; the top-up amount and any spend between 11-09 17:24 and 11-10 02:08 are not
+  recorded (the exact total is on the DeepSeek usage page). ≈ $14 at ¥7.1/$.

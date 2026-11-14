@@ -28,7 +28,7 @@ are 4-sample means. The failure modes differ by size in these episodes: none
 of the eight 0.8B and 9B episodes ties a model component to the loops, while all four 27B episodes and both
 deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, at least one editor's final answer
 misstates what it did or found. Code, trajectories, prompts and
-edits are public [repository still private: release before posting].
+edits will be public at posting [repository still private].
 
 ## 1 Introduction
 
@@ -94,8 +94,8 @@ or audit tool calls; we vary the editor and audit. Community reproductions:
 - random-direction controls for the p50c edit (a random edit of the same 64 neurons per layer recovers about a fifth of
   the gain) and a blind Claude attempt that found no fix [Chalmers 2026];
 - a framework report that a session with a vLLM-served Qwen3.5-0.8B "couldn't do the job" and that "a strong open
-  model" is needed [Ahmedn1 2026]; it is the only small open-model attempt we found, and it does not say whether the
-  small model was the editor or the target, or compare sizes.
+  model" is needed [Ahmedn1 2026]; it is the only attempt we found with an editor of the target's size, and it does not
+  say whether the small model was the editor or the target, or compare sizes.
 
 **Non-agent repairs.** Tree-Ising (Salloum and Ali 2026, arXiv 2611.14210) finds the repair without an LLM, as a
 discrete optimisation of bit-level sign and exponent edits over forward-pass statistics, and reports 54.6–55.1 % against
@@ -485,9 +485,10 @@ thinking-skip check, the problem-dependence of where it stops, repetition before
 
 **The criteria for every edit above the line (Table 5).** After the main-matrix scores, but before these controls
 ran, we fixed three readings of what a repair adds (post hoc, amendments A6 and A8): C1, it beats thinking off by more than 2 paired standard errors (over 4 samples); C2, it beats the
-fixed-length truncation T2 by more than 2 paired standard errors (sample 0), i.e. it is not a length rule; C3, its
-thinking length rises with the MATH level (Spearman > 0; the base has 0.08), i.e. where it stops depends on the
-problem. An edit that fails C2 or C3 is reported as early closing. Repetition inside the thinking (C4) and the audit
+fixed-length truncation T2 by more than 2 paired standard errors (sample 0); C3, its thinking length is positively
+associated with the MATH level (Spearman > 0 on sample 0; the base has 0.08). C2 only shows an advantage over cutting
+the unedited model's thinking at one length, after which it often loops on; C3 tests separately whether where the edit
+stops varies with the problem. An edit that fails C2 or C3 is reported as early closing; both rules are post hoc. Repetition inside the thinking (C4) and the audit
 (C5) are reported in §5.
 
 Table 5: C1–C3 for every edit above the repair line. Differences in points (SE).
@@ -818,22 +819,26 @@ edit that works is not.
 
 **The +20-point line is a weak test of repair.** The damaged model scores 48.95 % with its thinking switched off,
 above both valid strict repairs and level with Astra's published edit. An edit that makes the model stop thinking and
-answer cleanly can clear the line without repairing the thinking. Two community results report open editors on this
+answer cleanly can clear the line without repairing the thinking. Two community reports test other editors on this
 task: 50.4–51.55 % without a pass budget [Prayas-Agrawal 2026], and 25.2–27.8 % in another harness with an editable
-embedding [WKJBryan 2026]. Neither reports a thinking-off control. The thinking-off and truncation controls (Tables 4
-and 5) and the thinking-skip check need one MATH-500 run each, or none, and we suggest them as standard for this task. A stronger test would be a target whose thinking, switched off,
+embedding [WKJBryan 2026]. Neither reports a thinking-off control. We suggest the controls in Table 4 and the criteria
+in Table 5 as standard for this task. They cost one MATH-500 run per truncation control and four samples of the
+unedited model with thinking off, shared by all edits; the thinking-skip check reads the scored outputs and needs no
+run. A stronger test would be a target whose thinking, switched off,
 does not already clear the bar.
 
 **Simulation and calibration.** The two runs that beat thinking off both contain calls that predict an edit's effect
-at recorded positions (§5.4). The open-weight run above [Prayas-Agrawal 2026] had no pass budget and was told to check
-each change at observed states before a generation pass. A plausible reading, which these runs cannot test, is that
-an edit's effect at recorded states is what calibrates a gate's strength. Predicting it in the kernel is cheap;
-measuring it costs passes. With the kernel route forbidden and 50 passes, the gated close lands at or below the
-thinking-off score. Two arms with the same budget, one allowing the check
+at recorded positions (§5.4), though in neither does such a call feed the submitted edit. The open-weight run above
+[Prayas-Agrawal 2026] had no pass budget and was told to check each change at observed states before a generation
+pass. One plausible reading is that an edit's effect at recorded states is what calibrates a gate's strength:
+predicting it in the kernel is cheap, and measuring it costs passes. The eight runs mix editors, rule versions and
+sample counts, so they cannot test this. In the valid audited runs here, no score exceeded thinking off. Two arms with the same budget, one allowing the check
 and one forbidding it, would test this directly.
 
-**Removing a failure, not adding a skill.** Every working edit here, valid or not, writes the `</think>` direction
-from a detector of the loop state; the valid Opus edits differ in where the gate opens (§5.2). This fits the authors'
+**Removing a failure, not adding a skill.** Every working edit here is gated on a detector of the loop state. Most
+write the `</think>` direction from it: all the deepseek-flash edits and Opus s1 and s2, where the gate opens only
+inside a loop (§5.2). Others suppress the loop instead: Opus s3 closes attention-head output gates inside loops, and
+Astra's edit removes a repetition direction. This fits the authors'
 Gemma result and the community view that weight edits remove a blocker rather than add mathematical skill. Our
 results speak to repairs of that kind. They do not speak to editing that adds a capability.
 
@@ -913,13 +918,15 @@ $518 (`notes/compute_split_2026-11-14.md`): the main-matrix episodes $257 (targe
 of cheap GPUs $178; serving the Qwen 9B and 27B editors $79), the strict Opus 5.5 episodes $100, the 4-sample re-scores
 and the truncation and thinking-off controls $48, the first Opus round $70, runs abandoned under earlier rules $40, and
 setup $3. The DeepSeek API (the deepseek-flash editor, and the deepseek-flash reviewer of the Qwen and strict Opus
-runs) cost at least ¥100.6 (about $14) over the project: ¥65.20 → ¥35.90 before a top-up, ¥134.29 after it →
-¥63.04 at the end (account balance; the spend between the last reading before the top-up and the first after it is
+runs) cost at least ¥100.6 (about $14 at ¥7.1 per dollar) over the project: ¥65.20 → ¥35.90 before a top-up, ¥134.29 after it →
+¥63.04 on 2026-11-15 (account balance, `notes/compute_log.md`; the spend between the last reading before the top-up and the first after it is
 not recorded) [exact figure from the DeepSeek usage page]. Opus 5.5 and the Claude reviewer and labeller ran on a
 subscription and are not included.
 
-**E. Adjudications.** Each flagged call with its class and decision: `notes/note6_split_application.md` and each
-run's `audit_adjudication.json` (decided 2026-11-14; deepseek-flash unhinted s3 on 2026-11-15, after the blind check in
+**E. Adjudications.** Each flagged call of the main protocol, the strict Opus runs and deepseek-flash strict s1, with
+its class and decision: `notes/note6_split_application.md` and each run's `audit_adjudication.json`. The first-round
+Opus runs' 26 and 11 flags are listed in their `run_class.json` and were not adjudicated call by call (the runs were
+declared invalid as a whole when the rule was made explicit) (decided 2026-11-14; deepseek-flash unhinted s3 on 2026-11-15, after the blind check in
 §5.4, whose inputs and labels are in that run's `a7_blind/`).
 
 ## References
