@@ -525,7 +525,7 @@ not locate a threshold. Effort also differs (Table 7): the 0.8B editor charges n
 
 ![Figure 2](figs/fig2_failure_by_size.png)
 
-Figure 2: failure label of every main-protocol episode by editor, with the strict Opus 5.5 runs as the reference.
+Figure 2: Failure label of every main-protocol episode by editor, with the strict Opus 5.5 runs as the reference.
 Hatched: invalid (an upheld violation) or excluded (thinking skipped). The one solid deepseek-flash episode above the
 line, hinted s2 (36.65 %), meets the thinking-skip rule only borderline (§4.2). Drawn from `notes/episode_ledger.json`
 by `scripts/make_figures.py`.
@@ -783,7 +783,7 @@ print('chosen gamma=8 -> wall push %.1f-%.1f nats, ...'%(8*VW.mean()*1.5,8*VW.me
 # -> prints "chosen gamma=8 -> wall push 12.0-16.0 nats"; -8.0*outer(u_close, b_wall) is in the submitted edit
 ```
 
-Figure 3: an allowed and a forbidden use of recorded activations. Lines are verbatim from the logs, with lines
+Figure 3: An allowed and a forbidden use of recorded activations. Lines are verbatim from the logs, with lines
 left out and arguments elided (`...`); comments starting `->` are ours. In both, `H`, `Xpre`, `Xpost` and `Xmid` hold
 recorded layer-23 MLP activations. Full calls: `tool_calls.jsonl` of each run in the release.
 
