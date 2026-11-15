@@ -1,6 +1,7 @@
-"""Figure 1 of the preprint from the episode ledger (no numbers typed by hand except the fixed reference values below,
+"""Figures 1 and 2 of the preprint from the episode ledger (no numbers typed by hand except the fixed reference values below,
 each with its source). Run on a node with matplotlib (desktop sandbox venv):
-  harness/assets/venvs/sandbox/bin/python -I scripts/make_figures.py   -> paper/figs/fig1_scale_curve.{pdf,png}
+  harness/assets/venvs/sandbox/bin/python -I scripts/make_figures.py   -> paper/figs/fig1_scale_curve.{pdf,png},
+                                                                          fig2_failure_by_size.{pdf,png}
 Only runs whose run_class.json says counts=True and whose task is strict2 enter the curve (analysis plan). The
 deepseek-flash episodes are drawn as intervals beside it (DS below): valid as diamonds, invalid as crosses."""
 import json
@@ -27,7 +28,7 @@ SIZES = {"qwen0p8b": 0.8, "qwen9b": 9.0, "qwen27b": 27.0}
 DS_INTERVAL = (16.0, 748.0)  # deepseek-flash: activated (decode) .. total (backbone + Engram), model card
 # deepseek-flash main-matrix episodes: (prompt, reported score = 4-sample mean for runs above the line, valid)
 # (notes/pending_user_decisions.md 2026-11-14 03:10; drawn from this list, not the ledger: no size on the Qwen axis).
-# Unhinted s3 (0.462): early closing, and invalid if the A7 proposal of 2026-11-14 07:30 is accepted
+# Unhinted s3 (0.462): invalid (calls 123, 197; decided 2026-11-15) and early closing
 DS = [("hinted", 0.4985, False), ("unhinted", 0.068, False), ("hinted", 0.3665, True), ("unhinted", 0.547, False),
       ("unhinted", 0.462, False)]
 
@@ -121,5 +122,61 @@ def main():
     print("points:", {f"{k[0]}/{k[1]}": v for k, v in pts.items()})  # (score, empty edit)
 
 
+# Figure 2: failure label per episode by editor (main protocol; Opus strict as the reference). Stages are ordinal, so one
+# hue light -> dark; hatching marks an episode that is invalid or excluded (run_class counts False / adjudicated invalid).
+STAGES = [("not localised", "#c6daf3"), ("localised, edit failed", "#7eaee8"), ("above the repair line", "#2a78d6")]
+STAGE_OF = {"not localised": 0, "localised, edit failed": 1, "success": 2}
+EDITORS = [("qwen0p8b", "Qwen3.5\n0.8B", "strict2"), ("qwen9b", "Qwen3.5\n9B", "strict2"), ("qwen27b", "Qwen3.5\n27B", "strict2"),
+           ("deepseekflash", "deepseek-\nflash", "strict2"), ("opus55", "Opus 5.5\n(reference)", "strict")]
+
+
+def fig2():
+    rows = json.load(open(LEDGER))
+    counts = {}  # (editor, stage, excluded) -> n
+    for r in rows:
+        name = os.path.basename(r["run"])
+        for ed, _, task in EDITORS:
+            if name.startswith(ed + "-") and name.split("-p50-")[1].split("-s")[0] == task and r["failure_label"] in STAGE_OF:
+                excluded = r.get("counts") is not True or r.get("adjudicated_valid") is False
+                k = (ed, STAGE_OF[r["failure_label"]], excluded)
+                counts[k] = counts.get(k, 0) + 1
+    fig, ax = plt.subplots(figsize=(6.4, 3.4), dpi=200)
+    for spine in ("top", "right"):
+        ax.spines[spine].set_visible(False)
+    for spine in ("left", "bottom"):
+        ax.spines[spine].set_color(MUTED)
+    ax.tick_params(colors=MUTED, labelsize=8)
+    ax.yaxis.grid(True, color=GRID, linewidth=0.8)
+    ax.set_axisbelow(True)
+    ax.set_ylabel("Episodes", color=INK, fontsize=9)
+    for i, (ed, label, _) in enumerate(EDITORS):
+        bottom = 0
+        for st, (stage, c) in enumerate(STAGES):
+            for excluded in (False, True):
+                n = counts.get((ed, st, excluded), 0)
+                if not n:
+                    continue
+                # 2 px surface gap between stacked segments (white edge), hatch for invalid / excluded
+                ax.bar(i, n, 0.6, bottom=bottom, color=c, edgecolor="white", linewidth=1.5,
+                       hatch="////" if excluded else None, zorder=2)
+                ax.text(i, bottom + n / 2, str(n), ha="center", va="center", fontsize=7, color=INK, zorder=3,
+                        bbox=dict(boxstyle="round,pad=0.25", facecolor="white", edgecolor="none"))
+                bottom += n
+    ax.set_xticks(range(len(EDITORS)))
+    ax.set_xticklabels([e[1] for e in EDITORS], fontsize=8, color=INK)
+    ax.set_yticks(range(0, 6))
+    ax.axvline(3.5, color=GRID, linewidth=1.0, zorder=1)
+    handles = [matplotlib.patches.Patch(facecolor=c, edgecolor="white", label=s) for s, c in STAGES]
+    handles.append(matplotlib.patches.Patch(facecolor="white", edgecolor=MUTED, hatch="////", label="invalid or excluded"))
+    leg = ax.legend(handles=handles, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=4, fontsize=7, frameon=False)
+    for t in leg.get_texts():
+        t.set_color(INK)
+    fig.tight_layout()
+    for ext in ("pdf", "png"):
+        fig.savefig(os.path.join(OUT, f"fig2_failure_by_size.{ext}"))
+    print("figure 2:", counts)
+
+
 if __name__ == "__main__":
     main()
+    fig2()

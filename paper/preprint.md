@@ -515,13 +515,20 @@ for both valid strict repairs and for Astra's published edit.
 
 ### 5.1 Failure labels by size
 
-In these episodes the labels divide by size. None of the eight 0.8B and 9B episodes meets the localisation criterion:
+In these episodes the labels divide by size (Figure 2). None of the eight 0.8B and 9B episodes meets the localisation criterion:
 none ties a model component to loop-specific evidence. All four 27B episodes and all five deepseek-flash episodes
 meet it: they read the cut-off generations, separated looping from finished text, and tied a component to the loop.
 Then the edit failed (the 27B episodes, deepseek-flash unhinted s1), or it reached the threshold through an excluded
 close (hinted s1, unhinted s3), with a violation (unhinted s2) or only borderline (hinted s2). With two seeds per prompt this describes the sample; it does
 not locate a threshold. Effort also differs (Table 7): the 0.8B editor charges no pass at all, and in seven of the eight
 9B and 27B episodes 40–63 % of forward requests fail and are returned uncharged, nearly all of them malformed requests.
+
+![Figure 2](figs/fig2_failure_by_size.png)
+
+Figure 2: failure label of every main-protocol episode by editor, with the strict Opus 5.5 runs as the reference.
+Hatched: invalid (an upheld violation) or excluded (thinking skipped). The one solid deepseek-flash episode above the
+line, hinted s2 (36.65 %), meets the thinking-skip rule only borderline (§4.2). Drawn from `notes/episode_ledger.json`
+by `scripts/make_figures.py`.
 
 **0.8B: no contact with the task.** The 0.8B editor ends its episodes within minutes: 7–49 turns, 1–34 Python runs, no
 forward pass in any seed, no edit saved. In hinted s1 it ran 34 Python blocks. Most were syntax errors or scripts that
@@ -749,6 +756,36 @@ Table 8: runs with an upheld rule-(b) violation, by editor.
 | Opus 5.5 strict (v1, re-audited with note 6) | 3 | 1 | 1 | s2: 237 |
 | Opus 5.5 first round (original rules) | 2 | 2 | 2 | 26 and 11 calls that simulate layers to score candidate edits |
 | GPT-6 Astra (published p50c log) | 1 | 1 | 0 | 3 linear attributions through down_proj |
+
+**The boundary in code (Figure 3).** Both calls below come from deepseek-flash episodes and read the same kind of
+recorded activations (layer-23 MLP activations, the input to down_proj, returned by forward passes) projected on a
+candidate gate. The allowed one
+stops at statistics of the gate; the violation converts the gate's value into a predicted output effect and sets the
+strength from it.
+
+```python
+# -> (a) allowed: deepseek-flash unhinted s2, call 245. Where does the candidate gate fire?
+s_pre=Xpre@g; s_post=Xpost@g; s_mid=Xmid@g
+for lam in [0.05,0.10,0.14,0.18,0.22]:
+    a=s_pre-lam*t_pre; b=s_post-lam*t_post; c=s_mid-lam*t_mid
+    print('lam',lam, ..., 'pre frac>1',round(float((a>1).mean()),3),'post frac>1',round(float((b>1).mean()),3),
+          'mid frac>0.5',round(float((c>0.5).mean()),3))
+# -> call 246 saves the gate with lam = 0.12, checked by these firing statistics
+
+# -> (b) violation: deepseek-flash unhinted s3, call 197. What will the edit do to the output?
+def v(pts): return np.array([float(H[i,t]@bw) for i,t in pts])
+VW,VN,VH,VT=v(wall),v(pre),v(healthy),v(trig)
+# what gamma does the geometry imply? aim: wall push >= 12 nats, trig push <= 0.5 nats
+# nats/unit is unknown within [1.5, 2.0] from the recorded dose-response rows
+for s in [1.5,2.0]:
+    lo=12/(s*VW.mean()); hi=0.5/(s*max(VT.mean(),1e-9))
+print('chosen gamma=8 -> wall push %.1f-%.1f nats, ...'%(8*VW.mean()*1.5,8*VW.mean()*2.0, ...))
+# -> prints "chosen gamma=8 -> wall push 12.0-16.0 nats"; -8.0*outer(u_close, b_wall) is in the submitted edit
+```
+
+Figure 3: an allowed and a forbidden use of recorded activations. Lines are verbatim from the logs, with lines
+left out and arguments elided (`...`); comments starting `->` are ours. In both, `H`, `Xpre`, `Xpost` and `Xmid` hold
+recorded layer-23 MLP activations. Full calls: `tool_calls.jsonl` of each run in the release.
 
 **A blind check of the last ruling.** deepseek-flash unhinted s3 was the last run adjudicated. For it, two more
 labellers ruled under A7 on the 17 flagged calls, blind to each other, to the auditor's verdicts and to our proposal:
