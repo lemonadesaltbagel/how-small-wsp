@@ -1,0 +1,20 @@
+arXiv submission form (copy each field)
+
+Title:
+How Small Can a Weight-Space Programmer Be?
+
+Authors:
+Xintian Huang
+
+Abstract (1884 characters; limit 1,920):
+A frontier model, GPT-6 Astra, recently repaired Qwen3.5-0.8B by editing its weights directly: working in a Python sandbox with 50 forward passes of feedback, it removed reasoning loops and raised MATH-500 from 7.9 % to 48.1 %. Can smaller open models do this? We repeat the experiment under the same budget with open-weight editors, Qwen3.5 at 0.8B, 9B and 27B and, as a separate cross-family point, deepseek-flash (16B activated / 748B total parameters), each with the authors' hinted prompt and an unhinted one. We make the rule against simulating the network operational and enforce it with a pre-execution reviewer and a post-hoc audit, which we also apply to the original Astra log. Opus 5.5 repairs the model in two of three strict episodes (45.3 % and 44.5 %); its third (56.5 %) predicts an edit's effect at recorded tokens and is reported with the simulation-allowed results. The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). No open-weight editor has a valid repair. deepseek-flash clears the repair threshold in four of five episodes: one edit makes the model skip its thinking, two runs predict edit effects from recorded activations (one also ends its thinking at a near-fixed length), and one is borderline (36.65 %). The valid repairs beat truncating the unedited model's thinking at the same length, but not switching its thinking off (48.95 %). Of the eight runs whose tool calls predict an edit's effect, two beat thinking off; no valid strict repair does. Failure modes differ by size: no 0.8B or 9B episode ties a model component to the loops, while all four 27B episodes and both deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, some editor's final answer misstates what it did or found. Repair scores are 4-sample means. Code, trajectories and edits: github.com/lemonadesaltbagel/how-small-wsp.
+
+Comments:
+23 pages, 3 figures, 8 tables. Code, trajectories and edits: https://github.com/lemonadesaltbagel/how-small-wsp
+
+Primary category: cs.LG (Machine Learning)
+Cross-lists: cs.AI, cs.CL
+
+License: CC BY 4.0
+
+Files: upload paper/how-small-wsp-arxiv.zip as is (main.tex + figs/; arXiv compiles main.tex with pdflatex).
