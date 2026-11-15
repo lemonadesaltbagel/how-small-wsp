@@ -40,6 +40,7 @@ python3 -I scripts/make_release.py verify release                 # archive hash
 for f in release/*.tar.gz; do tar -xzf "$f" -C harness; done      # plus the GPQA archive, see above
 python3 -I scripts/make_release.py verify release harness         # every file against release/FILES.sha256
 python3 -I scripts/ledger.py                                      # rebuilds notes/episode_ledger.{md,json}
+python -I scripts/check_release_edits.py                          # each edit.npz against its manifest (numpy)
 ```
 
 The target weights are not redistributed: the target is Qwen3.5-0.8B from Hugging Face, prepared by the harness's exp 8
