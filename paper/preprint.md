@@ -1,7 +1,6 @@
 # How Small Can a Weight-Space Programmer Be?
 
-Xintian Huang · draft of 2026-11-15, merged from `paper/draft_*.md`. [Brackets] mark what still needs a figure or a check
-from the author's side. Numbers come from `notes/episode_ledger.json`, `notes/phase0_log.md` and each
+Xintian Huang · 2026-11-15. Numbers come from `notes/episode_ledger.json`, `notes/phase0_log.md` and each
 run's `run_class.json`.
 
 ## Abstract
@@ -28,7 +27,7 @@ are 4-sample means. The failure modes differ by size in these episodes: none
 of the eight 0.8B and 9B episodes ties a model component to the loops, while all four 27B episodes and both
 deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, at least one editor's final answer
 misstates what it did or found. Code, trajectories, prompts and
-edits will be public at posting [repository still private].
+edits: github.com/lemonadesaltbagel/how-small-wsp.
 
 ## 1 Introduction
 
@@ -483,7 +482,7 @@ a forced close it often loops on in the answer, and 63–72 % of all T1 and T2 g
 and T2 land near 30 % whatever the cut length (1.8k to 17.5k tokens). Against thinking off, the picture is different: the two
 valid strict repairs, Opus s1 and s3, score below it (by 3.65 and 4.45 points over 4 samples, SE 1.26 and 1.39), and
 Astra's edit is level with it (+2.25 over 4 samples, SE 1.32). Only the two invalid runs, Opus strict s2 and deepseek-flash unhinted s2, beat it by more than
-two standard errors (§5.4). The damaged model with its thinking switched off already scores as high as the published
+two standard errors (§5.4). The unedited model with its thinking switched off already scores as high as the published
 repair. A repair that keeps the thinking is therefore told apart from the excluded shortcut by its outputs (the
 thinking-skip check, the problem-dependence of where it stops, repetition before the stop; §5.1), not by its score.
 
@@ -821,7 +820,7 @@ loop validly in two of three strict episodes. Read as a question about tools, lo
 and forward passes is within reach of a 27B open model in this setting, and turning the location into a permissible
 edit that works is not.
 
-**The +20-point line is a weak test of repair.** The damaged model scores 48.95 % with its thinking switched off,
+**The +20-point line is a weak test of repair.** The unedited model scores 48.95 % with its thinking switched off,
 above both valid strict repairs and level with Astra's published edit. An edit that makes the model stop thinking and
 answer cleanly can clear the line without repairing the thinking. Two community reports test other editors on this
 task: 50.4–51.55 % without a pass budget [Prayas-Agrawal 2026], and 25.2–27.8 % in another harness with an editable
@@ -937,6 +936,14 @@ its class and decision: `notes/note6_split_application.md` and each run's `audit
 Opus runs' 26 and 11 flags are listed in their `run_class.json` and were not adjudicated call by call (the runs were
 declared invalid as a whole when the rule was made explicit) (decided 2026-11-14; deepseek-flash unhinted s3 on 2026-11-15, after the blind check in
 §5.4, whose inputs and labels are in that run's `a7_blind/`).
+
+**F. Release.** github.com/lemonadesaltbagel/how-small-wsp holds the code, the lab log, the analysis plan and the
+per-run decision records; its v1.0 release attaches every episode as an archive (prompts, replies, tool calls with
+outputs, forward-pass requests, reviewer decisions, audits, the edit ledger with each edit's stated reason, the
+submitted edit tensors, and the scored outputs), with a SHA-256 list of every file and a script that checks them and
+rebuilds the episode ledger (`scripts/make_release.py`, `scripts/ledger.py`). The GPQA hold-out records quote the
+questions and are encrypted with the GPQA dataset's own password. Model copies, intermediate edit tensors and sandbox
+scratch files are not included.
 
 ## References
 
