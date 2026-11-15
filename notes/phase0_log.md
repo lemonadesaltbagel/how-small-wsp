@@ -957,3 +957,16 @@ Heavy work stays on wsl, laptop and pods.
   repairs per cell 0/2 and 0/3; labeller-agreement reason corrected (some not-localised episodes print a cut-off
   generation); the localisation-call comparison stated as overlapping ranges; header note updated.
 - Preprint: every Opus s3 placeholder filled (44.5 %); Fig. 1 Opus strict mean (s1, s3) = 44.9 %.
+
+### Release prep (2026-11-15)
+- Secret scan: no keys or tokens in the pushed history (the 1 GB tensor blobs exist only in the local
+  backup-before-filter refs, never pushed) or in the run records (editor turns, tool calls, logs, reviews).
+- Public repository: lemonadesaltbagel/how-small-wsp (private until the preprint is submitted). It is this repository's
+  history minus the planning files (the two trackers, the research brief and outlines, tracker_proposals/), via
+  `scripts/sync_public.sh` (deterministic filter, so later syncs fast-forward). `scripts/publish_release.sh` flips it.
+- Release v1.0: 40 archives + MANIFEST.json + FILES.sha256, 1.04 GB, 28,425 files (`scripts/make_release.py`; model
+  copies, intermediate tensors, sandbox scratch and smoke runs left out). GPQA hold-out records quote the questions and
+  are encrypted with GPQA's own password.
+- Test from a fresh clone on wsl: archive and per-file hashes OK; `scripts/ledger.py` on the downloaded data rebuilds
+  notes/episode_ledger.{json,md} byte for byte; all 69 tensors of the 23 submitted edit sets match their manifests'
+  harness hashes (`scripts/check_release_edits.py`).
