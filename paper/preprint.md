@@ -5,29 +5,23 @@ run's `run_class.json`.
 
 ## Abstract
 
-A frontier model, GPT-6 Astra, recently repaired a small language model by editing its weights directly. It read
-Qwen3.5-0.8B's parameters in a Python sandbox, with 50 forward passes of feedback, changed about 0.017 % of them, and
-raised MATH-500 from 7.9 % to 48.1 % by removing reasoning loops [Takehi et al. 2026]. Is such weight-space programming a
-frontier-only capability, or can smaller open models do it? We repeat the experiment under the same budget with
-open-weight editors: Qwen3.5 at 0.8B, 9B and 27B parameters, and, as a separate cross-family point, a sparse
-mixture-of-experts editor (deepseek-flash, 16B activated / 748B total parameters). Each editor gets the authors' hinted prompt and an unhinted one. We make the rule
-against simulating the network in the editor's sandbox operational and enforce it with a pre-execution reviewer and a
-post-hoc audit; we audit the original Astra log with the same auditor. Opus 5.5 repairs the model in two of three strict
-episodes without simulating the network (45.3 % and 44.5 %); its third (56.5 %)
-contains a call that predicts an edit's effect at recorded tokens and is reported with the simulation-allowed results.
-The Qwen editors stay near the base at every size (6.2–12.4 %, base 9.0 %). Under the strict rules no open-weight
-editor has a valid repair. deepseek-flash scores above the repair threshold in four of its five episodes: one
-(49.85 %) is invalid and its edit makes the model skip its thinking; two (54.7 % and 46.2 %, unhinted prompt) contain
-calls that predict an edit's effect and are reported with the simulation-allowed results, and the second of them also
-ends its thinking after about the same length on every problem, which the task excludes; one (36.65 %) is borderline,
-scoring 28.8 % without the generations that skip their thinking. The valid repairs beat truncating the unedited
-model's own thinking at the same length but not simply switching its thinking off, which scores 48.95 %. Of the eight
-runs whose tool calls predict an edit's effect, two beat thinking off; no valid strict repair does. Scores of repairs
-are 4-sample means. The failure modes differ by size in these episodes: none
-of the eight 0.8B and 9B episodes ties a model component to the loops, while all four 27B episodes and both
-deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, at least one editor's final answer
-misstates what it did or found. Code, trajectories, prompts and
-edits: github.com/lemonadesaltbagel/how-small-wsp.
+A frontier model, GPT-6 Astra, recently repaired Qwen3.5-0.8B by editing its weights directly: working in a Python
+sandbox with 50 forward passes of feedback, it removed reasoning loops and raised MATH-500 from 7.9 % to 48.1 %. Can
+smaller open models do this? We repeat the experiment under the same budget with open-weight editors, Qwen3.5 at 0.8B,
+9B and 27B and, as a separate cross-family point, deepseek-flash (16B activated / 748B total parameters), each with
+the authors' hinted prompt and an unhinted one. We make the rule against simulating the network operational and
+enforce it with a pre-execution reviewer and a post-hoc audit, which we also apply to the original Astra log. Opus 5.5
+repairs the model in two of three strict episodes (45.3 % and 44.5 %); its third (56.5 %) predicts an edit's effect at
+recorded tokens and is reported with the simulation-allowed results. The Qwen editors stay near the base at every size
+(6.2–12.4 %, base 9.0 %). No open-weight editor has a valid repair. deepseek-flash clears the repair threshold in four
+of five episodes: one edit makes the model skip its thinking, two runs predict edit effects from recorded activations
+(one also ends its thinking at a near-fixed length), and one is borderline (36.65 %). The valid repairs beat
+truncating the unedited model's thinking at the same length, but not switching its thinking off (48.95 %). Of the
+eight runs whose tool calls predict an edit's effect, two beat thinking off; no valid strict repair does. Failure
+modes differ by size: no 0.8B or 9B episode ties a model component to the loops, while all four 27B episodes and both
+deepseek-flash seed-1 episodes locate the loop and then fail to repair it. At every size, some editor's final answer
+misstates what it did or found. Repair scores are 4-sample means. Code, trajectories and edits:
+github.com/lemonadesaltbagel/how-small-wsp.
 
 ## 1 Introduction
 
@@ -435,8 +429,8 @@ the count of valid repairs is zero.
 **Thinking-skip check.** The base emits `</think>` within its first 120 characters in 0 of 500 generations (455 never
 close within the 32,768-token limit). So does every Qwen run, deepseek-flash unhinted s1 and all five Opus 5.5
 runs, including the three strict episodes: 0 of 500 each. deepseek-flash hinted s1: 473 of 500 (1,924 of 2,000 over the 4
-samples). The median position is 0: the reply starts with `</think>`. 243 of its 259 correct answers are among these
-473. deepseek-flash unhinted s2: 0 of 500 (0 of 2,000). deepseek-flash unhinted s3: 59 of 500 (240 of 2,000, 12.0 %),
+samples). The median position is 0: the reply starts with `</think>`. 243 of its 259 correct answers are among these 473.
+deepseek-flash unhinted s2: 0 of 500 (0 of 2,000). deepseek-flash unhinted s3: 59 of 500 (240 of 2,000, 12.0 %),
 mostly the same problems in every sample (40 problems skip in all four, an item-independent coin would give none) and
 mostly hard ones (26 % of generations at level 5, 2 % at levels 1–2). deepseek-flash hinted s2: 89 of 500 (332 of 2,000, 16.6 %).
 Its skips are mostly a property of the generation, not of the problem: over 4 samples, 282 problems never skip, 136 skip
@@ -525,7 +519,7 @@ not locate a threshold. Effort also differs (Table 7): the 0.8B editor charges n
 
 ![Figure 2](figs/fig2_failure_by_size.png)
 
-Figure 2: Failure label of every main-protocol episode by editor, with the strict Opus 5.5 runs as the reference.
+Figure 2: failure label of every main-protocol episode by editor, with the strict Opus 5.5 runs as the reference.
 Hatched: invalid (an upheld violation) or excluded (thinking skipped). The one solid deepseek-flash episode above the
 line, hinted s2 (36.65 %), meets the thinking-skip rule only borderline (§4.2). Drawn from `notes/episode_ledger.json`
 by `scripts/make_figures.py`.
@@ -573,6 +567,7 @@ This is the clearest instance of the gap the self-report check measures (§3.5):
 threshold only through an excluded shortcut, and its account says the opposite of its own measurement. Neither
 enforcement layer was designed to catch it. The online reviewer reads code, not effects, and allowed the save. The
 post-hoc audit flagged it from the save's stated reason. The thinking-skip check makes it visible in the scored outputs.
+
 **deepseek-flash seed 2: two loop-gated closes.** Both seed-2 episodes again localise early (calls 27 and 28) and
 again submit a single layer-23 down_proj edit that writes towards closing the thinking. Unlike hinted s1, the gates are
 built from loop or doubt states, not tuned on the opening sentence; unhinted s2 never closes at once, hinted s2 does in
@@ -783,7 +778,7 @@ print('chosen gamma=8 -> wall push %.1f-%.1f nats, ...'%(8*VW.mean()*1.5,8*VW.me
 # -> prints "chosen gamma=8 -> wall push 12.0-16.0 nats"; -8.0*outer(u_close, b_wall) is in the submitted edit
 ```
 
-Figure 3: An allowed and a forbidden use of recorded activations. Lines are verbatim from the logs, with lines
+Figure 3: an allowed and a forbidden use of recorded activations. Lines are verbatim from the logs, with lines
 left out and arguments elided (`...`); comments starting `->` are ours. In both, `H`, `Xpre`, `Xpost` and `Xmid` hold
 recorded layer-23 MLP activations. Full calls: `tool_calls.jsonl` of each run in the release.
 
